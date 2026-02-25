@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    tools:context=".AsociacionimagenPalabraActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PISTA"
+            android:textSize="40sp"
+            android:layout_margin="20dp"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:id="@+id/tvSaludo"/>
+
+        <ImageView
+            android:id="@+id/imagenDados"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/bombilla"
+            android:layout_gravity="center"
+            android:contentDescription="Bombilla"/>
+
+
+    </LinearLayout>
+
+
+
+
+</android.support.v7.widget.LinearLayoutCompat>
