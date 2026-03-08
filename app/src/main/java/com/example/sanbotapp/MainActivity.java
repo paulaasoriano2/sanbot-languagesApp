@@ -66,10 +66,12 @@ public class MainActivity extends TopBaseActivity {
     private Button btnAsociacion;
     private Button btnAgenda;
     private Button btnColores;
+    private Button btnConversacion;
 
     private ImageButton feliz;
     private ImageButton triste;
     private ImageButton enfadado;
+    private ImageButton conver;
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
     private MediaManager mediaManager;
@@ -108,10 +110,12 @@ public class MainActivity extends TopBaseActivity {
         btnAsociacion = findViewById(R.id.asociacionimagenpalabra);
         btnAgenda = findViewById(R.id.agenda);
         btnColores = findViewById(R.id.colores);
+        btnConversacion = findViewById(R.id.conversacion);
 
         feliz = findViewById(R.id.imgasociacionimagenpalabra);
         triste = findViewById(R.id.imgagenda);
         enfadado = findViewById(R.id.imgcolores);
+        conver = findViewById(R.id.imgconversacion);
 
         faceRecognitionControl.stopFaceRecognition();
 
@@ -122,10 +126,12 @@ public class MainActivity extends TopBaseActivity {
         btnAgenda.setClickable(clickable);
         btnColores.setClickable(clickable);
         btnAsociacion.setClickable(clickable);
+        btnConversacion.setClickable(clickable);
 
         triste.setClickable(clickable);
         enfadado.setClickable(clickable);
         feliz.setClickable(clickable);
+        conver.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -210,6 +216,80 @@ public class MainActivity extends TopBaseActivity {
         });
 
 
+
+        btnConversacion.setOnClickListener(new View.OnClickListener() {
+            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+
+            @Override
+            public void onClick(View v) {
+                if (isProcessing) return; // Si ya está procesando, ignorar el clic
+                isProcessing = true;
+
+                // Desactivar todos los botones
+                setAllButtonsClickable(false);
+
+                /*new Thread(() -> {
+                    try {
+                        // Simula un pequeño retraso inicial
+                        Thread.sleep(100);
+
+                        // Mostrar emoción y encender LEDs
+                        systemManager.showEmotion(EmotionsType.SMILE);
+                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
+
+                        // Generar frases aleatorias
+                        /*String[] frases = {
+                                "Hoy estoy muy feliz, ¡Gracias por jugar conmigo!",
+                                "Estoy contenta de que estés aquí",
+                                "Estoy muy feliz de verte, espero que tú también lo estés"
+                        };
+                        Random rand = new Random();
+                        int randomIndex = rand.nextInt(frases.length);
+                        speechManager.startSpeak(frases[randomIndex], speakOption);
+
+                        String frase = "Vamos a jugar al juego asociación imagen palabra." +
+                                "Yo te diré una palabra en inglés y tú tendrás que seleccionar la imagen asociada. ¿Empezamos?";
+                        speechManager.startSpeak(frase, speakOption);
+
+                        // Simula la duración de la frase
+                        Thread.sleep(5000);
+
+                        // Apagar luces
+                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally {
+                        // Reactivar todos los botones
+                        runOnUiThread(() -> {
+                            setAllButtonsClickable(true);
+                            isProcessing = false; // Liberar bandera
+                        });
+                    }
+                }).start();*/
+
+                Intent intent = new Intent(MainActivity.this, ConversacionActivity.class);
+                startActivity(intent);
+            }
+
+        });
+
+
+        conver.setOnClickListener(new View.OnClickListener() {
+            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+
+            @Override
+            public void onClick(View v) {
+                if (isProcessing) return; // Si ya está procesando, ignorar el clic
+                isProcessing = true;
+
+                // Desactivar todos los botones
+                setAllButtonsClickable(false);
+
+                Intent intent = new Intent(MainActivity.this, ConversacionActivity.class);
+                startActivity(intent);
+            }
+
+        });
 
         btnAgenda.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics

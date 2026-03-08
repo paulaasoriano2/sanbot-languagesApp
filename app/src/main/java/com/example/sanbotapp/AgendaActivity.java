@@ -27,6 +27,16 @@ import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.Random;
 
 public class AgendaActivity extends TopBaseActivity {
@@ -101,7 +111,6 @@ public class AgendaActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
 
-        // TODO:
 
 
         feliz.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +295,40 @@ public class AgendaActivity extends TopBaseActivity {
 
     }
 
+    public void getPictogramas() throws IOException, JSONException {
+        URL url = new URL("https://api.arasaac.org/v1/pictograms/es/search/water");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream())
+        );
+
+        StringBuilder result = new StringBuilder();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            result.append(line);
+        }
+
+        reader.close();
+
+        String json = result.toString();
+
+        JSONArray array = new JSONArray(json);
+        JSONObject pictogram = array.getJSONObject(0);
+
+        int id = pictogram.getInt("_id");
+
+        String imageUrl = "https://static.arasaac.org/pictograms/"
+                + id + "/" + id + "_500.png";
+
+        /*Glide.with(this)
+                .load(imageUrl)
+                .into(imageView);*/
+
+    }
+
     @Override
     public void onResume() {
         SpeakOption speakOption = new SpeakOption();
@@ -297,10 +340,17 @@ public class AgendaActivity extends TopBaseActivity {
             @Override
             public void run() {
 
+
                 String[] frases = {"¿Y si recordamos lo que hiciste ayer? Me da mucha curiosidad. Haz clic sobre las acciones que hiciste", "¡Vamos a planear tu día! Haz clic sobre las acciones que quieres hacer hoy"};
                 Random rand = new Random();
                 int randomIndex = rand.nextInt(frases.length);
                 speechManager.startSpeak(frases[randomIndex], speakOption);
+
+                try {
+                    getPictogramas();
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
+                }
 
                 RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
                 wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);

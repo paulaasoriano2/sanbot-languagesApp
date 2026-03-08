@@ -3,8 +3,10 @@ package com.example.sanbotapp;
 
 import static android.app.PendingIntent.getActivity;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.support.v4.util.LogWriter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -130,6 +133,29 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         acierto.setClickable(clickable);
     }
 
+    /*@Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Get the layout inflater.
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+
+        // Inflate and set the layout for the dialog.
+        // Pass null as the parent view because it's going in the dialog layout.
+        builder.setView(inflater.inflate(R.layout.dialog_pista, null))
+                // Add action buttons
+                .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Sign in the user.
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        LoginDialogFragment.this.getDialog().cancel();
+                    }
+                });
+        return builder.create();
+    }*/
     public void setonClicks() {
 
         SpeakOption speakOption = new SpeakOption();
