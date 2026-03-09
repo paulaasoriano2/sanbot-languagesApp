@@ -25,7 +25,8 @@
         <activity
             android:name=".MainActivity"
             android:label="LanguagesApp"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +37,7 @@
         <activity android:name=".AgendaActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ColoresActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".PistaActivity" android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".ConversacionActivity" android:windowSoftInputMode="stateHidden" />
 
 
 

@@ -401,15 +401,10 @@ public class ConversacionActivity extends TopBaseActivity {
 
         respuesta = capitalizeCadena(respuesta);
         consultaRobot = false;
-        consultaPeliculas = false;
 
         // Consultas derivadas a las acciones internas del robot
         if(respuesta.startsWith("Robot")){
             consultaRobot = true;
-        }
-        // Consultas derivadas a la API de películas
-        else if(respuesta.startsWith("Películas")){
-            consultaPeliculas = true;
         }
         // Consultas derivadas a la API de OpenAI
         else{
@@ -575,7 +570,11 @@ public class ConversacionActivity extends TopBaseActivity {
         //dialogoRobot.setText("Cargando...");
 
         textoConsulta.setText("");
-
+        moduloOpenAI.consultaOpenAI(consultaChatGPT);
+        String resp = moduloOpenAI.getRespuestaGPT();
+        Log.d("resp", resp);
+        speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+        speechManager.startSpeak(resp, speakOption);
     }
 
     private void gestionarPantallaModoTeclado(){
