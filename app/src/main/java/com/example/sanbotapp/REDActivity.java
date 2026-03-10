@@ -3,7 +3,6 @@ package com.example.sanbotapp;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -29,10 +28,9 @@ import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
-import java.io.File;
 import java.util.Random;
 
-public class ColoresActivity extends TopBaseActivity {
+public class REDActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
@@ -66,7 +64,7 @@ public class ColoresActivity extends TopBaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         onMainServiceConnected();
-        setContentView(R.layout.activity_colores);
+        setContentView(R.layout.activity_red);
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
@@ -80,12 +78,8 @@ public class ColoresActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         btnAsociacion = findViewById(R.id.asociacionimagenpalabra);
-        btnAgenda = findViewById(R.id.agenda);
-        btnColores = findViewById(R.id.colores);
-
         feliz = findViewById(R.id.imgasociacionimagenpalabra);
-        triste = findViewById(R.id.imgagenda);
-        enfadado = findViewById(R.id.imgcolores);
+
 
         faceRecognitionControl.stopFaceRecognition();
 
@@ -93,12 +87,7 @@ public class ColoresActivity extends TopBaseActivity {
     }
 
     public void setAllButtonsClickable(boolean clickable) {
-        btnAgenda.setClickable(clickable);
-        btnColores.setClickable(clickable);
         btnAsociacion.setClickable(clickable);
-
-        triste.setClickable(clickable);
-        enfadado.setClickable(clickable);
         feliz.setClickable(clickable);
     }
 
@@ -111,9 +100,7 @@ public class ColoresActivity extends TopBaseActivity {
         // TODO:
 
 
-
-
-        btnAsociacion.setOnClickListener(new View.OnClickListener() {
+        feliz.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
@@ -124,110 +111,72 @@ public class ColoresActivity extends TopBaseActivity {
                 // Desactivar todos los botones
                 setAllButtonsClickable(false);
 
-                Intent intent = new Intent(ColoresActivity.this, REDActivity.class);
+                // Se abre la cámara
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.example.camera", "com.example.sanbotapp.robotControl.MediaControlActivity"));
+                intent.putExtra("nombre_actividad", "ColoresActivity");
+                intent.putExtra("color", colour);
+
                 startActivity(intent);
-            }
-        });
+/*
 
-        triste.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+                Bitmap bitmap = cameraManager.takePicture();
+                File file = new File(photoPath);
 
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart(
+                                "image",
+                                file.getName(),
+                                RequestBody.create(file, MediaType.parse("image/jpeg"))
+                        )
+                        .build();
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
+                Request request = new Request.Builder()
+                        .url("https://tu-app.onrender.com/upload")
+                        .post(requestBody)
+                        .build();
 
-                new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        systemManager.showEmotion(EmotionsType.CRY);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
-
-                        // saca frases aleatorias de tristeza rollo esto me pone triste, me siento triste, etc
-                        String[] frases = {"A veces me pongo muy triste, y no puedo parar de llorar", "Cuando me pongo trise, no puedo ocultarlo", "Me siento muy triste, no se como parar de llorar"};
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                                new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);
-                        headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        // apagar luces
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                        headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
+                OkHttpClient client = new OkHttpClient();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String result = response.body().string();
+                        Log.d("SERVER", result);
                     }
-                }).start();
 
-            }
-        });
-
-        enfadado.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
-
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
-
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                    }
+                });*/
 
                 new Thread(() -> {
                     try {
                         // Simula un pequeño retraso inicial
                         Thread.sleep(100);
 
-                        systemManager.showEmotion(EmotionsType.ANGRY);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_RED));
+                        // Mostrar emoción y encender LEDs
+                        systemManager.showEmotion(EmotionsType.SMILE);
+                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
 
-                        // saca frases aleatorias rollo cuando estoy enfadado me pongo muy nervioso, me enfada mucho, etc
-                        String[] frases = {"Cuando estoy enfadada me pongo muy nerviosa", "No me gusta estar enfadada, pero a veces no puedo evitarlo", "No puedo evitar enfadarme cuando sucede una injusticia"};
+                        // Generar frases aleatorias
+                        /*String[] frases = {
+                                "Hoy estoy muy feliz, ¡Gracias por jugar conmigo!",
+                                "Estoy contenta de que estés aquí",
+                                "Estoy muy feliz de verte, espero que tú también lo estés"
+                        };
                         Random rand = new Random();
                         int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        absoluteAngleHandMotion =
-                                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        speechManager.startSpeak(frases[randomIndex], speakOption);*/
 
 
-                        // apagar luces
+
+
+                        // Simula la duración de la frase
+                        Thread.sleep(5000);
+
+                        // Apagar luces
                         hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -239,19 +188,9 @@ public class ColoresActivity extends TopBaseActivity {
                         });
                     }
                 }).start();
-
             }
+
         });
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -269,14 +208,28 @@ public class ColoresActivity extends TopBaseActivity {
             @Override
             public void run() {
 
-                String frase = "Vamos a reconocer colores. Yo te diré un color y tú me tendrás que enseñar un objeto de ese color.";
-                speechManager.startSpeak(frase, speakOption);
+
+                String frase2 = "Busquemos un objeto que sea de ese color!";
+                speechManager.startSpeak(frase2, speakOption);
 
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                String frase3 = "Cuando lo encuentres, haz clic en el botón para enseñármelo";
+                speechManager.startSpeak(frase3, speakOption);
+
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+                String frase = "Let's do it! The color is red!";
+                speechManager.startSpeak(frase, speakOption);
 
                 AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
                         new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);

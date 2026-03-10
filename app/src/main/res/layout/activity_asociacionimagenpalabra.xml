@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,7 +19,8 @@
         android:textColor="@android:color/black"
         android:textAlignment="center"
         android:gravity="center"
-        android:id="@+id/actividad"/>
+        android:id="@+id/actividad"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:layout_width="match_parent"
@@ -29,7 +31,8 @@
         android:textColor="@android:color/black"
         android:textAlignment="center"
         android:gravity="center"
-        android:id="@+id/apple"/>
+        android:id="@+id/apple"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:layout_width="match_parent"
@@ -40,13 +43,15 @@
         android:textColor="@android:color/black"
         android:textAlignment="center"
         android:gravity="center"
-        android:id="@+id/informacion"/>
+        android:id="@+id/informacion"
+        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -127,4 +132,4 @@
 
 
 
-</android.support.v7.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -191,7 +191,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
                         };
                         Random rand = new Random();
                         int randomIndex = rand.nextInt(frases.length);
-                        //speechManager.startSpeak(frases[randomIndex], speakOption);
+                        speechManager.startSpeak(frases[randomIndex], speakOption);
 
                         try {
                             Thread.sleep(3000);
