@@ -36,13 +36,13 @@ public class ColoresActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
-    private Button btnAsociacion;
-    private Button btnAgenda;
-    private Button btnColores;
+    private Button btnRed;
+    private Button btnBlue;
+    private Button btnOrange;
+    private Button btnYellow;
 
-    private ImageButton feliz;
-    private ImageButton triste;
-    private ImageButton enfadado;
+    private Button btnGreen;
+
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
     private MediaManager mediaManager;
@@ -79,27 +79,34 @@ public class ColoresActivity extends TopBaseActivity {
 
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
-        btnAsociacion = findViewById(R.id.asociacionimagenpalabra);
-        btnAgenda = findViewById(R.id.agenda);
-        btnColores = findViewById(R.id.colores);
+        btnRed = findViewById(R.id.red);
+        btnBlue = findViewById(R.id.blue);
+        btnYellow = findViewById(R.id.yellow);
+        btnOrange = findViewById(R.id.orange);
+        btnGreen = findViewById(R.id.green);
 
-        feliz = findViewById(R.id.imgasociacionimagenpalabra);
-        triste = findViewById(R.id.imgagenda);
-        enfadado = findViewById(R.id.imgcolores);
+
 
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
     public void setAllButtonsClickable(boolean clickable) {
-        btnAgenda.setClickable(clickable);
-        btnColores.setClickable(clickable);
-        btnAsociacion.setClickable(clickable);
+        btnRed.setClickable(clickable);
+        btnBlue.setClickable(clickable);
+        btnYellow.setClickable(clickable);
+        btnOrange.setClickable(clickable);
+        btnGreen.setClickable(clickable);
 
-        triste.setClickable(clickable);
-        enfadado.setClickable(clickable);
-        feliz.setClickable(clickable);
+
     }
 
     public void setonClicks() {
@@ -108,12 +115,7 @@ public class ColoresActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
 
-        // TODO:
-
-
-
-
-        btnAsociacion.setOnClickListener(new View.OnClickListener() {
+        btnRed.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
@@ -124,12 +126,12 @@ public class ColoresActivity extends TopBaseActivity {
                 // Desactivar todos los botones
                 setAllButtonsClickable(false);
 
-                Intent intent = new Intent(ColoresActivity.this, REDActivity.class);
+                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
+                intent.putExtra("color", "red");
                 startActivity(intent);
             }
         });
-
-        triste.setOnClickListener(new View.OnClickListener() {
+        btnBlue.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
@@ -140,48 +142,12 @@ public class ColoresActivity extends TopBaseActivity {
                 // Desactivar todos los botones
                 setAllButtonsClickable(false);
 
-                new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        systemManager.showEmotion(EmotionsType.CRY);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
-
-                        // saca frases aleatorias de tristeza rollo esto me pone triste, me siento triste, etc
-                        String[] frases = {"A veces me pongo muy triste, y no puedo parar de llorar", "Cuando me pongo trise, no puedo ocultarlo", "Me siento muy triste, no se como parar de llorar"};
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                                new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);
-                        headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        // apagar luces
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                        headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-
+                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
+                intent.putExtra("color", "blue");
+                startActivity(intent);
             }
         });
-
-        enfadado.setOnClickListener(new View.OnClickListener() {
+        btnGreen.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
@@ -192,69 +158,43 @@ public class ColoresActivity extends TopBaseActivity {
                 // Desactivar todos los botones
                 setAllButtonsClickable(false);
 
-                new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        systemManager.showEmotion(EmotionsType.ANGRY);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_RED));
-
-                        // saca frases aleatorias rollo cuando estoy enfadado me pongo muy nervioso, me enfada mucho, etc
-                        String[] frases = {"Cuando estoy enfadada me pongo muy nerviosa", "No me gusta estar enfadada, pero a veces no puedo evitarlo", "No puedo evitar enfadarme cuando sucede una injusticia"};
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        absoluteAngleHandMotion =
-                                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-
-                        // apagar luces
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-
+                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
+                intent.putExtra("color", "green");
+                startActivity(intent);
             }
         });
+        btnYellow.setOnClickListener(new View.OnClickListener() {
+            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
+            @Override
+            public void onClick(View v) {
+                if (isProcessing) return; // Si ya está procesando, ignorar el clic
+                isProcessing = true;
 
+                // Desactivar todos los botones
+                setAllButtonsClickable(false);
 
+                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
+                intent.putExtra("color", "yellow");
+                startActivity(intent);
+            }
+        });
+        btnOrange.setOnClickListener(new View.OnClickListener() {
+            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
+            @Override
+            public void onClick(View v) {
+                if (isProcessing) return; // Si ya está procesando, ignorar el clic
+                isProcessing = true;
 
+                // Desactivar todos los botones
+                setAllButtonsClickable(false);
 
-
-
-
-
-
-
-
+                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
+                intent.putExtra("color", "orange");
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -303,10 +243,7 @@ public class ColoresActivity extends TopBaseActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

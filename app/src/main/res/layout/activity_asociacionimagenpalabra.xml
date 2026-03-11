@@ -20,7 +20,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:id="@+id/actividad"
-        tools:ignore="MissingConstraints" />
+        />
 
     <TextView
         android:layout_width="match_parent"
@@ -32,7 +32,8 @@
         android:textAlignment="center"
         android:gravity="center"
         android:id="@+id/apple"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@id/actividad"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -44,14 +45,18 @@
         android:textAlignment="center"
         android:gravity="center"
         android:id="@+id/informacion"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@id/apple"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@id/informacion"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"

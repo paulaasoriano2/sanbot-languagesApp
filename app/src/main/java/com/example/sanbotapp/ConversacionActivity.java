@@ -211,7 +211,7 @@ public class ConversacionActivity extends TopBaseActivity {
         moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
         gestionMediaPlayer = new GestionMediaPlayer();
 
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String contentPersonalizacion = "También quiero que a veces me llames por mi nombre que es " + nombreUsuario + " y " +
                 "que adaptes la conversación teniendo en cuenta que mi edad es de " + edadUsuario + " años";
@@ -362,7 +362,11 @@ public class ConversacionActivity extends TopBaseActivity {
 
     }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
     private void mostrarDialogoExplicacion() {
         // Crear el TextView que contendrá el mensaje
         TextView textView = new TextView(this);

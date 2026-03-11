@@ -5,12 +5,14 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.qihancloud.opensdk.base.TopBaseActivity;
@@ -18,7 +20,6 @@ import com.qihancloud.opensdk.beans.FuncConstant;
 import com.qihancloud.opensdk.function.beans.EmotionsType;
 import com.qihancloud.opensdk.function.beans.LED;
 import com.qihancloud.opensdk.function.beans.SpeakOption;
-import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.beans.headmotion.AbsoluteAngleHeadMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
@@ -28,19 +29,11 @@ import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
-import java.util.Random;
-
-public class REDActivity extends TopBaseActivity {
+public class DetalleColorActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
-    private Button btnAsociacion;
-    private Button btnAgenda;
-    private Button btnColores;
-
-    private ImageButton feliz;
-    private ImageButton triste;
-    private ImageButton enfadado;
+    private Button btnAbrirCamara;
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
     private MediaManager mediaManager;
@@ -49,7 +42,7 @@ public class REDActivity extends TopBaseActivity {
     private WheelMotionManager wheelMotionManager;
     private HeadMotionManager headMotionManager;
     private HardWareManager hardwareManager;
-    private String colour;
+    private String color;
 
 
     @Override
@@ -64,7 +57,12 @@ public class REDActivity extends TopBaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         onMainServiceConnected();
-        setContentView(R.layout.activity_red);
+
+        setContentView(R.layout.activity_detalle_color);
+        color = getIntent().getStringExtra("color");
+        Log.d("Color elegido", color);
+        TextView nombreColorEnPantalla = findViewById(R.id.nombreColor);
+        nombreColorEnPantalla.setText(color);
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
@@ -77,18 +75,27 @@ public class REDActivity extends TopBaseActivity {
 
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
-        btnAsociacion = findViewById(R.id.asociacionimagenpalabra);
-        feliz = findViewById(R.id.imgasociacionimagenpalabra);
+        btnAbrirCamara = findViewById(R.id.abrirCamara);
 
 
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public void setAllButtonsClickable(boolean clickable) {
-        btnAsociacion.setClickable(clickable);
-        feliz.setClickable(clickable);
+        btnAbrirCamara.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -100,7 +107,7 @@ public class REDActivity extends TopBaseActivity {
         // TODO:
 
 
-        feliz.setOnClickListener(new View.OnClickListener() {
+        btnAbrirCamara.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
@@ -115,79 +122,10 @@ public class REDActivity extends TopBaseActivity {
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName("com.example.camera", "com.example.sanbotapp.robotControl.MediaControlActivity"));
                 intent.putExtra("nombre_actividad", "ColoresActivity");
-                intent.putExtra("color", colour);
+                intent.putExtra("color", color);
 
                 startActivity(intent);
-/*
 
-                Bitmap bitmap = cameraManager.takePicture();
-                File file = new File(photoPath);
-
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart(
-                                "image",
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("image/jpeg"))
-                        )
-                        .build();
-
-                Request request = new Request.Builder()
-                        .url("https://tu-app.onrender.com/upload")
-                        .post(requestBody)
-                        .build();
-
-                OkHttpClient client = new OkHttpClient();
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String result = response.body().string();
-                        Log.d("SERVER", result);
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                    }
-                });*/
-
-                new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        // Mostrar emoción y encender LEDs
-                        systemManager.showEmotion(EmotionsType.SMILE);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                        // Generar frases aleatorias
-                        /*String[] frases = {
-                                "Hoy estoy muy feliz, ¡Gracias por jugar conmigo!",
-                                "Estoy contenta de que estés aquí",
-                                "Estoy muy feliz de verte, espero que tú también lo estés"
-                        };
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);*/
-
-
-
-
-                        // Simula la duración de la frase
-                        Thread.sleep(5000);
-
-                        // Apagar luces
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
             }
 
         });
@@ -209,6 +147,10 @@ public class REDActivity extends TopBaseActivity {
             public void run() {
 
 
+                AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,7);
+                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+
                 String frase2 = "Busquemos un objeto que sea de ese color!";
                 speechManager.startSpeak(frase2, speakOption);
 
@@ -218,22 +160,35 @@ public class REDActivity extends TopBaseActivity {
                     e.printStackTrace();
                 }
 
+                AbsoluteAngleHeadMotion absoluteAngleHeadMotion2 =
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,-7);
+                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion2);
+
                 String frase3 = "Cuando lo encuentres, haz clic en el botón para enseñármelo";
                 speechManager.startSpeak(frase3, speakOption);
 
                 try {
-                    Thread.sleep(4000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
+                String frase = "Let's do it! The color is";
                 speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
-                String frase = "Let's do it! The color is red!";
                 speechManager.startSpeak(frase, speakOption);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                speechManager.startSpeak(color, speakOption);
 
-                AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);
-                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+
+                //speechManager.startSpeak(color, speakOption);
+
+                AbsoluteAngleHeadMotion absoluteAngleHeadMotion3 =
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,0);
+                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion3);
             }
         }, 200);
 
@@ -256,10 +211,7 @@ public class REDActivity extends TopBaseActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

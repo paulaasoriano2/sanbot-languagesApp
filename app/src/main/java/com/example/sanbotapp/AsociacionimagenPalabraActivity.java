@@ -119,6 +119,14 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public void setAllButtonsClickable(boolean clickable) {
@@ -451,10 +459,6 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

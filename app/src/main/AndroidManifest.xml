@@ -38,7 +38,7 @@
         <activity android:name=".ColoresActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".PistaActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ConversacionActivity" android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".REDActivity" android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".DetalleColorActivity" android:windowSoftInputMode="stateHidden" />
 
 
 

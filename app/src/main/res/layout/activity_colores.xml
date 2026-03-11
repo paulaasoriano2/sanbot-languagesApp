@@ -26,21 +26,8 @@
             android:gravity="center"
             android:padding="16dp">
 
-            <ImageButton
-                android:id="@+id/imgasociacionimagenpalabra"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgasociacionimagenpalabra"
-                android:src="@drawable/feliz"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-                />
-
             <Button
-                android:id="@+id/asociacionimagenpalabra"
+                android:id="@+id/red"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="RED"
@@ -62,24 +49,12 @@
             android:gravity="center"
             android:padding="16dp">
 
-            <ImageButton
-                android:id="@+id/imgagenda"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgagenda"
-                android:src="@drawable/enamorado"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-                />
 
             <Button
-                android:id="@+id/agenda"
+                android:id="@+id/blue"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Mi Agenda"
+                android:text="BLUE"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"
                 android:textAllCaps="false"
@@ -97,24 +72,12 @@
             android:gravity="center"
             android:padding="16dp">
 
-            <ImageButton
-                android:id="@+id/imgcolores"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgcolores"
-                android:src="@drawable/entusiasmado"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-                />
 
             <Button
-                android:id="@+id/colores"
+                android:id="@+id/yellow"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Colores"
+                android:text="YELLOW"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"
                 android:textAllCaps="false"
@@ -123,6 +86,53 @@
                 android:gravity="center"/>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+
+            <Button
+                android:id="@+id/green"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="GREEN"
+                android:background="@drawable/button_rounded"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+
+            <Button
+                android:id="@+id/orange"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="ORANGE"
+                android:background="@drawable/button_rounded"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
