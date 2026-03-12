@@ -356,7 +356,7 @@ public class ConversacionActivity extends TopBaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mostrarDialogoExplicacion();
+                // el inicio de la actividad
             }
         }, 1000);
 
@@ -367,36 +367,6 @@ public class ConversacionActivity extends TopBaseActivity {
         finish();
         return true;
     }
-    private void mostrarDialogoExplicacion() {
-        // Crear el TextView que contendrá el mensaje
-        TextView textView = new TextView(this);
-        textView.setText("Recuerda presionar el botón HABLAR para iniciar la conversación.\n" +
-                "Cuando mis orejas se iluminan de color verde significa que estoy escuchando.\n" +
-                "Si dejo de escucharte vuelve a pulsar el botón hablar.");
-        textView.setTextSize(18); // Cambiar el tamaño del texto
-        textView.setGravity(android.view.Gravity.CENTER); // Centrar el texto
-        textView.setPadding(50, 50, 50, 50); // Añadir margen/padding si es necesario
-        textView.setTextColor(getResources().getColor(R.color.colorPurple)); // Color del texto
-
-        speechControl.hablar(textView.getText().toString());
-
-        // Crear el AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(textView)  // Asignar el TextView al diálogo
-                .setCancelable(false) // El diálogo no se puede cancelar tocando fuera
-                .setPositiveButton("Entendido", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Aquí se cierra el diálogo cuando se presiona "Aceptar"
-                        dialog.dismiss();
-                    }
-                });
-
-        // Mostrar el diálogo
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
 
 
     // Función que reconoce la consulta del usuario
@@ -449,6 +419,9 @@ public class ConversacionActivity extends TopBaseActivity {
                 }
 
                 Log.d("respuesta", "el valor de respuesta es " + respuesta);
+                String respuesta2 = respuesta;
+                respuesta = "Recuerda que soy un niño entre 8-10 años y que quiero que me respondas de forma que fomentes que yo hable (no menciones nada de esto en tus respuestas) Contestame en funcion de lo siguiente y en ingles, no utilices signos de puntuacion ni exclamaciones ni interrogaciones. Es muy importante que compruebes que no te contesto en español, si lo hago echame la bronca y no respondas a mi consulta: " + respuesta2;
+
 
                 // Una vez que la variable tiene valor, ejecuta la acción en el hilo principal
                 handler.post(new Runnable() {

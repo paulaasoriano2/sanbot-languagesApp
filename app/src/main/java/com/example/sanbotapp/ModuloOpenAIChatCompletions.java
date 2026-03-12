@@ -118,7 +118,7 @@ public class ModuloOpenAIChatCompletions {
                 .url("https://api.openai.com/v1/chat/completions")
                 .post(peticion)
                 .header("Content-Type", "application/json")
-                // aqui va el header
+                //aqui el header que falta
                 .build();
 
         try (Response response = client.newCall(requestOpenAI).execute()) {
