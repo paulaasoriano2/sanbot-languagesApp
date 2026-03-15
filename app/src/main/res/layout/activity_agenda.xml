@@ -5,8 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
     tools:context=".AgendaActivity">
 
     <!-- Título -->
@@ -14,7 +12,7 @@
         android:id="@+id/titleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="RED"
+        android:text="titulo"
         android:textAlignment="center"
         android:textColor="@color/colorBlack"
         android:textSize="30sp"
@@ -23,90 +21,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
+    <!-- LISTA -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16dp">
-
-            <ImageButton
-                android:id="@+id/imgasociacionimagenpalabra"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgasociacionimagenpalabra"
-                android:src="@drawable/feliz"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-            />
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16dp">
-
-            <ImageButton
-                android:id="@+id/imgagenda"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgagenda"
-                android:src="@drawable/enamorado"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-                />
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16dp">
-
-            <ImageButton
-                android:id="@+id/imgcolores"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgcolores"
-                android:src="@drawable/entusiasmado"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-                />
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-
+        android:text="Añadir"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
