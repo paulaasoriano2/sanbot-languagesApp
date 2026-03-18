@@ -33,7 +33,9 @@ import com.example.sanbotapp.robotControl.SpeechControl;
 import com.example.sanbotapp.robotControl.SystemControl;
 import com.qihancloud.opensdk.base.TopBaseActivity;
 import com.qihancloud.opensdk.beans.FuncConstant;
+import com.qihancloud.opensdk.function.beans.EmotionsType;
 import com.qihancloud.opensdk.function.beans.SpeakOption;
+import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
 import com.qihancloud.opensdk.function.unit.HeadMotionManager;
@@ -50,10 +52,6 @@ public class ConversacionActivity extends TopBaseActivity {
 
     // Componentes módulo conversacional
     private Button botonConfiguracion;
-    private Button botonNuevaConversacion;
-    private Button botonDetener;
-    private Button botonTutorial;
-    private Button botonRepetir;
     private ListView dialogo;
     private Button botonHablar;
     private Button botonHablarTeclado;
@@ -125,6 +123,7 @@ public class ConversacionActivity extends TopBaseActivity {
 
     private static SpeakOption speakOption = new SpeakOption();
 
+
     // ------------------- PRUEBAS CHAT -----------------
 
     //to scroll the list view to bottom on data change
@@ -135,19 +134,43 @@ public class ConversacionActivity extends TopBaseActivity {
 
     @Override
     public void onResume() {
+
+
+        SpeakOption speakOption = new SpeakOption();
+        speakOption.setSpeed(50);
+        speakOption.setIntonation(50);
+        speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
         super.onResume();
 
         // ------------------- PRUEBAS CHAT -----------------
         handler.removeCallbacksAndMessages(null);
-        dialogo.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_chat_singlemessage);
         if(chatArrayAdapter.isEmpty()){
             recuperarConversacion();
         }
-        actualizarVistaConversacion();
-        dialogo.setAdapter(chatArrayAdapter);
+        //actualizarVistaConversacion();
 
         gestionarPantallaModoTeclado();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                systemManager.showEmotion(EmotionsType.PRISE);
+                // Saludo inicial
+                String saludo = "Hi there! I have been waiting so long to talk. Let's have a wonderful conversation now!";
+                speechManager.startSpeak(saludo, speakOption);
+
+                // Esperar un poco antes de la siguiente frase
+                try { Thread.sleep(6000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+                // Invitar al niño a presentarse
+                String invitacion = "Can you please tell me your name?";
+                speechManager.startSpeak(invitacion, speakOption);
+
+
+            }
+        }, 200);
+
 
     }
 
@@ -167,14 +190,10 @@ public class ConversacionActivity extends TopBaseActivity {
         setContentView(R.layout.activity_modulo_conversacional);
 
         // Instanciación de componentes
-        botonDetener = findViewById(R.id.botonDetener);
-        botonRepetir = findViewById(R.id.botonRepetir);
-        dialogo = findViewById(R.id.burbujaDialogo);
         botonHablar = findViewById(R.id.botonHablar);
         botonHablarTeclado = findViewById(R.id.botonHablarTeclado);
         botonEnviarTeclado = findViewById(R.id.botonEnviarTeclado);
         textoConsulta = findViewById(R.id.textoConsultaTeclado);
-        botonNuevaConversacion = findViewById(R.id.botonNuevaConversacion);
 
 
         // Gestionamos la pantalla en función de si está activado el modo teclado
@@ -182,13 +201,11 @@ public class ConversacionActivity extends TopBaseActivity {
 
         // -------------- CHAT --------------
         conversacion = new ArrayList<>();
-        dialogo.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_chat_singlemessage);
         if (chatArrayAdapter.isEmpty()) {
             recuperarConversacion();
         }
-        actualizarVistaConversacion();
-        dialogo.setAdapter(chatArrayAdapter);
+        //actualizarVistaConversacion();
 
         // Inicialización de las unidades del robot
 
@@ -224,59 +241,7 @@ public class ConversacionActivity extends TopBaseActivity {
 
         try {
 
-            botonNuevaConversacion.setOnClickListener(new View.OnClickListener() {
-                // Al pulsarlo muestra la pantalla de ajustes
-                @Override
-                public void onClick(View v) {
-                    moduloOpenAI.clearRoleSystem();
-                    moduloOpenAI.clearConversacion();
-                    chatArrayAdapter.clear();
-                    dialogo.setAdapter(chatArrayAdapter);
-                }
-            });
 
-
-            // Gestión de la pulsación del botón de silenciar
-            botonDetener.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    // Si el robot está hablando (voz Sanbot) se pausa
-                    // sino, se reanuda
-                    if (speechControl.isRobotHablando()) {
-                        try {
-                            gestionVoz(vozSeleccionada, AccionReproduccionVoz.DETENER);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        try {
-                            gestionVoz(vozSeleccionada, AccionReproduccionVoz.DETENER);
-                        } catch (IOException | InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    // Si el mediaPlayer está reproduciéndose (voz OpenAI) se pausa,
-                    // sino, se reanuda
-                    if (gestionMediaPlayer.isMediaPlayerReproduciendose()) {
-                        try {
-                            gestionVoz(vozSeleccionada, AccionReproduccionVoz.DETENER);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else {
-                        try {
-                            gestionVoz(vozSeleccionada, AccionReproduccionVoz.DETENER);
-                        } catch (IOException | InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            });
 
             // Gestión de la pulsación del botón de hablar
             botonHablar.setOnClickListener(new View.OnClickListener() {
@@ -333,20 +298,6 @@ public class ConversacionActivity extends TopBaseActivity {
                 }
             });
 
-            // Gestión de la pulsación del botón repetir
-
-            botonRepetir.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        gestionVoz(vozSeleccionada, AccionReproduccionVoz.REPETIR);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -477,6 +428,8 @@ public class ConversacionActivity extends TopBaseActivity {
     }
 
     private void gestionVoz(String voz, AccionReproduccionVoz accionVoz) throws IOException, InterruptedException {
+        speakOption.setSpeed(100);
+
         if(voz.equals("sanbot")){
             switch (accionVoz) {
                 case HABLAR:
@@ -633,10 +586,9 @@ public class ConversacionActivity extends TopBaseActivity {
             chatArrayAdapter.add(cm);
         }
         Log.d("chatarray", String.valueOf(chatArrayAdapter.getCount() - 1));
-        dialogo.setSelection(chatArrayAdapter.getCount() - 1);
     }
 
-    private void actualizarVistaConversacion(){
+    /*private void actualizarVistaConversacion(){
         chatArrayAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -645,10 +597,12 @@ public class ConversacionActivity extends TopBaseActivity {
                 dialogo.setSelection(chatArrayAdapter.getCount() - 1);
             }
         });
-    }
+    }*/
     @Override
     protected void onMainServiceConnected() {
 
     }
+
+
 
 }

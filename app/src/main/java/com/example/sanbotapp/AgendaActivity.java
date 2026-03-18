@@ -221,12 +221,12 @@ public class AgendaActivity extends TopBaseActivity {
                 int randomIndex = rand.nextInt(frases.length);
                 speechManager.startSpeak(frases[randomIndex], speakOption);
 
-                try {
+               /* try {
                     getPictogramas();
                 } catch (IOException | JSONException e) {
                     throw new RuntimeException(e);
                 }
-
+*/
                 RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
                 wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);
 

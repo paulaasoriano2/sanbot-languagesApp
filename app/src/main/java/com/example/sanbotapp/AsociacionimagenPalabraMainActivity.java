@@ -1,32 +1,18 @@
 package com.example.sanbotapp;
 
 
-import static android.app.PendingIntent.getActivity;
-
-import android.app.Dialog;
-import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
-import com.example.sanbotapp.robotControl.HardwareControl;
 import com.example.sanbotapp.robotControl.SpeechControl;
 import com.qihancloud.opensdk.base.TopBaseActivity;
 import com.qihancloud.opensdk.beans.FuncConstant;
@@ -35,8 +21,6 @@ import com.qihancloud.opensdk.function.beans.LED;
 import com.qihancloud.opensdk.function.beans.SpeakOption;
 import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.beans.headmotion.AbsoluteAngleHeadMotion;
-import com.qihancloud.opensdk.function.beans.headmotion.RelativeAngleHeadMotion;
-import com.qihancloud.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
 import com.qihancloud.opensdk.function.unit.HeadMotionManager;
@@ -45,25 +29,12 @@ import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.sql.Time;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.Stream;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class AsociacionimagenPalabraActivity extends TopBaseActivity {
+public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
@@ -75,6 +46,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
     private ImageButton fallo1;
     private ImageButton fallo2;
     private ImageButton fallo3;
+
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
     private MediaManager mediaManager;
@@ -84,7 +56,10 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
     private HeadMotionManager headMotionManager;
     private HardWareManager hardwareManager;
     private SpeechControl speechControl;
+    private ArrayList<Integer> tandas; //0 frutas, 1 animales, 2
+    private Integer elementoRandom;
     private boolean[] tandasHechas = new boolean[4]; // true si ya se han hecho, false si no
+
 
 
     @Override
@@ -99,48 +74,27 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         onMainServiceConnected();
-        Intent intent = getIntent();
-        tandasHechas = intent.getBooleanArrayExtra("tandasHechas");
-        Integer elementoElegido = -1;
-        Boolean terminado = true;
 
-        for (int i = 0; i < tandasHechas.length; i++) {
-            if (!tandasHechas[i]) { // si es false
-                System.out.println("El elemento " + i + " es false");
-                elementoElegido = i;
-                terminado = false;
-                break;
-            }
-        }
+        elementoRandom = ThreadLocalRandom.current().nextInt(0, 4);
 
-        if(terminado){
-            Intent intentFinal = new Intent(AsociacionimagenPalabraActivity.this, MainActivity.class);
-            startActivity(intentFinal);
-            // Salir de esta activity
-            finish();
-            return;
-        }
-
-        if(elementoElegido == 0){
+        if(elementoRandom == 0){
             setContentView(R.layout.activity_asociacionimagenpalabra);
 
         }
-        else if(elementoElegido == 1){
+        else if(elementoRandom == 1){
             setContentView(R.layout.activity_asociacionimagenpalabrauno);
 
         }
-        else if(elementoElegido == 2){
-            setContentView(R.layout.activity_asociacionimagenpalabrados);
+        else if(elementoRandom == 2){
+            setContentView(R.layout.activity_asociacionimagenpalabrauno);
 
         }
         else{
-            setContentView(R.layout.activity_asociacionimagenpalabratres);
+            setContentView(R.layout.activity_asociacionimagenpalabrados);
 
         }
-        tandasHechas[elementoElegido] = true;
 
-
-
+        tandasHechas[elementoRandom] = true;
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         speechControl = new SpeechControl(speechManager);
@@ -158,7 +112,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         acierto = findViewById(R.id.imgasociacionimagenpalabra);
         fallo1 = findViewById(R.id.imgagenda);
         fallo2 = findViewById(R.id.imgcolores);
-        fallo3 = findViewById(R.id.imgcolores);
+        fallo3 = findViewById(R.id.imgcolores2);
 
 
         faceRecognitionControl.stopFaceRecognition();
@@ -262,7 +216,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
                         // Simula la duración de la frase
                         //Thread.sleep(5000);
 
-                        Thread.sleep(1000);
+                        Thread.sleep(6000);
 
                         // Apagar luces
                         hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
@@ -279,9 +233,10 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
                     }
                 }).start();
 
-                Intent intent = new Intent(AsociacionimagenPalabraActivity.this, AsociacionimagenPalabraActivity.class);
+                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, AsociacionimagenPalabraActivity.class);
                 intent.putExtra("tandasHechas", tandasHechas);
                 startActivity(intent);
+
             }
 
         });
@@ -471,6 +426,18 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     @Override
@@ -484,16 +451,30 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
             @Override
             public void run() {
 
+                String frase = "Vamos a jugar al juego asociación imagen palabra." +
+                        "Yo te diré una palabra en inglés y tú tendrás que seleccionar la imagen asociada. ¿Empezamos?";
+                speechManager.startSpeak(frase, speakOption);
+
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+                AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);
+                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+                AbsoluteAngleHeadMotion absoluteAngleHeadMotion2 =
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30);
+                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion2);
 
+                try {
+                    Thread.sleep(7000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-                String frase2 = "Let's go with the next one. The word is";
+                String frase2 = "Vamos con la primera palabra. Me pongo en modo lingüista.";
                 speechManager.startSpeak(frase2, speakOption);
 
                 try {
@@ -502,6 +483,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
                     e.printStackTrace();
                 }
 
+                speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
                 speechManager.startSpeak("Apple", speakOption);
 
 

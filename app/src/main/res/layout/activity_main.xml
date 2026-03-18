@@ -157,6 +157,42 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageButton
+                android:id="@+id/emocionesimg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="imgasociacionimagenpalabra"
+                android:padding="16dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/feliz" />
+
+            <Button
+                android:id="@+id/emociones"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_rounded"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="EMOTIONS"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 
