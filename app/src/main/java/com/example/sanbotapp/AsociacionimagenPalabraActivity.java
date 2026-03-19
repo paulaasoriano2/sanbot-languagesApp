@@ -158,7 +158,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
         acierto = findViewById(R.id.imgasociacionimagenpalabra);
         fallo1 = findViewById(R.id.imgagenda);
         fallo2 = findViewById(R.id.imgcolores);
-        fallo3 = findViewById(R.id.imgcolores);
+        fallo3 = findViewById(R.id.imgcolores2);
 
 
         faceRecognitionControl.stopFaceRecognition();

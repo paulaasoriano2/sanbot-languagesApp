@@ -110,7 +110,7 @@
                 android:layout_height="200dp"
                 android:scaleType="centerInside"
                 android:contentDescription="imgcolores"
-                android:src="@drawable/fresa2"
+                android:src="@drawable/watermelon"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"

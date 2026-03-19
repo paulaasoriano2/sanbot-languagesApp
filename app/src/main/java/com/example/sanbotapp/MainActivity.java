@@ -341,7 +341,7 @@ public class MainActivity extends TopBaseActivity {
 
                 faceRecognitionControl.stopFaceRecognition();
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.emociones", "com.example.sanbotapp.MainActivity"));
+                intent.setComponent(new ComponentName("com.example.emocionesIngles", "com.example.sanbotapp.MainActivity"));
                 startActivity(intent);
             }
 
@@ -354,7 +354,7 @@ public class MainActivity extends TopBaseActivity {
 
                 faceRecognitionControl.stopFaceRecognition();
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.emociones", "com.example.sanbotapp.MainActivity"));
+                intent.setComponent(new ComponentName("com.example.emocionesIngles", "com.example.sanbotapp.MainActivity"));
                 startActivity(intent);
             }
 
@@ -378,7 +378,7 @@ public class MainActivity extends TopBaseActivity {
                 AbsoluteAngleHandMotion absoluteAngleHandMotion =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
                 handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-                speechManager.startSpeak("¡Hola! ¿Preparado para una aventura de palabras? ¡Activando modo súper aprendizaje!", speakOption);
+                speechManager.startSpeak("Hi! Ready for a word adventure? Switching to super-learning mode!", speakOption);
 
                 try {
                     Thread.sleep(2000);

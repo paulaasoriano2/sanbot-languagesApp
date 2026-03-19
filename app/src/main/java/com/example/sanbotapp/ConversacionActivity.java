@@ -137,9 +137,8 @@ public class ConversacionActivity extends TopBaseActivity {
 
 
         SpeakOption speakOption = new SpeakOption();
-        speakOption.setSpeed(50);
+        speakOption.setSpeed(40);
         speakOption.setIntonation(50);
-        speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
         super.onResume();
 
         // ------------------- PRUEBAS CHAT -----------------
@@ -428,12 +427,12 @@ public class ConversacionActivity extends TopBaseActivity {
     }
 
     private void gestionVoz(String voz, AccionReproduccionVoz accionVoz) throws IOException, InterruptedException {
-        speakOption.setSpeed(100);
+        speakOption.setSpeed(40);
 
         if(voz.equals("sanbot")){
             switch (accionVoz) {
                 case HABLAR:
-                    speechControl.hablar(respuestaGPT);
+                    speechManager.startSpeak(respuestaGPT, speakOption);
                     if(conversacionAutomatica && !forzarParada){
                         gestionarFinHablaSanbot();
                     }
@@ -446,7 +445,7 @@ public class ConversacionActivity extends TopBaseActivity {
                     break;
                 case REPETIR:
                     forzarParada=true;
-                    speechControl.hablar(respuestaGPT);
+                    speechManager.startSpeak(respuestaGPT, speakOption);
                     break;
             }
         }
@@ -476,7 +475,7 @@ public class ConversacionActivity extends TopBaseActivity {
                     gestionMediaPlayer.pararMediaPlayer();
                     break;
                 case REPETIR:
-                    //forzarParada=true;
+                    //forzarParada=true;  
                     gestionMediaPlayer.reproducirMediaPlayer(respuestaGPTVoz);
                     break;
             }
@@ -503,7 +502,7 @@ public class ConversacionActivity extends TopBaseActivity {
         moduloOpenAI.consultaOpenAI(consultaChatGPT);
         String resp = moduloOpenAI.getRespuestaGPT();
         Log.d("resp", resp);
-        speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+        speakOption.setSpeed(40);
         speechManager.startSpeak(resp, speakOption);
     }
 
