@@ -65,9 +65,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private boolean[] tandasHechas = new boolean[4]; // true si ya se han hecho, false si no
     /*List<String> palabras = Arrays.asList("banana", "apple", "watermelon", "cherries",  "strawberry", "orange", "horse", "rabbit", //no funcionan: cherries strawberry orange shoes rabbit horse pear bread
             "hamburger", "pizza", "rice", "shoes");*/
-    List<String> palabras = Arrays.asList("watermelon", "rice", "pizza", "hamburger",  "pizza", "pizza", "apple", "apple",
-            "apple", "apple", "apple", "apple", "watermelon");
-    List<String> titulos = Arrays.asList("APPLE", "RICE", "DOG", "SHOES");
+    List<String> palabras = Arrays.asList("watermelon", "bread", "hamburger", "rice",  "pizza", "dog", "rabbit", "horse",
+            "cat", "orange", "cherries", "apple", "pear");
+    List<String> titulos = Arrays.asList("APPLE", "RICE", "DOG", "PEAR");
 
     int indiceActual = 0;
     private Integer contador;
@@ -91,28 +91,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         correcto = false;
         setContentView(R.layout.activity_asociacionimagenpalabra);
 
-
-/*
-        elementoRandom = ThreadLocalRandom.current().nextInt(0, 4);
-
-        if(elementoRandom == 0){
-            setContentView(R.layout.activity_asociacionimagenpalabra);
-
-        }
-        else if(elementoRandom == 1){
-            setContentView(R.layout.activity_asociacionimagenpalabrauno);
-
-        }
-        else if(elementoRandom == 2){
-            setContentView(R.layout.activity_asociacionimagenpalabrauno);
-
-        }
-        else{
-            setContentView(R.layout.activity_asociacionimagenpalabrados);
-
-        }
-
-        tandasHechas[elementoRandom] = true;*/
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         speechControl = new SpeechControl(speechManager);
@@ -154,29 +132,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         acierto.setClickable(clickable);
     }
 
-    /*@Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Get the layout inflater.
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-
-        // Inflate and set the layout for the dialog.
-        // Pass null as the parent view because it's going in the dialog layout.
-        builder.setView(inflater.inflate(R.layout.dialog_pista, null))
-                // Add action buttons
-                .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Sign in the user.
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        LoginDialogFragment.this.getDialog().cancel();
-                    }
-                });
-        return builder.create();
-    }*/
     public void setonClicks() {
 
         SpeakOption speakOption = new SpeakOption();
@@ -250,12 +205,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
                             headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                            if (indiceActual > titulos.size()) {
+                            if (contador >= 4) {
                                 indiceActual = 0;
                                 finJuego();
                                 Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
                                 startActivity(intent);
-                                finish();
                             }
                         }
                         else{
@@ -296,7 +250,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                                 e.printStackTrace();
                             }
 
-                            speechManager.startSpeak(palabras.get(indiceActual), speakOption);
+                            speechManager.startSpeak(titulos.get(contador), speakOption);
                         }
 
 
@@ -333,9 +287,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                         // Simula un pequeño retraso inicial
                         Thread.sleep(100);
-                        if(contador == 1){
-                            correcto = true;
-                        }
+                        correcto = false;
 
                         if(correcto){
 
@@ -382,12 +334,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
                             headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                            if (indiceActual > titulos.size()) {
+                            if (contador>=4) {
                                 indiceActual = 0;
                                 finJuego();
                                 Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
                                 startActivity(intent);
-                                finish();
                             }
                         }
                      else{
@@ -428,7 +379,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             e.printStackTrace();
                         }
 
-                        speechManager.startSpeak(titulos.get(indiceActual), speakOption);
+                        speechManager.startSpeak(titulos.get(contador), speakOption);
                     }
 
 
@@ -466,7 +417,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                         /*if(contador == 1 || contador == 3){
                             correcto = true;
                         }*/
-                        correcto = false;
+                        if (contador == 1){
+                            correcto = true;
+                        }
 
                         if(correcto){
 
@@ -514,12 +467,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
                             headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                            if (indiceActual > titulos.size()) {
+                            if (contador>=4) {
                                 indiceActual = 0;
                                 finJuego();
                                 Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
                                 startActivity(intent);
-                                finish();
                             }
                         }
                         else{
@@ -643,12 +595,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
                             headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                            if (indiceActual > titulos.size()) {
+                            if (contador>=4) {
                                 indiceActual = 0;
                                 finJuego();
                                 Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
                                 startActivity(intent);
-                                finish();
                             }
                         }
                         else{
@@ -689,7 +640,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                                 e.printStackTrace();
                             }
 
-                            speechManager.startSpeak(palabras.get(indiceActual), speakOption);
+                            speechManager.startSpeak(titulos.get(contador), speakOption);
                         }
 
 
@@ -707,16 +658,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             }
         });
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -762,7 +703,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private void actualizarImagen() {
         String nombreImagen1 = palabras.get(indiceActual);
 
-        int valorIni = indiceActual;
 
         int resId1 = getResources().getIdentifier(
                 nombreImagen1,
@@ -805,17 +745,38 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         );
         fallo3.setImageResource(resId4);
 
-        indiceActual = valorIni;
 
     }
     private void actualizarTitulo() {
-        String palabra = titulos.get(indiceActual);
+
+        SpeakOption speakOption = new SpeakOption();
+        speakOption.setSpeed(50);
+        speakOption.setIntonation(50);
+
+        String palabra = titulos.get(contador);
+
+        // Generar frases aleatorias
+        String[] frases = {
+                "Let's move on to the next word.",
+                "That was incredible. I am sure you will know the next one too. ",
+                "Here it is the next word."
+        };
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(frases.length);
+        speechManager.startSpeak(frases[randomIndex], speakOption);
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+        speechManager.startSpeak(palabra, speakOption);
+
 
         titulo.setText(palabra);
 
-        if (indiceActual >= titulos.size()) {
-            indiceActual = 0; // evitar out of bounds
-        }
+
     }
 
     @Override

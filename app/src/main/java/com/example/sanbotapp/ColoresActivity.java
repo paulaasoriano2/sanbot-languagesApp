@@ -120,11 +120,8 @@ public class ColoresActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
+
 
                 Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
                 intent.putExtra("color", "red");
@@ -136,11 +133,8 @@ public class ColoresActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
+
 
                 Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
                 intent.putExtra("color", "blue");
@@ -148,15 +142,10 @@ public class ColoresActivity extends TopBaseActivity {
             }
         });
         btnGreen.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
 
                 Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
                 intent.putExtra("color", "green");
@@ -164,15 +153,10 @@ public class ColoresActivity extends TopBaseActivity {
             }
         });
         btnYellow.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
 
                 Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
                 intent.putExtra("color", "yellow");
@@ -180,12 +164,10 @@ public class ColoresActivity extends TopBaseActivity {
             }
         });
         btnOrange.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
+
 
                 // Desactivar todos los botones
                 setAllButtonsClickable(false);
@@ -209,7 +191,7 @@ public class ColoresActivity extends TopBaseActivity {
             @Override
             public void run() {
 
-                String frase = "Vamos a reconocer colores. Yo te diré un color y tú me tendrás que enseñar un objeto de ese color.";
+                String frase = "Let's recognize colors. I will tell you a color and you will have to show me an object of that color.";
                 speechManager.startSpeak(frase, speakOption);
 
                 try {

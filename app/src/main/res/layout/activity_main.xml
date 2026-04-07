@@ -31,7 +31,7 @@
                 android:layout_height="200dp"
                 android:scaleType="centerInside"
                 android:contentDescription="imgasociacionimagenpalabra"
-                android:src="@drawable/feliz"
+                android:src="@drawable/imageword"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
@@ -41,7 +41,7 @@
                 android:id="@+id/asociacionimagenpalabra"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="IMAGEN-PALABRA"
+                android:text="IMAGE-WORD"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"
                 android:textAllCaps="false"
@@ -67,7 +67,7 @@
                 android:layout_height="200dp"
                 android:scaleType="centerInside"
                 android:contentDescription="imgagenda"
-                android:src="@drawable/enamorado"
+                android:src="@drawable/agenda"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
@@ -77,7 +77,7 @@
                 android:id="@+id/agenda"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="MI AGENDA"
+                android:text="MY AGENDA"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"
                 android:textAllCaps="false"
@@ -102,7 +102,7 @@
                 android:layout_height="200dp"
                 android:scaleType="centerInside"
                 android:contentDescription="imgcolores"
-                android:src="@drawable/entusiasmado"
+                android:src="@drawable/colores"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
@@ -112,7 +112,7 @@
                 android:id="@+id/colores"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="COLORES"
+                android:text="COLOURS"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"
                 android:textAllCaps="false"
@@ -121,80 +121,121 @@
                 android:gravity="center"/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16dp">
-
-            <ImageButton
-                android:id="@+id/imgconversacion"
-                android:layout_margin="16dp"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:scaleType="centerInside"
-                android:contentDescription="imgcolores"
-                android:src="@drawable/talk"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:clickable="true"
-                />
-
-            <Button
-                android:id="@+id/conversacion"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:text="CONVERSACIÓN"
-                android:background="@drawable/button_rounded"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:gravity="center"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <ImageButton
-                android:id="@+id/emocionesimg"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_margin="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="imgasociacionimagenpalabra"
-                android:padding="16dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/feliz" />
-
-            <Button
-                android:id="@+id/emociones"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_rounded"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="EMOTIONS"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/imgconversacion"
+            android:layout_margin="16dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerInside"
+            android:contentDescription="imgcolores"
+            android:src="@drawable/conversation"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:clickable="true"
+            />
+
+        <Button
+            android:id="@+id/conversacion"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="CONVERSATION"
+            android:background="@drawable/button_rounded"
+            android:textColor="@color/colorWhite"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/emocionesimg"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="imgasociacionimagenpalabra"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/emotions" />
+
+        <Button
+            android:id="@+id/emociones"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rounded"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="EMOTIONS"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/sayit"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="imgasociacionimagenpalabra"
+            android:padding="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/sayit" />
+
+        <Button
+            android:id="@+id/sayitbutton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rounded"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="SAY IT!"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    </LinearLayout>
 
 
 

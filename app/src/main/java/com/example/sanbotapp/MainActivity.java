@@ -64,6 +64,7 @@ public class MainActivity extends TopBaseActivity {
     private Button btnColores;
     private Button btnConversacion;
     private Button btnEmociones;
+    private Button btnSayit;
 
 
     private ImageButton feliz;
@@ -71,6 +72,7 @@ public class MainActivity extends TopBaseActivity {
     private ImageButton enfadado;
     private ImageButton conver;
     private ImageButton emociones;
+    private ImageButton sayit;
 
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
@@ -112,6 +114,7 @@ public class MainActivity extends TopBaseActivity {
         btnColores = findViewById(R.id.colores);
         btnConversacion = findViewById(R.id.conversacion);
         btnEmociones = findViewById(R.id.emociones);
+        btnSayit = findViewById(R.id.sayitbutton);
 
 
         feliz = findViewById(R.id.imgasociacionimagenpalabra);
@@ -119,6 +122,7 @@ public class MainActivity extends TopBaseActivity {
         enfadado = findViewById(R.id.imgcolores);
         conver = findViewById(R.id.imgconversacion);
         emociones = findViewById(R.id.emocionesimg);
+        sayit = findViewById(R.id.sayit);
 
 
         faceRecognitionControl.stopFaceRecognition();
@@ -132,12 +136,14 @@ public class MainActivity extends TopBaseActivity {
         btnAsociacion.setClickable(clickable);
         btnConversacion.setClickable(clickable);
         btnEmociones.setClickable(clickable);
+        btnSayit.setClickable(clickable);
 
         triste.setClickable(clickable);
         enfadado.setClickable(clickable);
         feliz.setClickable(clickable);
         conver.setClickable(clickable);
         emociones.setClickable(clickable);
+        sayit.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -359,6 +365,33 @@ public class MainActivity extends TopBaseActivity {
             }
 
         });
+
+        sayit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                faceRecognitionControl.stopFaceRecognition();
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.example.imagennombre", "com.example.sanbotapp.MainActivity"));
+                startActivity(intent);
+            }
+
+        });
+
+        btnSayit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                faceRecognitionControl.stopFaceRecognition();
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.example.imagennombre", "com.example.sanbotapp.MainActivity"));
+                startActivity(intent);
+            }
+
+        });
+
 
 
 

@@ -25,6 +25,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         notifyItemInserted(localDataSet.size() - 1);
     }
 
+    public void deleteItem(String item) {
+        localDataSet.remove("Nuevo evento");
+        localDataSet.remove(0);
+    }
+
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder)

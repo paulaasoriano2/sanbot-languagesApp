@@ -25,7 +25,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Selecciona la imagen que corresponda con la palabra"
+        android:text="Choose the image that matches with the word"
         android:textSize="20sp"
         android:layout_margin="20dp"
         android:textColor="@android:color/black"

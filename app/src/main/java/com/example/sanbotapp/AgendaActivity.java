@@ -47,6 +47,8 @@ public class AgendaActivity extends TopBaseActivity {
 
     public Boolean reconocimientoFacial = false;
     private Button addButton;
+    private Button deleteButton;
+
     private CustomAdapter adapter;
     
     private FaceRecognitionControl faceRecognitionControl;
@@ -101,6 +103,7 @@ public class AgendaActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         addButton = findViewById(R.id.addButton);
+        deleteButton = findViewById(R.id.deleteButton);
 
 
 
@@ -118,6 +121,8 @@ public class AgendaActivity extends TopBaseActivity {
     }
     public void setAllButtonsClickable(boolean clickable) {
         addButton.setClickable(clickable);
+        deleteButton.setClickable(clickable);
+
 
     }
 
@@ -166,6 +171,42 @@ public class AgendaActivity extends TopBaseActivity {
             }
 
         });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+
+            @Override
+            public void onClick(View v) {
+                if (isProcessing) return; // Si ya está procesando, ignorar el clic
+                isProcessing = true;
+
+                // Desactivar todos los botones
+                setAllButtonsClickable(false);
+
+                // Añadir el item clickado a la lista de elementos seleccionados
+                adapter.deleteItem("Nuevo evento");
+
+                new Thread(() -> {
+                    try {
+                        // Simula un pequeño retraso inicial
+                        Thread.sleep(100);
+
+                        speechManager.startSpeak("Nuevo evento deleted", speakOption);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally {
+                        // Reactivar todos los botones
+                        runOnUiThread(() -> {
+                            setAllButtonsClickable(true);
+                            isProcessing = false; // Liberar bandera
+                        });
+                    }
+                }).start();
+            }
+
+        });
+
 
 
     }
@@ -216,7 +257,9 @@ public class AgendaActivity extends TopBaseActivity {
             public void run() {
 
 
-                String[] frases = {"¿Y si recordamos lo que hiciste ayer? Me da mucha curiosidad. Haz clic sobre las acciones que hiciste", "¡Vamos a planear tu día! Haz clic sobre las acciones que quieres hacer hoy"};
+                String[] frases = {
+                        "What if we remember what you did yesterday? I'm very curious. Click on the actions you did"
+                };
                 Random rand = new Random();
                 int randomIndex = rand.nextInt(frases.length);
                 speechManager.startSpeak(frases[randomIndex], speakOption);
