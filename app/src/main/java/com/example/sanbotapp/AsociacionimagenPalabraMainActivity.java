@@ -2,6 +2,7 @@ package com.example.sanbotapp;
 
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.example.sanbotapp.robotControl.SpeechControl;
@@ -116,6 +119,26 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         setonClicks();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        VocabularioDbAdapter db = getVocabularioDbAdapter();
+// Leer
+        Cursor cursor = db.fetchAllVocabulario();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String nombre = cursor.getString(2);
+                Log.d("DATABWWWWWW", nombre);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+    }
+
+    private VocabularioDbAdapter getVocabularioDbAdapter() {
+        VocabularioDbAdapter db = new VocabularioDbAdapter(this);
+        db.open();
+        return db;
     }
 
     @Override
