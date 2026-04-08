@@ -13,6 +13,7 @@ public class VocabularioDbAdapter {
 
     public static final String KEY_ROWID = "_id";
     public static final String KEY_CATEGORIA = "categoria";
+    public static final String KEY_SUBCATEGORIA = "subCategoria";
     public static final String KEY_NOMBRE = "nombre";
     public static final String KEY_IMAGEN = "imagen";
     public static final String KEY_NIVEL = "nivel";
@@ -40,7 +41,7 @@ public class VocabularioDbAdapter {
     }
 
     // CREAR TABLA VOCABULARIO
-    public long createVocabulario(String categoria, String nombre, String imagen, int nivel) {
+    public long createVocabulario(String categoria, String subCategoria, String nombre, String imagen, int nivel) {
         long result = -1;
 
         try {
@@ -51,6 +52,7 @@ public class VocabularioDbAdapter {
 
             ContentValues values = new ContentValues();
             values.put(KEY_CATEGORIA, categoria);
+            values.put(KEY_SUBCATEGORIA, subCategoria);
             values.put(KEY_NOMBRE, nombre);
             values.put(KEY_IMAGEN, imagen);
             values.put(KEY_NIVEL, nivel);
@@ -85,7 +87,7 @@ public class VocabularioDbAdapter {
     public Cursor fetchAllVocabulario() {
         return mDb.query(
                 DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
+                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_SUBCATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
                 null,
                 null,
                 null,
@@ -99,7 +101,7 @@ public class VocabularioDbAdapter {
         Cursor cursor = mDb.query(
                 true,
                 DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
+                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_SUBCATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
                 KEY_ROWID + "=" + rowId,
                 null,
                 null,
@@ -116,12 +118,13 @@ public class VocabularioDbAdapter {
     }
 
     // 🔹 UPDATE
-    public boolean updateVocabulario(long rowId, String categoria, String nombre, String imagen, int nivel) {
+    public boolean updateVocabulario(long rowId, String categoria, String subCategoria, String nombre, String imagen, int nivel) {
         boolean result = true;
 
         try {
             if (rowId < 1) result = false;
             if (categoria == null || categoria.isEmpty()) result = false;
+            if (subCategoria == null || subCategoria.isEmpty()) result = false;
             if (nombre == null || nombre.isEmpty()) result = false;
             if (imagen == null || imagen.isEmpty()) result = false;
             if (nivel < 0) result = false;
@@ -133,6 +136,7 @@ public class VocabularioDbAdapter {
         if (result) {
             ContentValues values = new ContentValues();
             values.put(KEY_CATEGORIA, categoria);
+            values.put(KEY_SUBCATEGORIA, categoria);
             values.put(KEY_NOMBRE, nombre);
             values.put(KEY_IMAGEN, imagen);
             values.put(KEY_NIVEL, nivel);
@@ -152,7 +156,7 @@ public class VocabularioDbAdapter {
     public Cursor fetchByCategoria(String categoria) {
         return mDb.query(
                 DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
+                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_SUBCATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
                 KEY_CATEGORIA + "=?",
                 new String[]{categoria},
                 null,
@@ -165,7 +169,7 @@ public class VocabularioDbAdapter {
     public Cursor fetchByNivel(int nivel) {
         return mDb.query(
                 DATABASE_TABLE,
-                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
+                new String[]{KEY_ROWID, KEY_CATEGORIA, KEY_SUBCATEGORIA, KEY_NOMBRE, KEY_IMAGEN, KEY_NIVEL},
                 KEY_NIVEL + "=?",
                 new String[]{String.valueOf(nivel)},
                 null,

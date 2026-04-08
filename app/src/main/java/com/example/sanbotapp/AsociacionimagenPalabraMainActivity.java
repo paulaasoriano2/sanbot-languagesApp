@@ -36,7 +36,9 @@ import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -68,14 +70,22 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private boolean[] tandasHechas = new boolean[4]; // true si ya se han hecho, false si no
     /*List<String> palabras = Arrays.asList("banana", "apple", "watermelon", "cherries",  "strawberry", "orange", "horse", "rabbit", //no funcionan: cherries strawberry orange shoes rabbit horse pear bread
             "hamburger", "pizza", "rice", "shoes");*/
-    List<String> palabras = Arrays.asList("watermelon", "bread", "hamburger", "rice",  "pizza", "dog", "rabbit", "horse",
-            "cat", "orange", "cherries", "apple", "pear");
+    /*List<String> palabras = Arrays.asList("watermelon", "bread", "hamburger", "rice",  "pizza", "dog", "rabbit", "horse",
+            "cat", "orange", "cherries", "apple", "pear");*/
+    //List<String, String> palabras = new ArrayList<String>();
     List<String> titulos = Arrays.asList("APPLE", "RICE", "DOG", "PEAR");
+    List<String> categorias = Arrays.asList("comida", "animales");
+    List<String> subCategorias = Arrays.asList("frutas", "carbohidratos");
+    List<String[]> palabras = new ArrayList<>();
+    private Integer i = 0; // Contador de categorias
+    private Integer j = 0; // Contador de palabras
+    private Integer h = 0; // Contador de sub categorias
+
 
     int indiceActual = 0;
     private Integer contador;
     private Boolean correcto;
-
+    ArrayList<String> palabrasUsadas = new ArrayList<>();
 
 
     @Override
@@ -92,6 +102,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         onMainServiceConnected();
         contador = 0;
         correcto = false;
+
         setContentView(R.layout.activity_asociacionimagenpalabra);
 
 
@@ -126,7 +137,12 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
         if (cursor.moveToFirst()) {
             do {
-                String nombre = cursor.getString(2);
+                String nombre = cursor.getString(3);
+                String categoria = cursor.getString(1);
+                String subCategoria = cursor.getString(2);
+
+                palabras.add(new String[]{nombre, categoria, subCategoria});
+               // palabras.add(nombre);
                 Log.d("DATABWWWWWW", nombre);
             } while (cursor.moveToNext());
         }
@@ -535,7 +551,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                                 e.printStackTrace();
                             }
 
-                            speechManager.startSpeak(palabras.get(indiceActual), speakOption);
+                            speechManager.startSpeak(titulos.get(indiceActual), speakOption);
                         }
 
 
@@ -724,7 +740,76 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     }
 
     private void actualizarImagen() {
-        String nombreImagen1 = palabras.get(indiceActual);
+        String categoria;
+        String subCategoria;
+        Integer indice = 0;
+        List<String> palabrasAMostrar = new ArrayList<String>();
+        while (i < categorias.size()) { // Se recorren todas las categorias que hay
+            categoria = categorias.get(i);
+            if(Objects.equals(categoria, "comida")){
+                while(h<subCategorias.size()){
+                    while (j < palabras.size() && indice < 4) {
+                        for (String[] fruta : palabras) {
+                            String nombre = fruta[0];
+                            String categoriaPalabra = fruta[1];
+                            String subcategoria = fruta[2];
+
+                            Log.d("PALABRA", nombre + " " + categoria + " " + subcategoria);
+
+                            if (!palabrasUsadas.contains(nombre) && Objects.equals(subCategorias.get(h), subcategoria) && Objects.equals(categoriaPalabra, categoria) && !Objects.equals(nombre, "apple") && !Objects.equals(nombre, "banana") && !Objects.equals(nombre, "watermelon") && !Objects.equals(nombre, "strawberry")) {
+                                Log.d("PALABRA AÑADIDA", nombre + " " + categoria + " " + subcategoria);
+                                palabrasAMostrar.add(nombre);
+                                palabrasUsadas.add(nombre);
+                                indice++;
+                            }
+                            if(indice == 4){
+                                mostrarPalabras(palabrasAMostrar);
+                                indice = 0;
+                                return;
+                            }
+                        }
+
+                        j++;
+                    }
+                }
+
+            }
+            else{
+                while (j < palabras.size() && indice < 4) {
+                    for (String[] fruta : palabras) {
+                        String nombre = fruta[0];
+                        String categoriaPalabra = fruta[1];
+                        String subcategoria = fruta[2];
+
+                        Log.d("PALABRA", nombre + " " + categoria + " " + subcategoria);
+
+                        if (!palabrasUsadas.contains(nombre) && Objects.equals(categoriaPalabra, categoria) && !Objects.equals(nombre, "apple") && !Objects.equals(nombre, "banana") && !Objects.equals(nombre, "watermelon") && !Objects.equals(nombre, "strawberry")) {
+                            Log.d("PALABRA AÑADIDA", nombre + " " + categoria + " " + subcategoria);
+                            palabrasAMostrar.add(nombre);
+                            palabrasUsadas.add(nombre);
+                            indice++;
+                        }
+                        if(indice == 4){
+                            mostrarPalabras(palabrasAMostrar);
+                            indice = 0;
+                            return;
+                        }
+                    }
+
+                    j++;
+                }
+            }
+
+            i++;
+        }
+    }
+
+    void mostrarPalabras(List<String> palabrasAMostrar){
+
+        /*for(int k=0; k<4; k++){
+
+        }*/
+        String nombreImagen1 = palabrasAMostrar.get(0);
 
 
         int resId1 = getResources().getIdentifier(
@@ -737,7 +822,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
         indiceActual = indiceActual+1;
 
-        String nombreImagen2 = palabras.get(indiceActual);
+        String nombreImagen2 = palabrasAMostrar.get(1);
 
         int resId2 = getResources().getIdentifier(
                 nombreImagen2,
@@ -748,7 +833,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
         indiceActual = indiceActual+1;
 
-        String nombreImagen3 = palabras.get(indiceActual);
+        String nombreImagen3 = palabrasAMostrar.get(2);
 
         int resId3 = getResources().getIdentifier(
                 nombreImagen3,
@@ -759,7 +844,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
         indiceActual = indiceActual+1;
 
-        String nombreImagen4 = palabras.get(indiceActual);
+        String nombreImagen4 = palabrasAMostrar.get(3);
 
         int resId4 = getResources().getIdentifier(
                 nombreImagen4,
