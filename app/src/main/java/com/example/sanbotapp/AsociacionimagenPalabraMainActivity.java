@@ -744,10 +744,26 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         String subCategoria;
         Integer indice = 0;
         List<String> palabrasAMostrar = new ArrayList<String>();
+
+        boolean palabraDisponible = false;
+        for (String[] fruta : palabras) {
+            if (!palabrasUsadas.contains(fruta[0])) {
+                palabraDisponible = true;
+                break;
+            }
+        }
+
+        if (!palabraDisponible) {
+            Log.d("INFO", "No quedan palabras disponibles");
+            return; // salir del método
+        }
+
+
         while (i < categorias.size()) { // Se recorren todas las categorias que hay
             categoria = categorias.get(i);
             if(Objects.equals(categoria, "comida")){
                 while(h<subCategorias.size()){
+                    j=0;
                     while (j < palabras.size() && indice < 4) {
                         for (String[] fruta : palabras) {
                             String nombre = fruta[0];
@@ -765,12 +781,13 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             if(indice == 4){
                                 mostrarPalabras(palabrasAMostrar);
                                 indice = 0;
-                                return;
+                                break;
                             }
                         }
 
                         j++;
                     }
+                    h++;
                 }
 
             }
@@ -792,7 +809,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                         if(indice == 4){
                             mostrarPalabras(palabrasAMostrar);
                             indice = 0;
-                            return;
+                            break;
                         }
                     }
 
