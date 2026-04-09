@@ -26,8 +26,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     public void deleteItem(String item) {
-        localDataSet.remove("Nuevo evento");
-        localDataSet.remove(0);
+        if (!localDataSet.isEmpty()) {
+            int position = localDataSet.size() - 1; // Elimina el último elemento añadido
+            localDataSet.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     /**
@@ -76,6 +79,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.getTextView().setText(localDataSet.get(position));
+
+        viewHolder.itemView.setOnClickListener(v -> {
+
+            int pos = viewHolder.getAdapterPosition();
+
+            if (pos != RecyclerView.NO_POSITION) {
+                localDataSet.remove(pos);
+                notifyItemRemoved(pos);
+            }
+
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

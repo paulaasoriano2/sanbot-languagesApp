@@ -184,7 +184,7 @@ public class AgendaActivity extends TopBaseActivity {
                 setAllButtonsClickable(false);
 
                 // Añadir el item clickado a la lista de elementos seleccionados
-                adapter.deleteItem("Nuevo evento");
+                //adapter.deleteItem("Nuevo evento");
 
                 new Thread(() -> {
                     try {
