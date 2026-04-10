@@ -46,9 +46,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
-    private Button btnAsociacion;
-    private Button btnAgenda;
-    private Button btnColores;
 
     private ImageButton acierto;
     private ImageButton fallo1;
@@ -65,14 +62,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private HardWareManager hardwareManager;
     private SpeechControl speechControl;
     private TextView titulo;
-    private ArrayList<Integer> tandas; //0 frutas, 1 animales, 2
-    private Integer elementoRandom;
-    private boolean[] tandasHechas = new boolean[4]; // true si ya se han hecho, false si no
-    /*List<String> palabras = Arrays.asList("banana", "apple", "watermelon", "cherries",  "strawberry", "orange", "horse", "rabbit", //no funcionan: cherries strawberry orange shoes rabbit horse pear bread
-            "hamburger", "pizza", "rice", "shoes");*/
-    /*List<String> palabras = Arrays.asList("watermelon", "bread", "hamburger", "rice",  "pizza", "dog", "rabbit", "horse",
-            "cat", "orange", "cherries", "apple", "pear");*/
-    //List<String, String> palabras = new ArrayList<String>();
+    private  boolean isFirstScreen;
     List<String> titulos = new ArrayList<>();
     List<String> categorias = Arrays.asList("comida", "animales");
     List<String> subCategorias = Arrays.asList("frutas", "carbohidratos");
@@ -102,6 +92,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         onMainServiceConnected();
         contador = 0;
         correcto = false;
+        isFirstScreen = true;
         //titulos.add("APPLE");
 
 
@@ -131,6 +122,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         imagenes.add(fallo1);
         imagenes.add(fallo2);
         imagenes.add(fallo3);
+
+        acierto.setImageDrawable(null);
+        fallo1.setImageDrawable(null);
+        fallo2.setImageDrawable(null);
+        fallo3.setImageDrawable(null);
 
         faceRecognitionControl.stopFaceRecognition();
 
@@ -229,13 +225,13 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             // Cambiar imagen
             indiceActual++;
+            contador ++;
 
             runOnUiThread(() -> {
                 actualizarImagen();
                 actualizarTitulo();
             });
             correcto = false;
-            contador ++;
 
             // apagar luces
             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
@@ -344,6 +340,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
         if (!palabraDisponible) {
             Log.d("INFO", "No quedan palabras disponibles");
+            finJuego();
             return; // salir del método
         }
 
@@ -474,18 +471,31 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         SpeakOption speakOption = new SpeakOption();
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
-
         String palabra = titulos.get(contador);
 
-        // Generar frases aleatorias
-        String[] frases = {
-                "Let's move on to the next word.",
-                "That was incredible. I am sure you will know the next one too. ",
-                "Here it is the next word."
-        };
-        Random rand = new Random();
-        int randomIndex = rand.nextInt(frases.length);
-        speechManager.startSpeak(frases[randomIndex], speakOption);
+        if(isFirstScreen){
+            speechManager.startSpeak("Get ready because the words are coming!", speakOption);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            speechManager.startSpeak("The first word is", speakOption);
+
+            isFirstScreen = false;
+        }
+        else{
+            // Generar frases aleatorias
+            String[] frases = {
+                    "Let's move on to the next word.",
+                    "That was incredible. I am sure you will know the next one too. ",
+                    "Here it is the next word."
+            };
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(frases.length);
+            speechManager.startSpeak(frases[randomIndex], speakOption);
+        }
+
         try {
             Thread.sleep(4000);
         } catch (InterruptedException e) {
@@ -535,17 +545,14 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 }
 
                 String frase2 = "Vamos con la primera palabra. Me pongo en modo lingüista.";*/
+// limpiar imágenes primero
+               /* for (ImageButton img : imagenes) {
+                    img.setImageDrawable(null);
+                }*/
                 actualizarImagen();
-                titulo.setText(titulos.get(contador));
-                speechManager.startSpeak("The first word is", speakOption);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                actualizarTitulo();
+                //titulo.setText(titulos.get(contador));
 
-                // speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
-                speechManager.startSpeak(titulos.get(contador), speakOption);
 
 
             }
