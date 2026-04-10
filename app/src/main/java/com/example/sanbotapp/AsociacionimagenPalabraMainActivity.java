@@ -86,8 +86,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private Integer contador;
     private Boolean correcto;
     ArrayList<String> palabrasUsadas = new ArrayList<>();
-
-
+    List<ImageButton> imagenes = new ArrayList<>();
+    int indiceCorrecto;
     @Override
     protected void onMainServiceConnected() {
 
@@ -102,7 +102,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         onMainServiceConnected();
         contador = 0;
         correcto = false;
-        titulos.add("APPLE");
+        //titulos.add("APPLE");
+
 
         setContentView(R.layout.activity_asociacionimagenpalabra);
 
@@ -125,6 +126,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         fallo2 = findViewById(R.id.imgcolores);
         fallo3 = findViewById(R.id.imgcolores2);
         titulo = findViewById(R.id.actividad);
+
+        imagenes.add(acierto);
+        imagenes.add(fallo1);
+        imagenes.add(fallo2);
+        imagenes.add(fallo3);
 
         faceRecognitionControl.stopFaceRecognition();
 
@@ -174,533 +180,113 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
     public void setonClicks() {
 
+        // Desactivar todos los botones
+        setAllButtonsClickable(false);
+
+        for (int k = 0; k < imagenes.size(); k++) {
+
+            int index = k;
+
+            imagenes.get(k).setOnClickListener(v -> comprobarRespuesta(index));
+        }
+
+    }
+
+    void comprobarRespuesta(int imagenPulsada){
         SpeakOption speakOption = new SpeakOption();
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
 
 
-        acierto.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+        if(imagenPulsada == indiceCorrecto){
+            // Mostrar emoción y encender LEDs
+            systemManager.showEmotion(EmotionsType.PRISE);
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
 
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
+            AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
+            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
+            // Generar frases aleatorias
+            String[] frases = {
+                    "Ta-da! Your intelligence shines like an LED.",
+                    "Well done! Your brain is in linguist mode.",
+                    "Amazing! Your effort is paying off."
+            };
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(frases.length);
+            speechManager.startSpeak(frases[randomIndex], speakOption);
 
-                new Thread(() -> {
-                    try {
-
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-                        if(contador == 0 || contador == 2){
-                            correcto = true;
-                        }
-
-                        if(correcto){
-
-                            // Mostrar emoción y encender LEDs
-                            systemManager.showEmotion(EmotionsType.PRISE);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Generar frases aleatorias
-                            String[] frases = {
-                                    "Ta-da! Your intelligence shines like an LED.",
-                                    "Well done! Your brain is in linguist mode.",
-                                    "Amazing! Your effort is paying off."
-                            };
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Cambiar imagen
-                            indiceActual++;
-
-
-                            runOnUiThread(() -> {
-                                actualizarImagen();
-                                actualizarTitulo();
-
-                            });
-                            correcto = false;
-                            contador ++;
-
-                            // apagar luces
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-
-                            if (contador >= 4) {
-                                indiceActual = 0;
-                                finJuego();
-                                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                        else{
-                            speechManager.startSpeak("Try again!", speakOption);
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            systemManager.showEmotion(EmotionsType.QUESTION);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-
-                            String[] frases = {"I can repeat the word again."};
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                            AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                                    new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 7);
-                            headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            speechManager.startSpeak("The word is", speakOption);
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            speechManager.startSpeak(titulos.get(contador), speakOption);
-                        }
-
-
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
 
+            absoluteAngleHandMotion =
+                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
+            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
+            // Cambiar imagen
+            indiceActual++;
 
-        fallo1.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+            runOnUiThread(() -> {
+                actualizarImagen();
+                actualizarTitulo();
+            });
+            correcto = false;
+            contador ++;
 
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
+            // apagar luces
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
-
-                new Thread(() -> {
-                    try {
-
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-                        correcto = true; //titulos[indiceActual] == ;
-
-                        if(correcto){
-
-                            // Mostrar emoción y encender LEDs
-                            systemManager.showEmotion(EmotionsType.PRISE);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Generar frases aleatorias
-                            String[] frases = {
-                                    "Ta-da! Your intelligence shines like an LED.",
-                                    "Well done! Your brain is in linguist mode.",
-                                    "Amazing! Your effort is paying off."
-                            };
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Cambiar imagen
-                            indiceActual++;
-
-                            runOnUiThread(() -> {
-                                actualizarImagen();
-                                actualizarTitulo();
-
-                            });
-                            correcto = false;
-                            contador ++;
-
-                            // apagar luces
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-
-                            if (contador>=4) {
-                                indiceActual = 0;
-                                finJuego();
-                                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                     else{
-                        speechManager.startSpeak("Try again!", speakOption);
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        systemManager.showEmotion(EmotionsType.QUESTION);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                        AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
-                        handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-
-                        String[] frases = {"I can repeat the word again."};
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                                new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 7);
-                        headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        speechManager.startSpeak("The word is", speakOption);
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        speechManager.startSpeak(titulos.get(contador), speakOption);
-                    }
-
-
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-
+            if (contador>=4) {
+                indiceActual = 0;
+                finJuego();
+                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
+                startActivity(intent);
             }
-        });
-
-        fallo2.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
-
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
-
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
-
-                new Thread(() -> {
-                    try {
-
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-                        /*if(contador == 1 || contador == 3){
-                            correcto = true;
-                        }*/
-                        if (contador == 1){
-                            correcto = true;
-                        }
-
-                        if(correcto){
-
-                            // Mostrar emoción y encender LEDs
-                            systemManager.showEmotion(EmotionsType.PRISE);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Generar frases aleatorias
-                            String[] frases = {
-                                    "Ta-da! Your intelligence shines like an LED.",
-                                    "Well done! Your brain is in linguist mode.",
-                                    "Amazing! Your effort is paying off."
-                            };
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Cambiar imagen
-                            indiceActual++;
-
-
-                            runOnUiThread(() -> {
-                                actualizarImagen();
-                                actualizarTitulo();
-
-                            });
-                            correcto = false;
-                            contador ++;
-
-                            // apagar luces
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-
-                            if (contador>=4) {
-                                indiceActual = 0;
-                                finJuego();
-                                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                        else{
-                            speechManager.startSpeak("Try again!", speakOption);
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            systemManager.showEmotion(EmotionsType.QUESTION);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-
-                            String[] frases = {"I can repeat the word again."};
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                            AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                                    new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 7);
-                            headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            speechManager.startSpeak("The word is", speakOption);
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            speechManager.startSpeak(titulos.get(indiceActual), speakOption);
-                        }
-
-
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-
+        } else {
+            speechManager.startSpeak("Try again!", speakOption);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
 
-        fallo3.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
+            systemManager.showEmotion(EmotionsType.QUESTION);
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
 
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
-
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
-
-                new Thread(() -> {
-                    try {
-
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-                        if(contador == 3){
-                            correcto = true;
-                        }
-
-                        if(correcto){
-
-                            // Mostrar emoción y encender LEDs
-                            systemManager.showEmotion(EmotionsType.PRISE);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Generar frases aleatorias
-                            String[] frases = {
-                                    "Ta-da! Your intelligence shines like an LED.",
-                                    "Well done! Your brain is in linguist mode.",
-                                    "Amazing! Your effort is paying off."
-                            };
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
-                            // Cambiar imagen
-                            indiceActual++;
-
-                            runOnUiThread(() -> {
-                                actualizarImagen();
-                                actualizarTitulo();
-                            });
-                            correcto = false;
-                            contador ++;
-
-                            // apagar luces
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-
-                            if (contador>=4) {
-                                indiceActual = 0;
-                                finJuego();
-                                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                        else{
-                            speechManager.startSpeak("Try again!", speakOption);
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            systemManager.showEmotion(EmotionsType.QUESTION);
-                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
-                            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+            AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
+            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
 
-                            String[] frases = {"I can repeat the word again."};
-                            Random rand = new Random();
-                            int randomIndex = rand.nextInt(frases.length);
-                            speechManager.startSpeak(frases[randomIndex], speakOption);
+            String[] frases = {"I can repeat the word again."};
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(frases.length);
+            speechManager.startSpeak(frases[randomIndex], speakOption);
 
-                            AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                                    new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 7);
-                            headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            speechManager.startSpeak("The word is", speakOption);
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            speechManager.startSpeak(titulos.get(contador), speakOption);
-                        }
-
-
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-
+            AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
+                    new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 7);
+            headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
 
+            speechManager.startSpeak("The word is", speakOption);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+            speechManager.startSpeak(titulos.get(contador), speakOption);
 
+        }
 
     }
 
@@ -773,7 +359,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                             Log.d("PALABRA", nombre + " " + categoria + " " + subcategoria);
 
-                            if (!palabrasUsadas.contains(nombre) && Objects.equals(subCategorias.get(h), subcategoria) && Objects.equals(categoriaPalabra, categoria) && !Objects.equals(nombre, "apple") && !Objects.equals(nombre, "banana") && !Objects.equals(nombre, "watermelon") && !Objects.equals(nombre, "strawberry")) {
+                            if (!palabrasUsadas.contains(nombre) && Objects.equals(subCategorias.get(h), subcategoria) && Objects.equals(categoriaPalabra, categoria)) {
                                 Log.d("PALABRA AÑADIDA", nombre + " " + categoria + " " + subcategoria);
                                 palabrasAMostrar.add(nombre);
                                 palabrasUsadas.add(nombre);
@@ -798,7 +384,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                         Log.d("PALABRA", nombre + " " + categoria + " " + subcategoria);
 
-                        if (!palabrasUsadas.contains(nombre) && Objects.equals(categoriaPalabra, categoria) && !Objects.equals(nombre, "apple") && !Objects.equals(nombre, "banana") && !Objects.equals(nombre, "watermelon") && !Objects.equals(nombre, "strawberry")) {
+                        if (!palabrasUsadas.contains(nombre) && Objects.equals(categoriaPalabra, categoria)) {
                             Log.d("PALABRA AÑADIDA", nombre + " " + categoria + " " + subcategoria);
                             palabrasAMostrar.add(nombre);
                             palabrasUsadas.add(nombre);
@@ -822,12 +408,24 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     void mostrarPalabras(List<String> palabrasAMostrar){
 
         Random rand = new Random();
-        int r = rand.nextInt(4); // genera 0,1,2 o 3
-        titulos.add(palabrasAMostrar.get(r).toUpperCase());
+        indiceCorrecto = rand.nextInt(4); // genera 0,1,2 o 3
+        titulos.add(palabrasAMostrar.get(indiceCorrecto).toUpperCase());
 
-        String nombreImagen1 = palabrasAMostrar.get(0);
+        //String nombreImagen1 = palabrasAMostrar.get(0);
+        for (int k = 0; k < 4; k++) {
 
+            String nombreImagen = palabrasAMostrar.get(k);
 
+            int resId = getResources().getIdentifier(
+                    nombreImagen,
+                    "drawable",
+                    getPackageName()
+            );
+
+            imagenes.get(k).setImageResource(resId);
+        }
+
+/*
         int resId1 = getResources().getIdentifier(
                 nombreImagen1,
                 "drawable",
@@ -867,7 +465,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 "drawable",
                 getPackageName()
         );
-        fallo3.setImageResource(resId4);
+        fallo3.setImageResource(resId4);*/
 
 
     }
@@ -937,6 +535,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 }
 
                 String frase2 = "Vamos con la primera palabra. Me pongo en modo lingüista.";*/
+                actualizarImagen();
+                titulo.setText(titulos.get(contador));
                 speechManager.startSpeak("The first word is", speakOption);
                 try {
                     Thread.sleep(2000);
@@ -945,7 +545,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 }
 
                 // speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
-                speechManager.startSpeak("Apple", speakOption);
+                speechManager.startSpeak(titulos.get(contador), speakOption);
 
 
             }
