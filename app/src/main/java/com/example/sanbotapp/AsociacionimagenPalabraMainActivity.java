@@ -73,7 +73,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     /*List<String> palabras = Arrays.asList("watermelon", "bread", "hamburger", "rice",  "pizza", "dog", "rabbit", "horse",
             "cat", "orange", "cherries", "apple", "pear");*/
     //List<String, String> palabras = new ArrayList<String>();
-    List<String> titulos = Arrays.asList("APPLE", "RICE", "DOG", "PEAR");
+    List<String> titulos = new ArrayList<>();
     List<String> categorias = Arrays.asList("comida", "animales");
     List<String> subCategorias = Arrays.asList("frutas", "carbohidratos");
     List<String[]> palabras = new ArrayList<>();
@@ -102,6 +102,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         onMainServiceConnected();
         contador = 0;
         correcto = false;
+        titulos.add("APPLE");
 
         setContentView(R.layout.activity_asociacionimagenpalabra);
 
@@ -326,7 +327,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                         // Simula un pequeño retraso inicial
                         Thread.sleep(100);
-                        correcto = false;
+                        correcto = true; //titulos[indiceActual] == ;
 
                         if(correcto){
 
@@ -744,6 +745,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         String subCategoria;
         Integer indice = 0;
         List<String> palabrasAMostrar = new ArrayList<String>();
+        palabrasAMostrar.clear();
+
 
         boolean palabraDisponible = false;
         for (String[] fruta : palabras) {
@@ -763,8 +766,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             categoria = categorias.get(i);
             if(Objects.equals(categoria, "comida")){
                 while(h<subCategorias.size()){
-                    j=0;
-                    while (j < palabras.size() && indice < 4) {
                         for (String[] fruta : palabras) {
                             String nombre = fruta[0];
                             String categoriaPalabra = fruta[1];
@@ -781,18 +782,15 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             if(indice == 4){
                                 mostrarPalabras(palabrasAMostrar);
                                 indice = 0;
-                                break;
+                                return;
                             }
                         }
 
-                        j++;
-                    }
                     h++;
                 }
 
             }
             else{
-                while (j < palabras.size() && indice < 4) {
                     for (String[] fruta : palabras) {
                         String nombre = fruta[0];
                         String categoriaPalabra = fruta[1];
@@ -809,12 +807,12 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                         if(indice == 4){
                             mostrarPalabras(palabrasAMostrar);
                             indice = 0;
-                            break;
+                            return;
                         }
                     }
 
                     j++;
-                }
+
             }
 
             i++;
@@ -823,9 +821,10 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
     void mostrarPalabras(List<String> palabrasAMostrar){
 
-        /*for(int k=0; k<4; k++){
+        Random rand = new Random();
+        int r = rand.nextInt(4); // genera 0,1,2 o 3
+        titulos.add(palabrasAMostrar.get(r).toUpperCase());
 
-        }*/
         String nombreImagen1 = palabrasAMostrar.get(0);
 
 
