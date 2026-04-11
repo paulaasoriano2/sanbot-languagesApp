@@ -1,0 +1,90 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/feedbackTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="GOOD JOB!"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="70sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/feedbackSubtitle"
+            android:layout_width="399dp"
+            android:layout_height="120dp"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="The answer was:"
+            android:textAlignment="center"
+            android:textColor="#9C9C9C"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/imgRespuesta"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/apple"
+                android:layout_gravity="center"
+                android:contentDescription="Bombilla"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apple"
+                android:textSize="40sp"
+                android:textColor="@android:color/black"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:id="@+id/textoRespuesta"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Do you want to play with other word?"
+            android:textSize="40sp"
+            android:layout_margin="20dp"
+            android:textColor="#9C9C9C"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:id="@+id/jugarDeNuevo"/>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:text="No"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/btnAccept"
+            android:text="Yes"
+            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+</LinearLayout>
