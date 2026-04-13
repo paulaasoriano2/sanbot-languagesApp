@@ -1,34 +1,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="1300dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PISTA"
-            android:textSize="40sp"
-            android:layout_margin="20dp"
-            android:textColor="@android:color/black"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:id="@+id/tvSaludo"/>
 
         <ImageView
             android:id="@+id/imagenDados"
-            android:layout_width="260dp"
+            android:layout_width="130dp"
             android:layout_height="260dp"
             android:layout_margin="20dp"
             android:src="@drawable/bombilla"
             android:layout_gravity="center"
             android:contentDescription="Bombilla"/>
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HINT!"
+            android:textSize="60sp"
+            android:layout_margin="20dp"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:id="@+id/hint"
+            android:textStyle="bold"/>
+
+
     </LinearLayout>
+
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="That's not the correct image."
+            android:textSize="40sp"
+            android:layout_margin="20dp"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:id="@+id/hintMessage"/>
+
+
+
 
 </LinearLayout>

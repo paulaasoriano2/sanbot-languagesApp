@@ -6,15 +6,17 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.example.sanbotapp.robotControl.SpeechControl;
@@ -36,11 +38,10 @@ import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
@@ -51,6 +52,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private ImageButton fallo1;
     private ImageButton fallo2;
     private ImageButton fallo3;
+    private ImageView imageDialog;
 
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
@@ -94,6 +96,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         correcto = false;
         isFirstScreen = true;
         //titulos.add("APPLE");
+      //  imageDialog = dialogView.findViewById(R.id.dialogImage);
 
 
         setContentView(R.layout.activity_asociacionimagenpalabra);
@@ -182,26 +185,31 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         for (int k = 0; k < imagenes.size(); k++) {
 
             int index = k;
-
-            imagenes.get(k).setOnClickListener(v -> comprobarRespuesta(index));
+            imagenes.get(k).setVisibility(View.VISIBLE);
+            imagenes.get(k).setOnClickListener(v -> {
+                try {
+                    comprobarRespuesta(index);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
 
     }
 
-    void comprobarRespuesta(int imagenPulsada){
+    void comprobarRespuesta(int imagenPulsada) throws InterruptedException {
         SpeakOption speakOption = new SpeakOption();
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
-
 
         if(imagenPulsada == indiceCorrecto){
             // Mostrar emoción y encender LEDs
             systemManager.showEmotion(EmotionsType.PRISE);
             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
 
-            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
-            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+            AtomicReference<AbsoluteAngleHandMotion> absoluteAngleHandMotion =
+                    new AtomicReference<>(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 0));
+            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
 
             // Generar frases aleatorias
             String[] frases = {
@@ -213,36 +221,66 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             int randomIndex = rand.nextInt(frases.length);
             speechManager.startSpeak(frases[randomIndex], speakOption);
 
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
 
-            absoluteAngleHandMotion =
-                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
-            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+            View dialogView = inflater.inflate(R.layout.dialog_feedbackasociacion, null);
+            builder.setView(dialogView);
 
-            // Cambiar imagen
-            indiceActual++;
-            contador ++;
+            AlertDialog dialog = builder.create();
+            dialog.setCancelable(false);
+            dialog.show();
+            Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
+            Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
 
-            runOnUiThread(() -> {
-                actualizarImagen();
-                actualizarTitulo();
+
+            btnAcceptar.setOnClickListener(v -> {
+                dialog.dismiss();
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                absoluteAngleHandMotion.set(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 180));
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
+
+                // Cambiar imagen
+                indiceActual++;
+                contador ++;
+
+                runOnUiThread(() -> {
+                    actualizarImagen();
+                    actualizarTitulo();
+                });
+                correcto = false;
+            /*int resId = getResources().getIdentifier(
+                    nombreImagen,
+                    "drawable",
+                    getPackageName()
+            );*/
+
+
+                // apagar luces
+                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+
+                if (contador>=4) {
+                    indiceActual = 0;
+                    finJuego();
+                    Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
             });
-            correcto = false;
 
-            // apagar luces
-            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-
-            if (contador>=4) {
-                indiceActual = 0;
+            btnCancelar.setOnClickListener(v -> {
+                dialog.dismiss();
                 finJuego();
-                Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+                finish();
+            });
+
+
         } else {
             speechManager.startSpeak("Try again!", speakOption);
             try {
@@ -258,6 +296,17 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                     new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
             handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+
+            View dialogView = inflater.inflate(R.layout.dialog_pista, null);
+            builder.setView(dialogView);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+
+            imagenes.get(imagenPulsada).setVisibility(View.GONE);
 
             String[] frases = {"I can repeat the word again."};
             Random rand = new Random();
@@ -272,6 +321,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
 
             speechManager.startSpeak("The word is", speakOption);
             try {
