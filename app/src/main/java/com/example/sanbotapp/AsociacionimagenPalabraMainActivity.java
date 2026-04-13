@@ -64,6 +64,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private HardWareManager hardwareManager;
     private SpeechControl speechControl;
     private TextView titulo;
+
+    private TextView respuestaCorrectaDialog;
     private  boolean isFirstScreen;
     List<String> titulos = new ArrayList<>();
     List<String> categorias = Arrays.asList("comida", "animales");
@@ -80,6 +82,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     ArrayList<String> palabrasUsadas = new ArrayList<>();
     List<ImageButton> imagenes = new ArrayList<>();
     int indiceCorrecto;
+    List<String> palabrasAMostrar = new ArrayList<String>();
+
     @Override
     protected void onMainServiceConnected() {
 
@@ -221,6 +225,18 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             int randomIndex = rand.nextInt(frases.length);
             speechManager.startSpeak(frases[randomIndex], speakOption);
 
+            String nombreImagen = palabrasAMostrar.get(imagenPulsada);
+
+            int resId = getResources().getIdentifier(
+                    nombreImagen,
+                    "drawable",
+                    getPackageName()
+            );
+
+            imagenes.get(indiceCorrecto).setImageResource(resId);
+            String palabra = palabrasAMostrar.get(indiceCorrecto);
+
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             LayoutInflater inflater = getLayoutInflater();
 
@@ -229,6 +245,13 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             AlertDialog dialog = builder.create();
             dialog.setCancelable(false);
+            respuestaCorrectaDialog = dialogView.findViewById(R.id.textoRespuesta);
+            respuestaCorrectaDialog.setText(palabra.toUpperCase());
+
+            ImageView imgDialog =
+                    dialogView.findViewById(R.id.imgRespuesta);
+
+            imgDialog.setImageResource(resId);
             dialog.show();
             Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
             Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
@@ -376,7 +399,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         String categoria;
         String subCategoria;
         Integer indice = 0;
-        List<String> palabrasAMostrar = new ArrayList<String>();
         palabrasAMostrar.clear();
 
 
