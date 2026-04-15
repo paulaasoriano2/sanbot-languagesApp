@@ -46,8 +46,7 @@ public class AgendaActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
-    private Button addButton;
-    private Button deleteButton;
+    private ImageButton addButton;
 
     private CustomAdapter adapter;
     
@@ -103,7 +102,6 @@ public class AgendaActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         addButton = findViewById(R.id.addButton);
-        deleteButton = findViewById(R.id.deleteButton);
 
 
 
@@ -121,7 +119,6 @@ public class AgendaActivity extends TopBaseActivity {
     }
     public void setAllButtonsClickable(boolean clickable) {
         addButton.setClickable(clickable);
-        deleteButton.setClickable(clickable);
 
 
     }
@@ -132,10 +129,6 @@ public class AgendaActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
 
-
-        addButton.setOnClickListener(v -> {
-            adapter.addItem("Nuevo evento");
-        });
 
         addButton.setOnClickListener(new View.OnClickListener() {
             private boolean isProcessing = false; // Bandera para evitar múltiples clics
@@ -171,42 +164,6 @@ public class AgendaActivity extends TopBaseActivity {
             }
 
         });
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
-
-            @Override
-            public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
-
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
-
-                // Añadir el item clickado a la lista de elementos seleccionados
-                //adapter.deleteItem("Nuevo evento");
-
-                new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        speechManager.startSpeak("Nuevo evento deleted", speakOption);
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();
-            }
-
-        });
-
 
 
     }
