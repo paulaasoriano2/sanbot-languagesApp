@@ -1,5 +1,9 @@
 package com.example.sanbotapp;
 
+import okhttp3.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -29,11 +33,15 @@ import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DetalleColorActivity extends TopBaseActivity {
 
 
     public Boolean reconocimientoFacial = false;
     private Button btnAbrirCamara;
+    private Button btnComprobarColor;
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
     private MediaManager mediaManager;
@@ -43,6 +51,9 @@ public class DetalleColorActivity extends TopBaseActivity {
     private HeadMotionManager headMotionManager;
     private HardWareManager hardwareManager;
     private String color;
+    private String color_dominant;
+    private double percent;
+
 
 
     @Override
@@ -76,6 +87,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         btnAbrirCamara = findViewById(R.id.abrirCamara);
+        btnComprobarColor = findViewById(R.id.comprobarColor);
 
 
         faceRecognitionControl.stopFaceRecognition();
@@ -96,6 +108,7 @@ public class DetalleColorActivity extends TopBaseActivity {
 
     public void setAllButtonsClickable(boolean clickable) {
         btnAbrirCamara.setClickable(clickable);
+        btnComprobarColor.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -104,19 +117,14 @@ public class DetalleColorActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
 
-        // TODO:
+        setAllButtonsClickable(true);
+
 
 
         btnAbrirCamara.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
-
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
 
                 // Se abre la cámara
                 Intent intent = new Intent();
@@ -130,9 +138,71 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         });
 
+        btnComprobarColor.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                File imagefile = null;
+                sendImageToServer(imagefile);
+                if(esColorCorrecto()){
 
+                }
+                else{
 
+                }
+            }
+
+        });
+
+    }
+
+    public void sendImageToServer(File imageFile){
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody fileBody = RequestBody.create(
+                imageFile,
+                MediaType.parse("image/jpeg")
+        );
+
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("image", imageFile.getName(), fileBody)
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://opencv-pruebas.onrender.com/detect-color")
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if(response.isSuccessful()){
+                    String json = response.body().string();
+                    System.out.println(json);
+                    JSONObject obj = null;
+                    try {
+                        obj = new JSONObject(json);
+                        color_dominant = obj.getString("dominant_color");
+                        percent = obj.getDouble("percentage");
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+    }
+
+    public boolean esColorCorrecto(){
+        return Objects.equals(color, color_dominant);
     }
 
     @Override
