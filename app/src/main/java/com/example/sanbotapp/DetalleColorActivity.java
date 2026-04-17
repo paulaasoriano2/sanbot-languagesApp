@@ -2,11 +2,15 @@ package com.example.sanbotapp;
 
 import okhttp3.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Objects;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -129,10 +133,11 @@ public class DetalleColorActivity extends TopBaseActivity {
                 // Se abre la cámara
                 Intent intent = new Intent();
                 intent.setComponent(new ComponentName("com.example.camera", "com.example.sanbotapp.robotControl.MediaControlActivity"));
-                intent.putExtra("nombre_actividad", "ColoresActivity");
+                intent.putExtra("nombre_actividad", "DetalleColorActivity");
                 intent.putExtra("color", color);
+                startActivityForResult(intent, 100);
 
-                startActivity(intent);
+                //startActivity(intent);
 
             }
 
@@ -142,18 +147,74 @@ public class DetalleColorActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                File imagefile = null;
-                sendImageToServer(imagefile);
+                String imageUriString = getIntent().getStringExtra("screenshot_uri");
+
+                if (imageUriString != null) {
+                    Uri imageUri = Uri.parse(imageUriString);
+
+                    File file = uriToFile(imageUri);
+                    sendImageToServer(file);
+                }
+
                 if(esColorCorrecto()){
 
+                    String frase3 = "Good job! The object is red.";
+                    speechManager.startSpeak(frase3, speakOption);
+                    Log.d("Color elegido", color);
                 }
                 else{
 
+                    String frase3 = "Try again, sometimes I don't see objects very well";
+                    speechManager.startSpeak(frase3, speakOption);
+                    Log.d("Color elegido", color);
                 }
             }
 
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+
+            String imageUriString = data.getStringExtra("screenshot_uri");
+            Log.d("imageUriString", imageUriString);
+
+
+            if (imageUriString != null) {
+                Uri imageUri = Uri.parse(imageUriString);
+
+                File file = uriToFile(imageUri);
+                sendImageToServer(file);
+            }
+        }
+    }
+
+    private File uriToFile(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            File file = new File(getCacheDir(), "temp_image.jpg");
+            OutputStream outputStream = new FileOutputStream(file);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            outputStream.close();
+            inputStream.close();
+
+            return file;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void sendImageToServer(File imageFile){
@@ -234,7 +295,7 @@ public class DetalleColorActivity extends TopBaseActivity {
                         new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,-7);
                 headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion2);
 
-                String frase3 = "Cuando lo encuentres, haz clic en el botón para enseñármelo";
+                String frase3 = "When you find it, tap";
                 speechManager.startSpeak(frase3, speakOption);
 
                 try {
@@ -257,7 +318,7 @@ public class DetalleColorActivity extends TopBaseActivity {
                 //speechManager.startSpeak(color, speakOption);
 
                 AbsoluteAngleHeadMotion absoluteAngleHeadMotion3 =
-                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,0);
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,90);
                 headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion3);
             }
         }, 200);

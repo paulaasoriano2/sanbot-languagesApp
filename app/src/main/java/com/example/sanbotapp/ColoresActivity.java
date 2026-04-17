@@ -116,7 +116,6 @@ public class ColoresActivity extends TopBaseActivity {
         speakOption.setIntonation(50);
 
         btnRed.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
@@ -129,7 +128,6 @@ public class ColoresActivity extends TopBaseActivity {
             }
         });
         btnBlue.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
