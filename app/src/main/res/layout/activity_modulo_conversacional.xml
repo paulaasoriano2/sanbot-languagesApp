@@ -10,82 +10,37 @@
     android:orientation="horizontal">
 
 
-
-    <LinearLayout
-        android:id="@+id/linearLayoutConversacion"
-        android:layout_width="match_parent"
-        android:layout_height="640dp"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@id/barra_inferior"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="-64dp">
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:background="@drawable/edittext_border"
-        android:id="@+id/barra_inferior"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:paddingLeft="10dp">
-
-        <Button
-            android:id="@+id/botonHablar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/button_rounded"
-            android:drawablePadding="8dp"
-            android:drawableEnd="@drawable/baseline_mic_24"
-            android:text="TALK TO ME"
-            android:textColor="@android:color/white" />
-
-
-        <EditText
-            android:id="@+id/textoConsultaTeclado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="0dp"
-            android:backgroundTint="@color/colorWhite"
-            android:layout_marginEnd="0dp"
-            android:background="@android:color/transparent"
-            android:hint="Escribe un mensaje..."
-            android:inputType="text"
-            android:maxLines="6"
-            android:visibility="invisible"
-            tools:ignore="Autofill" />
-
-        <Button
-            android:id="@+id/botonHablarTeclado"
+        <LinearLayout
+            android:id="@+id/botonHablarContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/button_rounded"
-            android:drawablePadding="8dp"
-            android:drawableEnd="@drawable/baseline_mic_24"
-            android:text="Hablar"
-            android:visibility="invisible"
-            android:textColor="@android:color/white" />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/botonEnviarTeclado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_rounded"
-            android:layout_marginEnd="110dp"
-            android:drawablePadding="8dp"
-            android:drawableEnd="@drawable/baseline_send_24"
-            android:text="Enviar"
-            android:visibility="invisible"
-            android:layout_alignEnd="@id/botonHablarTeclado"/>
+            <ImageButton
+                android:id="@+id/botonHablar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:src="@drawable/sayit"
+                android:contentDescription="Talk to me" />
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Talk to me"
+                android:textColor="#808080"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"/>
+
+        </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

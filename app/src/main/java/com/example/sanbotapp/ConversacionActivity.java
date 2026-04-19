@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,7 +54,7 @@ public class ConversacionActivity extends TopBaseActivity {
     // Componentes módulo conversacional
     private Button botonConfiguracion;
     private ListView dialogo;
-    private Button botonHablar;
+    private ImageButton botonHablar;
     private Button botonHablarTeclado;
     private Button botonEnviarTeclado;
     private EditText textoConsulta;
@@ -186,13 +187,11 @@ public class ConversacionActivity extends TopBaseActivity {
 
 
         // Establecer pantalla
-        setContentView(R.layout.activity_modulo_conversacional);
+        setContentView(R.layout.activity_modulo_conversacional_dos);
 
         // Instanciación de componentes
         botonHablar = findViewById(R.id.botonHablar);
-        botonHablarTeclado = findViewById(R.id.botonHablarTeclado);
-        botonEnviarTeclado = findViewById(R.id.botonEnviarTeclado);
-        textoConsulta = findViewById(R.id.textoConsultaTeclado);
+
 
 
         // Gestionamos la pantalla en función de si está activado el modo teclado
