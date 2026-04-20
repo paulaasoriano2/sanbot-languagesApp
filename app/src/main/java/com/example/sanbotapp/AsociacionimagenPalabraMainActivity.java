@@ -68,7 +68,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private TextView respuestaCorrectaDialog;
     private  boolean isFirstScreen;
     List<String> titulos = new ArrayList<>();
-    List<String> categorias = Arrays.asList("comida", "animales");
+    List<String> categorias = Arrays.asList("comida", "animales", "ropa"); // TO CONECTAR CON BASE DE DATOS
     List<String> subCategorias = Arrays.asList("frutas", "carbohidratos");
     List<String[]> palabras = new ArrayList<>();
     private Integer i = 0; // Contador de categorias

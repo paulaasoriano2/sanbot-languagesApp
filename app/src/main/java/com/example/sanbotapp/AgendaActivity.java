@@ -1,16 +1,22 @@
 package com.example.sanbotapp;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.qihancloud.opensdk.base.TopBaseActivity;
@@ -40,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class AgendaActivity extends TopBaseActivity {
@@ -47,6 +54,7 @@ public class AgendaActivity extends TopBaseActivity {
 
     public Boolean reconocimientoFacial = false;
     private ImageButton addButton;
+    private Button reproducir;
 
     private CustomAdapter adapter;
     
@@ -58,6 +66,8 @@ public class AgendaActivity extends TopBaseActivity {
     private WheelMotionManager wheelMotionManager;
     private HeadMotionManager headMotionManager;
     private HardWareManager hardwareManager;
+    List<String> pictogramas = new ArrayList<>();
+    private LinearLayout containerLayout;
 
 
     @Override
@@ -102,6 +112,8 @@ public class AgendaActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         addButton = findViewById(R.id.addButton);
+        reproducir = findViewById(R.id.reproducir);
+        containerLayout = findViewById(R.id.containerLayout);
 
 
 
@@ -110,6 +122,88 @@ public class AgendaActivity extends TopBaseActivity {
         setonClicks();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        PictogramasDbAdapter db = getPictogramasDbAdapter();
+// Leer
+        Cursor cursor = db.fetchAllPictogramas();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String nombre = cursor.getString(2);
+                //String categoria = cursor.getString(1);
+
+                pictogramas.add(nombre);
+                // palabras.add(nombre);
+                Log.d("DATABWWWWWW", nombre);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        //crearImageButtons();
+
+
+    }
+
+    /*private void crearImageButtons() {
+        for (String[] pictograma : pictogramas) {
+            String nombrePictograma = pictograma[0];
+            String nombreImagen = pictograma[1];
+
+            // Crear ImageButton
+            ImageButton imageButton = new ImageButton(this);
+
+            // Obtener el ID del recurso de imagen (si está en res/drawable)
+            int imagenResourceId = getResources().getIdentifier(
+                    nombreImagen, "drawable", getPackageName()
+            );
+
+            // Configurar la imagen
+            if (imagenResourceId != 0) {
+                imageButton.setImageResource(imagenResourceId);
+            } else {
+                // Imagen por defecto si no existe
+                imageButton.setImageResource(android.R.drawable.ic_menu_gallery);
+            }
+
+            // Configurar scale type
+            imageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            // Configurar layout params
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(16, 16, 16, 16);
+            imageButton.setLayoutParams(params);
+
+            // Configurar tag para identificar el pictograma
+            imageButton.setTag(nombrePictograma);
+
+            // Configurar click listener
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String pictogramaSeleccionado = (String) v.getTag();
+                    Toast.makeText(AgendaActivity.this,
+                            "Seleccionaste: " + pictogramaSeleccionado,
+                            Toast.LENGTH_SHORT).show();
+                    // Aquí puedes agregar la acción deseada
+                }
+            });
+
+            // Agregar al contenedor
+            containerLayout.addView(imageButton);
+        }
+    }*/
+
+
+    private PictogramasDbAdapter getPictogramasDbAdapter() {
+        PictogramasDbAdapter db = new PictogramasDbAdapter(this);
+        db.open();
+        return db;
     }
 
     @Override
@@ -119,8 +213,7 @@ public class AgendaActivity extends TopBaseActivity {
     }
     public void setAllButtonsClickable(boolean clickable) {
         addButton.setClickable(clickable);
-
-
+        reproducir.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -165,7 +258,47 @@ public class AgendaActivity extends TopBaseActivity {
 
         });
 
+        reproducir.setOnClickListener(new View.OnClickListener() {
+            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
+            @Override
+            public void onClick(View v) {
+                if (isProcessing) return; // Si ya está procesando, ignorar el clic
+                isProcessing = true;
+
+                // Desactivar todos los botones
+                setAllButtonsClickable(false);
+
+                new Thread(() -> {
+                    try {
+
+                        ArrayList<String> localDataSet = adapter.getDataSet();
+                        if(localDataSet.isEmpty()){
+                            Thread.sleep(100);
+                            speechManager.startSpeak("Please, select one or more pictograms to build your agenda", speakOption);
+
+                        }
+                        for (int i = 0; i < localDataSet.size(); i++) {
+                            String elemento = localDataSet.get(i);
+                            System.out.println(elemento);
+                            Thread.sleep(100);
+                            speechManager.startSpeak(localDataSet.get(i), speakOption);
+
+                        }
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally {
+                        // Reactivar todos los botones
+                        runOnUiThread(() -> {
+                            setAllButtonsClickable(true);
+                            isProcessing = false; // Liberar bandera
+                        });
+                    }
+                }).start();
+
+            }
+        });
     }
 
     public void getPictogramas() throws IOException, JSONException {
@@ -227,8 +360,8 @@ public class AgendaActivity extends TopBaseActivity {
                     throw new RuntimeException(e);
                 }
 */
-                RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
-                wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);
+               /* RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
+                wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);*/
 
                 try {
                     Thread.sleep(2000);

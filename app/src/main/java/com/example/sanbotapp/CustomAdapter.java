@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
@@ -32,6 +33,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             notifyItemRemoved(position);
         }
     }
+
+    public ArrayList<String> getDataSet() {
+        return localDataSet;
+    }
+
 
     /**
      * Provide a reference to the type of views that you are using

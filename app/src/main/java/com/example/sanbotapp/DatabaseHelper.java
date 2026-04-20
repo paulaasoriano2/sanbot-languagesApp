@@ -27,6 +27,18 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "nivel        integer not null"
             + "); ";
 
+    /**
+     * Database creation sql statement ACCIONES --> VOCABULARIO
+     * Ejemplo: categoria (comida), nombre (apple), imagen (imagen de manzana), nivel (1)
+     */
+    private static final String PICTOGRAMAS = "create table pictogramas ("
+            + "_id          integer primary key autoincrement,"
+            + "categoria    text    not null,"
+            + "nombre       text    unique,"
+            + "imagen       text    not null,"
+            + "nivel        integer not null"
+            + "); ";
+
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -34,6 +46,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(VOCABULARIO);
+        db.execSQL(PICTOGRAMAS);
 
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida', 'frutas', 'apple','apple',1)");
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'banana','banana',1)");
@@ -55,6 +68,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'pear','pear',1)");
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'shoes','shoes',1)");
 
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comida','sayit', 'sayit',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comida','vomitos', 'vomitos',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comida','rabbit', 'rabbit',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comida','rice', 'rice',1)");
+
 
 
     }
@@ -64,6 +82,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS vocabulario");
+        db.execSQL("DROP TABLE IF EXISTS pictogramas");
 
         onCreate(db);
     }
