@@ -57,7 +57,7 @@ public class ConversacionActivity extends TopBaseActivity {
     private ImageButton botonHablar;
     private Button botonHablarTeclado;
     private Button botonEnviarTeclado;
-    private EditText textoConsulta;
+    //private EditText textoConsulta;
 
     // Modulos del robot
     private SpeechManager speechManager;
@@ -150,7 +150,7 @@ public class ConversacionActivity extends TopBaseActivity {
         }
         //actualizarVistaConversacion();
 
-        gestionarPantallaModoTeclado();
+        //gestionarPantallaModoTeclado();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -195,7 +195,7 @@ public class ConversacionActivity extends TopBaseActivity {
 
 
         // Gestionamos la pantalla en función de si está activado el modo teclado
-        gestionarPantallaModoTeclado();
+        //gestionarPantallaModoTeclado();
 
         // -------------- CHAT --------------
         conversacion = new ArrayList<>();
@@ -257,7 +257,7 @@ public class ConversacionActivity extends TopBaseActivity {
                 }
             });
 
-            // Gestión de la pulsación del botón de hablar
+           /* // Gestión de la pulsación del botón de hablar
             botonHablarTeclado.setOnClickListener(new View.OnClickListener() {
                 // Al pulsarlo se empieza a escuchar al usuario
                 // y se interpreta su consulta hablada
@@ -271,10 +271,10 @@ public class ConversacionActivity extends TopBaseActivity {
                         throw new RuntimeException(e);
                     }
                 }
-            });
+            });*/
 
             // Gestión de la pulsación del botón de enviar
-            botonEnviarTeclado.setOnClickListener(new View.OnClickListener() {
+            /*botonEnviarTeclado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -295,7 +295,7 @@ public class ConversacionActivity extends TopBaseActivity {
 
                 }
             });
-
+*/
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -335,7 +335,7 @@ public class ConversacionActivity extends TopBaseActivity {
         }
 
         // Mostramos la cadena reconocida en el EditText de la vista
-        textoConsulta.setText(respuesta);
+       // textoConsulta.setText(respuesta);
 
         // Si la conversación está en modo automático, se realizará la
         // acción de pulsar el botón de enviar a no ser de que el usuario
@@ -358,7 +358,7 @@ public class ConversacionActivity extends TopBaseActivity {
         // Vacío la consulta de ChatGPT
         consultaChatGPT = "";
         respuesta="";
-        textoConsulta.setText("");
+       // textoConsulta.setText("");
 
         // El robot se pone en modo escucha
         new Thread(new Runnable() {
@@ -497,7 +497,7 @@ public class ConversacionActivity extends TopBaseActivity {
         //dialogoRobot.setVisibility(View.VISIBLE);
         //dialogoRobot.setText("Cargando...");
 
-        textoConsulta.setText("");
+        //textoConsulta.setText("");
         moduloOpenAI.consultaOpenAI(consultaChatGPT);
         String resp = moduloOpenAI.getRespuestaGPT();
         Log.d("resp", resp);
@@ -505,7 +505,7 @@ public class ConversacionActivity extends TopBaseActivity {
         speechManager.startSpeak(resp, speakOption);
     }
 
-    private void gestionarPantallaModoTeclado(){
+    /*private void gestionarPantallaModoTeclado(){
         if(modoTeclado){
             botonEnviarTeclado.setVisibility(View.VISIBLE);
             botonHablarTeclado.setVisibility(View.VISIBLE);
@@ -518,7 +518,7 @@ public class ConversacionActivity extends TopBaseActivity {
             textoConsulta.setVisibility(View.INVISIBLE);
             botonHablar.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
     private void gestionarFinHablaSanbot(){
         Log.d("hola", "entrando....");

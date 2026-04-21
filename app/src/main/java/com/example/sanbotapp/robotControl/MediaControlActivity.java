@@ -233,15 +233,17 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                 finish();
 */
                 Intent intent = new Intent();
-                intent.setClassName("com.example.lineatemporal", "com.example.sanbotapp.DetalleColorActivity");
+                intent.setClassName("com.example.languages", "com.example.languages.DetalleColorActivity");
                 intent.putExtra("screenshot_uri", imageUri.toString());
                 finish();
-/*                if(nombreActividad == "DetalleColorActivity"){
+                /*if(Objects.equals(nombreActividad, "DetalleColorActivity")){
 
                     Intent intent = new Intent();
-                    intent.setClassName("com.example.sanbotapp", "com.example.sanbotapp."+ nombreActividad);
-                    intent.putExtra("screenshot_uri", imageUri.toString());
-
+                    intent.setClassName("com.example.languages", "com.example.languages.DetalleColorActivity");
+                    if (imageUri != null) {
+                        intent.putExtra("screenshot_uri", imageUri.toString());
+                        Log.d("IMAGEN NO NULA", imageUri.toString());
+                    }
                     setResult(RESULT_OK, intent);
                     finish();
 
@@ -280,8 +282,8 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivity(intent);
 
-                }
-*/
+                }*/
+
             }
         });
 
@@ -441,10 +443,12 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         streamOption.setChannel(StreamOption.MAIN_STREAM);
         streamOption.setDecodType(StreamOption.HARDWARE_DECODE);
         streamOption.setJustIframe(false);
-        mediaManager.openStream(streamOption);
+        //mediaManager.openStream(streamOption);
 
         // Configure MediaCodec
+        //startDecoding(this.surface);
         startDecoding(this.surface);
+        mediaManager.openStream(streamOption);
     }
 
     @Override

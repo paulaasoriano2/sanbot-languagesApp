@@ -40,6 +40,8 @@
         <activity android:name=".ConversacionActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".DetalleColorActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".AsociacionimagenPalabraMainActivity" android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".robotControl.MediaControlActivity" android:windowSoftInputMode="stateHidden" />
+
 
 
 

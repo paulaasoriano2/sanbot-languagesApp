@@ -132,7 +132,7 @@ public class DetalleColorActivity extends TopBaseActivity {
 
                 // Se abre la cámara
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.camera", "com.example.sanbotapp.robotControl.MediaControlActivity"));
+                intent.setComponent(new ComponentName("com.example.languages", "com.example.languages.robotControl.MediaControlActivity"));
                 intent.putExtra("nombre_actividad", "DetalleColorActivity");
                 intent.putExtra("color", color);
                 startActivityForResult(intent, 100);
