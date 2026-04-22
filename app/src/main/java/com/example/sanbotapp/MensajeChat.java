@@ -9,4 +9,8 @@ public class MensajeChat {
         this.left = left;
         this.message = message;
     }
+
+    public boolean isMe(){
+        return !left;
+    }
 }

@@ -74,7 +74,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private Integer i = 0; // Contador de categorias
     private Integer j = 0; // Contador de palabras
     private Integer h = 0; // Contador de sub categorias
-
+    private ArrayList<Integer> imagenesOcultas = new ArrayList<>();
 
     int indiceActual = 0;
     private Integer contador;
@@ -189,7 +189,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         for (int k = 0; k < imagenes.size(); k++) {
 
             int index = k;
-            imagenes.get(k).setVisibility(View.VISIBLE);
+            //imagenes.get(k).setVisibility(View.VISIBLE);
             imagenes.get(k).setOnClickListener(v -> {
                 try {
                     comprobarRespuesta(index);
@@ -207,7 +207,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         speakOption.setIntonation(50);
 
         if(imagenPulsada == indiceCorrecto){
-            // Mostrar emoción y encender LEDs
+
+                // Mostrar emoción y encender LEDs
             systemManager.showEmotion(EmotionsType.PRISE);
             hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
 
@@ -256,6 +257,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
             Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
 
+            for (int k = 0; k < imagenesOcultas.size(); k++) {
+                imagenes.get(imagenesOcultas.get(k)).setVisibility(View.VISIBLE);
+            }
 
             btnAcceptar.setOnClickListener(v -> {
                 dialog.dismiss();
@@ -330,6 +334,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
 
             imagenes.get(imagenPulsada).setVisibility(View.GONE);
+            imagenesOcultas.add(imagenPulsada);
 
             String[] frases = {"I can repeat the word again."};
             Random rand = new Random();
@@ -546,13 +551,12 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         String palabra = titulos.get(contador);
 
         if(isFirstScreen){
-            speechManager.startSpeak("Get ready because the words are coming!", speakOption);
+            //speechManager.startSpeak("Get ready because the words are coming!", speakOption);
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            speechManager.startSpeak("The first word is", speakOption);
 
             isFirstScreen = false;
         }
@@ -568,6 +572,10 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             speechManager.startSpeak(frases[randomIndex], speakOption);
         }
 
+
+
+        titulo.setText(palabra);
+
         try {
             Thread.sleep(4000);
         } catch (InterruptedException e) {
@@ -575,10 +583,17 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         }
 
         // speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+        speechManager.startSpeak("The first word is", speakOption);
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         speechManager.startSpeak(palabra, speakOption);
 
 
-        titulo.setText(palabra);
 
 
     }
@@ -597,11 +612,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 String frase = "Let's play the image-word association game. I will say a word in English and you will have to select the corresponding image. Shall we start?";
                 speechManager.startSpeak(frase, speakOption);
 
-                try {
+               /* try {
                     Thread.sleep(8000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 /*
                 AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
                         new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);

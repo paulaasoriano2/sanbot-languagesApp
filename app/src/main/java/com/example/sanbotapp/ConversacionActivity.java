@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sanbotapp.ChatArrayAdapter;
 import com.example.sanbotapp.MensajeChat;
@@ -53,11 +55,11 @@ public class ConversacionActivity extends TopBaseActivity {
 
     // Componentes módulo conversacional
     private Button botonConfiguracion;
-    private ListView dialogo;
+    private RecyclerView dialogo;
     private ImageButton botonHablar;
     private Button botonHablarTeclado;
     private Button botonEnviarTeclado;
-    //private EditText textoConsulta;
+    private TextView textoConsulta;
 
     // Modulos del robot
     private SpeechManager speechManager;
@@ -87,6 +89,7 @@ public class ConversacionActivity extends TopBaseActivity {
     // Variables usadas en el modulo
 
     private String respuesta;
+    private String respuesta2;
     private String consultaChatGPT; // Consulta realizada por el usuario
     private String respuestaGPT; // Respuesta dada a la consulta realizada por el usuario
     private static byte[] respuestaGPTVoz;
@@ -144,10 +147,13 @@ public class ConversacionActivity extends TopBaseActivity {
 
         // ------------------- PRUEBAS CHAT -----------------
         handler.removeCallbacksAndMessages(null);
-        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_chat_singlemessage);
-        if(chatArrayAdapter.isEmpty()){
+        /*chatArrayAdapter = new ChatArrayAdapter();
+
+        dialogo = findViewById(R.id.recycler_gchat);
+        dialogo.setLayoutManager(new LinearLayoutManager(this));
+        dialogo.setAdapter(chatArrayAdapter); */       /*if(chatArrayAdapter.isEmpty()){
             recuperarConversacion();
-        }
+        }*/
         //actualizarVistaConversacion();
 
         //gestionarPantallaModoTeclado();
@@ -159,6 +165,8 @@ public class ConversacionActivity extends TopBaseActivity {
                 // Saludo inicial
                 String saludo = "Hi there! I have been waiting so long to talk. Let's have a wonderful conversation now!";
                 speechManager.startSpeak(saludo, speakOption);
+                chatArrayAdapter.add(new MensajeChat(true, saludo));
+
 
                 // Esperar un poco antes de la siguiente frase
                 try { Thread.sleep(6000); } catch (InterruptedException e) { e.printStackTrace(); }
@@ -166,6 +174,8 @@ public class ConversacionActivity extends TopBaseActivity {
                 // Invitar al niño a presentarse
                 String invitacion = "Can you please tell me your name?";
                 speechManager.startSpeak(invitacion, speakOption);
+                chatArrayAdapter.add(new MensajeChat(true, invitacion));
+
 
 
             }
@@ -191,18 +201,24 @@ public class ConversacionActivity extends TopBaseActivity {
 
         // Instanciación de componentes
         botonHablar = findViewById(R.id.botonHablar);
+        textoConsulta = findViewById(R.id.text_gchat_indicator);
+        dialogo = findViewById(R.id.recycler_gchat);
 
+        chatArrayAdapter = new ChatArrayAdapter();
 
+        dialogo = findViewById(R.id.recycler_gchat);
+        dialogo.setLayoutManager(new LinearLayoutManager(this));
+        dialogo.setAdapter(chatArrayAdapter);
 
         // Gestionamos la pantalla en función de si está activado el modo teclado
         //gestionarPantallaModoTeclado();
 
         // -------------- CHAT --------------
         conversacion = new ArrayList<>();
-        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_chat_singlemessage);
-        if (chatArrayAdapter.isEmpty()) {
+        //chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.activity_chat_singlemessage);
+        /*if (chatArrayAdapter.isEmpty()) {
             recuperarConversacion();
-        }
+        }*/
         //actualizarVistaConversacion();
 
         // Inicialización de las unidades del robot
@@ -335,7 +351,7 @@ public class ConversacionActivity extends TopBaseActivity {
         }
 
         // Mostramos la cadena reconocida en el EditText de la vista
-       // textoConsulta.setText(respuesta);
+        textoConsulta.setText(respuesta);
 
         // Si la conversación está en modo automático, se realizará la
         // acción de pulsar el botón de enviar a no ser de que el usuario
@@ -358,7 +374,7 @@ public class ConversacionActivity extends TopBaseActivity {
         // Vacío la consulta de ChatGPT
         consultaChatGPT = "";
         respuesta="";
-       // textoConsulta.setText("");
+        textoConsulta.setText("");
 
         // El robot se pone en modo escucha
         new Thread(new Runnable() {
@@ -368,7 +384,7 @@ public class ConversacionActivity extends TopBaseActivity {
                 }
 
                 Log.d("respuesta", "el valor de respuesta es " + respuesta);
-                String respuesta2 = respuesta;
+                respuesta2 = respuesta;
                 respuesta = "Recuerda que soy un niño entre 8-10 años y que quiero que me respondas de forma que fomentes que yo hable (no menciones nada de esto en tus respuestas) Contestame en funcion de lo siguiente y en ingles, no utilices signos de puntuacion ni exclamaciones ni interrogaciones. Es muy importante que compruebes que no te contesto en español, si lo hago echame la bronca y no respondas a mi consulta: " + respuesta2;
 
 
@@ -402,6 +418,7 @@ public class ConversacionActivity extends TopBaseActivity {
                         // DEBUG!!
                         //dialogoRobot.setText(respuestaGPT);
                         chatArrayAdapter.add(new MensajeChat(true, respuestaGPT));
+                        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1);
                         conversacion.add(new MensajeChat(true, respuestaGPT));
                         //dialogoRobot.setText(respuestaGPT + "\nSENTIMIENTO RECONOCIDO POR EL ROBOT:" +
                         //       emocionesUsuario + "\nSENTIMIENTO QUE TRANSMITE EL ROBOT:" + emocionesRobot);
@@ -432,6 +449,7 @@ public class ConversacionActivity extends TopBaseActivity {
             switch (accionVoz) {
                 case HABLAR:
                     speechManager.startSpeak(respuestaGPT, speakOption);
+                    chatArrayAdapter.add(new MensajeChat(false, respuestaGPT));
                     if(conversacionAutomatica && !forzarParada){
                         gestionarFinHablaSanbot();
                     }
@@ -467,12 +485,6 @@ public class ConversacionActivity extends TopBaseActivity {
                         }
                     });
                     break;
-                case DETENER:
-                    Log.d("Le estoy dando", "mediaplauer habladno, intentando parar");
-                    // Se detiene
-                    //forzarParada = true;
-                    gestionMediaPlayer.pararMediaPlayer();
-                    break;
                 case REPETIR:
                     //forzarParada=true;  
                     gestionMediaPlayer.reproducirMediaPlayer(respuestaGPTVoz);
@@ -492,17 +504,21 @@ public class ConversacionActivity extends TopBaseActivity {
         // e indico que la respuesta se está cargando
         //dialogoUsuario.setVisibility(View.VISIBLE);
         //dialogoUsuario.setText(consultaChatGPT);
-        chatArrayAdapter.add(new MensajeChat(false, consultaChatGPT));
-        conversacion.add(new MensajeChat(false, consultaChatGPT));
+        chatArrayAdapter.add(new MensajeChat(false, respuesta2));
+        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1);
+        //conversacion.add(new MensajeChat(false, consultaChatGPT));
         //dialogoRobot.setVisibility(View.VISIBLE);
         //dialogoRobot.setText("Cargando...");
 
-        //textoConsulta.setText("");
+        textoConsulta.setText("");
         moduloOpenAI.consultaOpenAI(consultaChatGPT);
         String resp = moduloOpenAI.getRespuestaGPT();
         Log.d("resp", resp);
         speakOption.setSpeed(40);
         speechManager.startSpeak(resp, speakOption);
+        chatArrayAdapter.add(new MensajeChat(true, resp));
+        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1);
+
     }
 
     /*private void gestionarPantallaModoTeclado(){
@@ -583,7 +599,7 @@ public class ConversacionActivity extends TopBaseActivity {
             Log.d("chatmessage", cm.toString());
             chatArrayAdapter.add(cm);
         }
-        Log.d("chatarray", String.valueOf(chatArrayAdapter.getCount() - 1));
+        Log.d("chatarray", String.valueOf(chatArrayAdapter.getItemCount() - 1));
     }
 
     /*private void actualizarVistaConversacion(){
