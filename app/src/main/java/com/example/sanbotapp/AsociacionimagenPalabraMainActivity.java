@@ -264,14 +264,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             btnAcceptar.setOnClickListener(v -> {
                 dialog.dismiss();
 
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
                 absoluteAngleHandMotion.set(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 180));
                 handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
+                // apagar luces
+                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
 
                 // Cambiar imagen
                 indiceActual++;
@@ -289,19 +286,21 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             );*/
 
 
-                // apagar luces
-                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
                 headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
                 if (contador>=4) {
                     indiceActual = 0;
                     finJuego();
-                    Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
+                    //startActivity(intent);
+                    finish();
                 }
             });
 
             btnCancelar.setOnClickListener(v -> {
+                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
                 dialog.dismiss();
                 finJuego();
                 finish();
@@ -359,6 +358,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             }
 
             speechManager.startSpeak(titulos.get(contador), speakOption);
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
 
         }
 
@@ -558,7 +559,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 e.printStackTrace();
             }
 
-            isFirstScreen = false;
+            //isFirstScreen = false;
         }
         else{
             // Generar frases aleatorias
@@ -583,13 +584,17 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         }
 
         // speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
-        speechManager.startSpeak("The first word is", speakOption);
+        if(isFirstScreen){
+            speechManager.startSpeak("The first word is", speakOption);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            isFirstScreen = false;
         }
+
 
         speechManager.startSpeak(palabra, speakOption);
 

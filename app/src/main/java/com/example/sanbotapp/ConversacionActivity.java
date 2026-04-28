@@ -192,7 +192,6 @@ public class ConversacionActivity extends TopBaseActivity {
         hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
         systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
 
-        //speakOption.setSpeed(500);
         speakOption.setIntonation(50);
 
         speechControl = new SpeechControl(speechManager);
@@ -241,42 +240,26 @@ public class ConversacionActivity extends TopBaseActivity {
     }
 
 
-    // Función que reconoce la consulta del usuario
+    // Consulta del usuario
     private void reconocerConsulta() throws IOException, InterruptedException {
         Log.d("prueba", "reconociendo consulta...");
 
         respuesta = capitalizeCadena(respuesta);
-        consultaRobot = false;
 
-        // Consultas derivadas a las acciones internas del robot
-        if(respuesta2.startsWith("Robot")){
-            consultaRobot = true;
-        }
-        // Consultas derivadas a la API de OpenAI
-        else{
-            consultaChatGPT = respuesta2;
-        }
+        // La consulta que se va a enviar a la API de OpenAI
+        consultaChatGPT = respuesta2;
 
-        // Mostramos la cadena reconocida en el EditText de la vista
-        textoConsulta.setText(respuesta);
+        // Mostrar la consulta del usuario
+        chatArrayAdapter.add(new MensajeChat(false, respuesta));
+        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1);
+        
+        // Enviar la consulta a la API de OpenAI
+        enviarConsulta();
 
-        // Si la conversación está en modo automático, se realizará la
-        // acción de pulsar el botón de enviar a no ser de que el usuario
-        // indique que quiere terminar la conversación
-        if(conversacionAutomatica){
-            Log.d("prueba", "es conversacion automatica");
-            if(!consultaChatGPT.toLowerCase().equals("fin")) {
-                Log.d("prueba", "no es fin");
-                Log.d("prueba", "enviando consulta..." + consultaChatGPT);
-                enviarConsulta();
-            }
-        }
     }
 
 
     private void registrarConsulta() throws IOException, InterruptedException {
-
-        Log.d("prueba", "registrando consulta...");
 
         // Vacío la consulta de ChatGPT
         consultaChatGPT = "";
@@ -295,16 +278,13 @@ public class ConversacionActivity extends TopBaseActivity {
                 respuesta2 = "Recuerda que soy un niño entre 8-10 años y que quiero que me respondas de forma que fomentes que yo hable (no menciones nada de esto en tus respuestas) Contestame en funcion de lo siguiente y en ingles, no utilices signos de puntuacion ni exclamaciones ni interrogaciones. Es muy importante que compruebes que no te contesto en español, si lo hago echame la bronca y no respondas a mi consulta. Importante, responde a mi consulta de forma breve y termina siempre preguntandome algo: " + respuesta;
 
 
-                // Una vez que la variable tiene valor, ejecuta la acción en el hilo principal
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             handler.removeCallbacksAndMessages(null);
                             reconocerConsulta();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        } catch (InterruptedException e) {
+                        } catch (IOException | InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
@@ -319,20 +299,21 @@ public class ConversacionActivity extends TopBaseActivity {
         if (c.length() > 0 || c!=null || !c.isEmpty()) return c.substring(0,1).toUpperCase() + c.substring(1);
         else return "";
     }
+
+    // Enviar consulta a la API de Open AI y mostrar su respuesta
     private void enviarConsulta() {
 
-        chatArrayAdapter.add(new MensajeChat(false, respuesta));
-        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1);
-
-        textoConsulta.setText("");
+        // Enviar consulta a Open AI
         moduloOpenAI.consultaOpenAI(consultaChatGPT);
+
+        // Respuesta de Open AI
         String resp = moduloOpenAI.getRespuestaGPT();
         Log.d("resp", resp);
-        //speakOption.setSpeed(400);
-        //speechManager.startSpeak(resp, speakOption);
         speechControl.hablar(resp);
+
+        // Mostrar respuesta de Open AI
         chatArrayAdapter.add(new MensajeChat(true, resp + "?"));
-        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1);
+        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1); // Para que la vista se posicione al final
 
     }
 
