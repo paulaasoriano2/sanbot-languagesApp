@@ -37,6 +37,7 @@ import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +58,8 @@ public class DetalleColorActivity extends TopBaseActivity {
     private String color;
     private String color_dominant;
     private double percent;
+    private JSONArray allColors;
+    private String imageUriString;
 
 
 
@@ -75,6 +78,7 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         setContentView(R.layout.activity_detalle_color);
         color = getIntent().getStringExtra("color");
+        imageUriString = getIntent().getStringExtra("screenshot_uri");
         Log.d("Color elegido", color);
         TextView nombreColorEnPantalla = findViewById(R.id.nombreColor);
         nombreColorEnPantalla.setText(color);
@@ -132,7 +136,7 @@ public class DetalleColorActivity extends TopBaseActivity {
 
                 // Se abre la cámara
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.languages", "com.example.languages.robotControl.MediaControlActivity"));
+                intent.setComponent(new ComponentName("com.example.languages", "com.example.sanbotapp.robotControl.MediaControlActivity"));
                 intent.putExtra("nombre_actividad", "DetalleColorActivity");
                 intent.putExtra("color", color);
                 startActivityForResult(intent, 100);
@@ -147,16 +151,22 @@ public class DetalleColorActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                String imageUriString = getIntent().getStringExtra("screenshot_uri");
+
+
 
                 if (imageUriString != null) {
                     Uri imageUri = Uri.parse(imageUriString);
+                    Log.d("Captura recibida", imageUriString);
+
 
                     File file = uriToFile(imageUri);
                     sendImageToServer(file);
                 }
+                else{
+                    Log.d("Captura recibida", "Captura recibida pero es nula");
 
-                if(esColorCorrecto()){
+                }
+/*                if(esColorCorrecto()){
 
                     String frase3 = "Good job! The object is red.";
                     speechManager.startSpeak(frase3, speakOption);
@@ -167,12 +177,13 @@ public class DetalleColorActivity extends TopBaseActivity {
                     String frase3 = "Try again, sometimes I don't see objects very well";
                     speechManager.startSpeak(frase3, speakOption);
                     Log.d("Color elegido", color);
-                }
+                }*/
             }
 
         });
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,7 +228,9 @@ public class DetalleColorActivity extends TopBaseActivity {
         }
     }
 
-    public void sendImageToServer(File imageFile){
+   /* public void sendImageToServer(File imageFile){
+        Log.d("Captura recibida", "Enviada al servidor");
+
 
         OkHttpClient client = new OkHttpClient();
 
@@ -254,12 +267,94 @@ public class DetalleColorActivity extends TopBaseActivity {
                         obj = new JSONObject(json);
                         color_dominant = obj.getString("dominant_color");
                         percent = obj.getDouble("percentage");
+                        Log.d("Color dominante", color_dominant);
+
+                        Log.d("Porcentaje", String.valueOf(percent));
+
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                 }
             }
         });
+    }*/
+
+    public void sendImageToServer(File imageFile) {
+
+        new Thread(() -> {
+
+            try {
+                //OkHttpClient client = new OkHttpClient();
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                        .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                        .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+                        .build();
+
+                RequestBody fileBody = RequestBody.create(
+                        imageFile,
+                        MediaType.parse("image/jpeg")
+                );
+
+                MultipartBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("image", imageFile.getName(), fileBody)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url("https://opencv-pruebas.onrender.com/detect-color")
+                        .post(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful()) {
+
+                    String json = response.body().string();
+
+                    JSONObject obj = new JSONObject(json);
+
+                    color_dominant = obj.getString("dominant_color");
+                    percent = obj.getDouble("percentage");
+                    allColors = obj.getJSONArray("all_colors");
+
+                    for (int i = 0; i < allColors.length(); i++) {
+                        JSONArray colorItem = allColors.getJSONArray(i);
+
+                        String name = colorItem.getString(0);
+                        double percentage = colorItem.getDouble(1);
+
+                        Log.d("COLOR LIST", name + " -> " + percentage + "%");
+                    }
+
+                    Log.d("Color dominante", color_dominant);
+                    Log.d("Porcentaje", String.valueOf(percent));
+
+                    runOnUiThread(() -> {
+
+                        SpeakOption speakOption = new SpeakOption();
+                        speakOption.setSpeed(50);
+                        speakOption.setIntonation(50);
+
+                        if (esColorCorrecto()) {
+                            speechManager.startSpeak(
+                                    "Good job! The object is " + color_dominant,
+                                    speakOption
+                            );
+                        } else {
+                            speechManager.startSpeak(
+                                    "Try again, I detected " + color_dominant,
+                                    speakOption
+                            );
+                        }
+                    });
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }).start();
     }
 
     public boolean esColorCorrecto(){

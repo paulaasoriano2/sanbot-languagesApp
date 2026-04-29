@@ -157,29 +157,32 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         if (intent != null) {
             nombreActividad = intent.getStringExtra("nombre_actividad");
 
-            if(nombreActividad=="DetalleColorActivity"){
+            if(Objects.equals(nombreActividad, "DetalleColorActivity")){
                 color = intent.getStringExtra("color");
-                return;
+
             }
-            mRowId = intent.getLongExtra("mRowId", -1);
+            else{
+                mRowId = intent.getLongExtra("mRowId", -1);
 
-            // Actividad crear usuario
-            nombreUsuario = intent.getStringExtra("nombreUsuario");
-            mote = intent.getStringExtra("mote");
+                // Actividad crear usuario
+                nombreUsuario = intent.getStringExtra("nombreUsuario");
+                mote = intent.getStringExtra("mote");
 
-            //Actividad crear linea
-            nombreLinea = intent.getStringExtra("nombreLinea");
-            descripcionLinea = intent.getStringExtra("descripcionLinea");
+                //Actividad crear linea
+                nombreLinea = intent.getStringExtra("nombreLinea");
+                descripcionLinea = intent.getStringExtra("descripcionLinea");
 
-            //Actividad crear evento
-            nombreEvento = intent.getStringExtra("nombreEvento");
-            descripcionEvento = intent.getStringExtra("descripcionEvento");
-            fechaEvento = intent.getStringExtra("fechaEvento");
+                //Actividad crear evento
+                nombreEvento = intent.getStringExtra("nombreEvento");
+                descripcionEvento = intent.getStringExtra("descripcionEvento");
+                fechaEvento = intent.getStringExtra("fechaEvento");
 
-            edit_nombreEvento = intent.getStringExtra("edit_nombreEvento");
-            edit_descripcionEvento = intent.getStringExtra("edit_descripcionEvento");
-            edit_fechaEvento = intent.getStringExtra("edit_fechaEvento");
-            selectedsonguri = intent.getStringExtra("edit_selectedSongUri");
+                edit_nombreEvento = intent.getStringExtra("edit_nombreEvento");
+                edit_descripcionEvento = intent.getStringExtra("edit_descripcionEvento");
+                edit_fechaEvento = intent.getStringExtra("edit_fechaEvento");
+                selectedsonguri = intent.getStringExtra("edit_selectedSongUri");
+            }
+
 
         }
 
@@ -225,7 +228,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         btn_aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Nombre actividad", nombreActividad);
+               // Log.d("Nombre actividad", nombreActividad);
                 /*Intent resultIntent = new Intent();
                 resultIntent.putExtra("screenshot_uri", imageUri.toString());
 
@@ -233,8 +236,11 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                 finish();
 */
                 Intent intent = new Intent();
-                intent.setClassName("com.example.languages", "com.example.languages.DetalleColorActivity");
+                intent.setClassName("com.example.languages", "com.example.sanbotapp.DetalleColorActivity");
                 intent.putExtra("screenshot_uri", imageUri.toString());
+                intent.putExtra("color", color);
+                setResult(RESULT_OK, intent);
+                startActivity(intent);
                 finish();
                 /*if(Objects.equals(nombreActividad, "DetalleColorActivity")){
 
@@ -388,7 +394,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                     // Acceder al valor de la propiedad "user"
                     String user = bean.getUser();
                     // Hacer algo con el valor de "user"
-                    System.out.println("Usuario reconocido: " + user);
+                    //System.out.println("Usuario reconocido: " + user);
 
                     if(user != ""){
                         speechManager.startSpeak("hola " + user + " ¿cómo estás?");
@@ -396,7 +402,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
 
                 }
                 tvFace.setText(sb.toString());
-                System.out.println("Persona reconocida????：" + sb.toString());
+                //System.out.println("Persona reconocida????：" + sb.toString());
 
 
             }
@@ -549,7 +555,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
     public void storeImage(Bitmap bitmap){
         String dir = Environment.getExternalStorageDirectory()+ "/FACE_REG/IMG/" + "DCIM/";
 
-        System.out.println("RUTA: " + dir);
+        //System.out.println("RUTA: " + dir);
         final File f = new File(dir);
         if (!f.exists()) {
             f.mkdirs();
@@ -560,15 +566,15 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         try {
             FileOutputStream fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            System.out.println("Imagen guardada en: " + file.getAbsolutePath());
+            //System.out.println("Imagen guardada en: " + file.getAbsolutePath());
             fos.flush();
             fos.close();
-            System.out.println("Imagen guardada en: " + file.getAbsolutePath());
+            //System.out.println("Imagen guardada en: " + file.getAbsolutePath());
         } catch (FileNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
+           // System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            //System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
 
