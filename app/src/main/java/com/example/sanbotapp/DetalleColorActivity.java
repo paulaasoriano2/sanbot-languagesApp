@@ -14,13 +14,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.qihancloud.opensdk.base.TopBaseActivity;
@@ -28,6 +32,7 @@ import com.qihancloud.opensdk.beans.FuncConstant;
 import com.qihancloud.opensdk.function.beans.EmotionsType;
 import com.qihancloud.opensdk.function.beans.LED;
 import com.qihancloud.opensdk.function.beans.SpeakOption;
+import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.beans.headmotion.AbsoluteAngleHeadMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
@@ -61,6 +66,9 @@ public class DetalleColorActivity extends TopBaseActivity {
     private JSONArray allColors;
     private String imageUriString;
 
+    private TextView colorRespuesta;
+    private Boolean isFirst;
+    private Boolean notFound;
 
 
     @Override
@@ -78,10 +86,12 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         setContentView(R.layout.activity_detalle_color);
         color = getIntent().getStringExtra("color");
+        isFirst = getIntent().getBooleanExtra("isFirst", true);
         imageUriString = getIntent().getStringExtra("screenshot_uri");
-        Log.d("Color elegido", color);
+        notFound =getIntent().getBooleanExtra("notFound", false);
+        Log.d("Color elegido", capitalizeCadena(color));
         TextView nombreColorEnPantalla = findViewById(R.id.nombreColor);
-        nombreColorEnPantalla.setText(color);
+        nombreColorEnPantalla.setText(capitalizeCadena(color));
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
@@ -95,7 +105,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         btnAbrirCamara = findViewById(R.id.abrirCamara);
-        btnComprobarColor = findViewById(R.id.comprobarColor);
+        btnComprobarColor = findViewById(R.id.notfound);
 
 
         faceRecognitionControl.stopFaceRecognition();
@@ -108,6 +118,11 @@ public class DetalleColorActivity extends TopBaseActivity {
 
     }
 
+    private String capitalizeCadena(String c){
+        Log.d("capitalize", "tratando de capitalizar " + c);
+        if (c.length() > 0 || c!=null || !c.isEmpty()) return c.substring(0,1).toUpperCase() + c.substring(1);
+        else return "";
+    }
     @Override
     public boolean onSupportNavigateUp() {
         finish();
@@ -139,6 +154,7 @@ public class DetalleColorActivity extends TopBaseActivity {
                 intent.setComponent(new ComponentName("com.example.languages", "com.example.sanbotapp.robotControl.MediaControlActivity"));
                 intent.putExtra("nombre_actividad", "DetalleColorActivity");
                 intent.putExtra("color", color);
+                intent.putExtra("isFirst",false);
                 startActivityForResult(intent, 100);
 
                 //startActivity(intent);
@@ -164,20 +180,11 @@ public class DetalleColorActivity extends TopBaseActivity {
                 }
                 else{
                     Log.d("Captura recibida", "Captura recibida pero es nula");
+                    String frase = "I can't see the image. Please capture it again!";
+                    speechManager.startSpeak(frase, speakOption);
+
 
                 }
-/*                if(esColorCorrecto()){
-
-                    String frase3 = "Good job! The object is red.";
-                    speechManager.startSpeak(frase3, speakOption);
-                    Log.d("Color elegido", color);
-                }
-                else{
-
-                    String frase3 = "Try again, sometimes I don't see objects very well";
-                    speechManager.startSpeak(frase3, speakOption);
-                    Log.d("Color elegido", color);
-                }*/
             }
 
         });
@@ -228,63 +235,11 @@ public class DetalleColorActivity extends TopBaseActivity {
         }
     }
 
-   /* public void sendImageToServer(File imageFile){
-        Log.d("Captura recibida", "Enviada al servidor");
-
-
-        OkHttpClient client = new OkHttpClient();
-
-        RequestBody fileBody = RequestBody.create(
-                imageFile,
-                MediaType.parse("image/jpeg")
-        );
-
-        MultipartBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("image", imageFile.getName(), fileBody)
-                .build();
-
-        Request request = new Request.Builder()
-                .url("https://opencv-pruebas.onrender.com/detect-color")
-                .post(requestBody)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                if(response.isSuccessful()){
-                    String json = response.body().string();
-                    System.out.println(json);
-                    JSONObject obj = null;
-                    try {
-                        obj = new JSONObject(json);
-                        color_dominant = obj.getString("dominant_color");
-                        percent = obj.getDouble("percentage");
-                        Log.d("Color dominante", color_dominant);
-
-                        Log.d("Porcentaje", String.valueOf(percent));
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        });
-    }*/
-
     public void sendImageToServer(File imageFile) {
 
         new Thread(() -> {
 
             try {
-                //OkHttpClient client = new OkHttpClient();
                 OkHttpClient client = new OkHttpClient.Builder()
                         .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
                         .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
@@ -338,9 +293,41 @@ public class DetalleColorActivity extends TopBaseActivity {
 
                         if (esColorCorrecto()) {
                             speechManager.startSpeak(
-                                    "Good job! The object is " + color_dominant,
+                                    "Good job! The color was " + color_dominant,
                                     speakOption
                             );
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            LayoutInflater inflater = getLayoutInflater();
+
+                            View dialogView = inflater.inflate(R.layout.dialog_feedbackcolores, null);
+                            builder.setView(dialogView);
+
+                            AlertDialog dialog = builder.create();
+                            dialog.setCancelable(false);
+                            colorRespuesta = dialogView.findViewById(R.id.colorRespuesta);
+                            colorRespuesta.setText(color.toUpperCase());
+
+                            dialog.show();
+                            Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
+                            Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
+
+                            btnAcceptar.setOnClickListener(v -> {
+                                dialog.dismiss();
+
+                                //absoluteAngleHandMotion.set(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 180));
+                                //handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
+                                // apagar luces
+                                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                            });
+
+                            btnCancelar.setOnClickListener(v -> {
+                                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                                headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+                                dialog.dismiss();
+                                finJuego();
+                                finish();
+                            });
+
                         } else {
                             speechManager.startSpeak(
                                     "Try again, I detected " + color_dominant,
@@ -367,54 +354,82 @@ public class DetalleColorActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
         super.onResume();
+        if(isFirst){
+            btnComprobarColor.setVisibility(View.GONE);
+
+        }
         // Inicializamos el sistema
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
 
-                AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,7);
-                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+                if(isFirst){
 
-                String frase2 = "Busquemos un objeto que sea de ese color!";
-                speechManager.startSpeak(frase2, speakOption);
+                    btnComprobarColor.setVisibility(View.GONE);
 
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
+                            new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,7);
+                    headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+
+                    String frase2 = "Let's look for an object of that colour!";
+                    speechManager.startSpeak(frase2, speakOption);
+
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    AbsoluteAngleHeadMotion absoluteAngleHeadMotion2 =
+                            new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,-7);
+                    headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion2);
+
+
+                    String frase3 = "When you find it, tap";
+                    speechManager.startSpeak(frase3, speakOption);
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    String frase = "Let's do it! The color you have chosen is";
+                    speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+                    speechManager.startSpeak(frase, speakOption);
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    speechManager.startSpeak(color, speakOption);
+
+
+                    AbsoluteAngleHeadMotion absoluteAngleHeadMotion3 =
+                            new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,90);
+                    headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion3);
                 }
 
-                AbsoluteAngleHeadMotion absoluteAngleHeadMotion2 =
-                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,-7);
-                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion2);
+                else if(notFound){
+                    String frase = "Don't worry we can try with other colour";
+                    speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+                    speechManager.startSpeak(frase, speakOption);
+                    finish();
+                }
+                else{
 
-                String frase3 = "When you find it, tap";
-                speechManager.startSpeak(frase3, speakOption);
+                    btnComprobarColor.setVisibility(View.VISIBLE);
 
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    String frase = "I have received your photo. Tap on check colour";
+                    speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+                    speechManager.startSpeak(frase, speakOption);
                 }
 
-                String frase = "Let's do it! The color is";
-                speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
-                speechManager.startSpeak(frase, speakOption);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                speechManager.startSpeak(color, speakOption);
 
 
                 //speechManager.startSpeak(color, speakOption);
 
-                AbsoluteAngleHeadMotion absoluteAngleHeadMotion3 =
-                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_HORIZONTAL,90);
-                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion3);
             }
         }, 200);
 
@@ -440,6 +455,42 @@ public class DetalleColorActivity extends TopBaseActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void finJuego() {
+
+        SpeakOption speakOption = new SpeakOption();
+        speakOption.setSpeed(40);
+        speakOption.setIntonation(50);
+
+        speechManager.startSpeak("Amazing! You finished all the colours!", speakOption);
+
+        systemManager.showEmotion(EmotionsType.SMILE);
+        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
+
+        AbsoluteAngleHandMotion motion =
+                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
+        handMotionManager.doAbsoluteAngleMotion(motion);
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        motion =
+                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
+        handMotionManager.doAbsoluteAngleMotion(motion);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
+
     }
 
 

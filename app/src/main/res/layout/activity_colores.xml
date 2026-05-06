@@ -29,6 +29,7 @@
                 android:layout_height="200dp"
                 android:src="@drawable/colores"
                 android:scaleType="centerInside"
+                android:tag="red"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <Button
@@ -36,6 +37,8 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="RED"
+                android:tag="red"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
@@ -54,6 +57,7 @@
                 android:layout_height="200dp"
                 android:src="@drawable/colores"
                 android:scaleType="centerInside"
+                android:tag="blue"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <Button
@@ -61,6 +65,8 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="BLUE"
+                android:tag="blue"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
@@ -74,18 +80,21 @@
             android:padding="16dp">
 
             <ImageButton
-                android:id="@+id/imgyellow"
+                android:id="@+id/imggreen"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/colores"
                 android:scaleType="centerInside"
+                android:tag="green"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <Button
-                android:id="@+id/yellow"
+                android:id="@+id/green"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="YELLOW"
+                android:text="GREEN"
+                android:tag="green"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
@@ -99,19 +108,22 @@
             android:padding="16dp">
 
             <ImageButton
-                android:id="@+id/imggreen"
+                android:id="@+id/imgpurple"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/colores"
+                android:tag="purple"
                 android:scaleType="centerInside"
 
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <Button
-                android:id="@+id/green"
+                android:id="@+id/purple"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="GREEN"
+                android:text="PURPLE"
+                android:tag="purple"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
@@ -135,59 +147,12 @@
             android:padding="16dp">
 
             <ImageButton
-                android:id="@+id/imgorange"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/colores"
-                android:scaleType="centerInside"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
-
-            <Button
-                android:id="@+id/orange"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:text="ORANGE"
-                android:background="@drawable/button_rounded"
-                android:textColor="@color/colorWhite"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16dp">
-
-            <ImageButton
-                android:id="@+id/imgpurple"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/colores"
-                android:scaleType="centerInside"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
-
-            <Button
-                android:id="@+id/purple"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:text="PURPLE"
-                android:background="@drawable/button_rounded"
-                android:textColor="@color/colorWhite"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="16dp">
-
-            <ImageButton
                 android:id="@+id/imgblack"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/colores"
                 android:scaleType="centerInside"
+                android:tag="black"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <Button
@@ -195,6 +160,62 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="BLACK"
+                android:tag="black"
+                android:textStyle="bold"
+                android:background="@drawable/button_rounded"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <ImageButton
+                android:id="@+id/imgpink"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/colores"
+                android:tag="pink"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+            <Button
+                android:id="@+id/pink"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="PINK"
+                android:textStyle="bold"
+                android:tag="pink"
+                android:background="@drawable/button_rounded"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <ImageButton
+                android:id="@+id/imggrey"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/colores"
+                android:tag="grey"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+            <Button
+                android:id="@+id/grey"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="GREY"
+                android:tag="grey"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>
@@ -211,6 +232,7 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/colores"
+                android:tag="white"
                 android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
@@ -219,6 +241,8 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="WHITE"
+                android:tag="white"
+                android:textStyle="bold"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite"/>
         </LinearLayout>

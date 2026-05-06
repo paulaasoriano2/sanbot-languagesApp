@@ -81,7 +81,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
 
     SurfaceView svMedia;
     TextureView tvMedia;
-    Button tvCapture, btn_cancel, btn_aceptar;
+    Button tvCapture, btn_cancel, btn_aceptar, btn_notfound;
 
     LinearLayout llButtons;
     ImageView ivCapture;
@@ -111,6 +111,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
     private String edit_fechaEvento="";
     private String selectedsonguri="";
     private String color="";
+    private Boolean isFirst = false;
     private long mRowId;
 
 
@@ -141,6 +142,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_aceptar = findViewById(R.id.btn_aceptar);
         llButtons = findViewById(R.id.ll_buttons);
+        btn_notfound = findViewById(R.id.btn_notfound);
 
         // Añadimos el speechManager
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
@@ -200,6 +202,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                     ivScreenshot.setImageBitmap(screenshot);
                     ivScreenshot.setVisibility(View.VISIBLE);
                     tvCapture.setVisibility(View.GONE);
+                    btn_notfound.setVisibility(View.GONE);
                     llButtons.setVisibility(View.VISIBLE);
 
 
@@ -215,12 +218,26 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
             }
         });
 
+        btn_notfound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                intent.setClassName("com.example.languages", "com.example.sanbotapp.DetalleColorActivity");
+                intent.putExtra("notFound", true);
+                intent.putExtra("color", color);
+                intent.putExtra("isFirst", isFirst);
+                setResult(RESULT_OK, intent);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ivScreenshot.setVisibility(View.GONE);
-                tvCapture.setVisibility(View.VISIBLE);
-                llButtons.setVisibility(View.GONE);
+                finish();
 
             }
         });
@@ -228,67 +245,15 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         btn_aceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Log.d("Nombre actividad", nombreActividad);
-                /*Intent resultIntent = new Intent();
-                resultIntent.putExtra("screenshot_uri", imageUri.toString());
-
-                setResult(RESULT_OK, resultIntent);
-                finish();
-*/
                 Intent intent = new Intent();
                 intent.setClassName("com.example.languages", "com.example.sanbotapp.DetalleColorActivity");
                 intent.putExtra("screenshot_uri", imageUri.toString());
+                intent.putExtra("notFound", false);
                 intent.putExtra("color", color);
+                intent.putExtra("isFirst", isFirst);
                 setResult(RESULT_OK, intent);
                 startActivity(intent);
                 finish();
-                /*if(Objects.equals(nombreActividad, "DetalleColorActivity")){
-
-                    Intent intent = new Intent();
-                    intent.setClassName("com.example.languages", "com.example.languages.DetalleColorActivity");
-                    if (imageUri != null) {
-                        intent.putExtra("screenshot_uri", imageUri.toString());
-                        Log.d("IMAGEN NO NULA", imageUri.toString());
-                    }
-                    setResult(RESULT_OK, intent);
-                    finish();
-
-                }
-                else{
-                    Intent intent = new Intent();
-                    intent.setClassName("com.example.lineatemporal", "com.example.sanbotapp."+ nombreActividad);
-                    intent.putExtra("screenshot_uri", imageUri.toString());
-                    intent.putExtra("mRowId final", mRowId);
-
-                    if(Objects.equals(nombreActividad, "CrearUsuarioActivity")){
-                        intent.putExtra("nombreUsuario", nombreUsuario);
-                        intent.putExtra("mote", mote);
-                    }
-
-                    if(Objects.equals(nombreActividad, "CrearLineaActivity")){
-                        intent.putExtra("nombreLinea", nombreLinea);
-                        intent.putExtra("descripcionLinea", descripcionLinea);
-                    }
-
-                    if(Objects.equals(nombreActividad, "CrearEventoActivity")){
-                        intent.putExtra("nombreEvento", nombreEvento);
-                        intent.putExtra("descripcionEvento", descripcionEvento);
-                        intent.putExtra("fechaEvento", fechaEvento);
-                    }
-
-                    if(Objects.equals(nombreActividad, "EditarEventoActivity")){
-                        intent.putExtra("edit_nombreEvento", edit_nombreEvento);
-                        intent.putExtra("edit_descripcionEvento", edit_descripcionEvento);
-                        intent.putExtra("edit_fechaEvento", edit_fechaEvento);
-                        intent.putExtra("edit_selectedSongUri", selectedsonguri);
-                    }
-
-
-                    System.out.println("mRowId final: " + mRowId);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(intent);
-
-                }*/
 
             }
         });

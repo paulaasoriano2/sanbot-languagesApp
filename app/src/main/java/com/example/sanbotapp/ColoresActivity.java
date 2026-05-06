@@ -38,8 +38,8 @@ public class ColoresActivity extends TopBaseActivity {
     public Boolean reconocimientoFacial = false;
     private Button btnRed;
     private Button btnBlue;
-    private Button btnOrange;
-    private Button btnYellow;
+    private Button btnBlack;
+    private Button btnWhite;
 
     private Button btnGreen;
 
@@ -81,10 +81,11 @@ public class ColoresActivity extends TopBaseActivity {
 
         btnRed = findViewById(R.id.red);
         btnBlue = findViewById(R.id.blue);
-        btnYellow = findViewById(R.id.yellow);
-        btnOrange = findViewById(R.id.orange);
+        btnWhite = findViewById(R.id.white);
+        btnBlack = findViewById(R.id.black);
         btnGreen = findViewById(R.id.green);
 
+        setAllButtonsClickable(true);
 
 
         faceRecognitionControl.stopFaceRecognition();
@@ -102,8 +103,8 @@ public class ColoresActivity extends TopBaseActivity {
     public void setAllButtonsClickable(boolean clickable) {
         btnRed.setClickable(clickable);
         btnBlue.setClickable(clickable);
-        btnYellow.setClickable(clickable);
-        btnOrange.setClickable(clickable);
+        btnWhite.setClickable(clickable);
+        btnBlack.setClickable(clickable);
         btnGreen.setClickable(clickable);
 
 
@@ -115,66 +116,23 @@ public class ColoresActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
 
-        btnRed.setOnClickListener(new View.OnClickListener() {
-
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-
-                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
-                intent.putExtra("color", "red");
-                startActivity(intent);
-            }
-        });
-        btnBlue.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-
+                String color = v.getTag().toString();
 
                 Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
-                intent.putExtra("color", "blue");
+                intent.putExtra("color", color);
                 startActivity(intent);
             }
-        });
-        btnGreen.setOnClickListener(new View.OnClickListener() {
+        };
 
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
-                intent.putExtra("color", "green");
-                startActivity(intent);
-            }
-        });
-        btnYellow.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
-                intent.putExtra("color", "yellow");
-                startActivity(intent);
-            }
-        });
-        btnOrange.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
-
-                Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
-                intent.putExtra("color", "orange");
-                startActivity(intent);
-            }
-        });
+        btnRed.setOnClickListener(listener);
+        btnBlue.setOnClickListener(listener);
+        btnGreen.setOnClickListener(listener);
+        btnWhite.setOnClickListener(listener);
+        btnBlack.setOnClickListener(listener);
 
     }
 

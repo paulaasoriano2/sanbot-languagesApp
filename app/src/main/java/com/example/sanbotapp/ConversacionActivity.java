@@ -29,6 +29,7 @@ import com.example.sanbotapp.GestionMediaPlayer;
 import com.example.sanbotapp.R;
 import com.example.sanbotapp.ModuloOpenAIChatCompletions;
 import com.example.sanbotapp.ModuloOpenAIAudioSpeech;
+import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.example.sanbotapp.robotControl.HandsControl;
 import com.example.sanbotapp.robotControl.HardwareControl;
 import com.example.sanbotapp.robotControl.HeadControl;
@@ -42,6 +43,7 @@ import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
 import com.qihancloud.opensdk.function.unit.HeadMotionManager;
+import com.qihancloud.opensdk.function.unit.MediaManager;
 import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 
@@ -116,6 +118,9 @@ public class ConversacionActivity extends TopBaseActivity {
     private ChatArrayAdapter chatArrayAdapter;
 
     private List<MensajeChat> conversacion;
+    private FaceRecognitionControl faceRecognitionControl;
+    private MediaManager mediaManager;
+
 
     @Override
     public void onResume() {
@@ -148,6 +153,8 @@ public class ConversacionActivity extends TopBaseActivity {
                 //speechManager.startSpeak(invitacion, speakOption);
                 speechControl.hablar(invitacion);
                 chatArrayAdapter.add(new MensajeChat(true, invitacion));
+                try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); } // si se activa el reconocimiento facial
+
 
 
 
@@ -191,6 +198,8 @@ public class ConversacionActivity extends TopBaseActivity {
         handMotionManager = (HandMotionManager) getUnitManager(FuncConstant.HANDMOTION_MANAGER);
         hardWareManager = (HardWareManager) getUnitManager(FuncConstant.HARDWARE_MANAGER);
         systemManager = (SystemManager) getUnitManager(FuncConstant.SYSTEM_MANAGER);
+        mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
+
 
         speakOption.setIntonation(50);
 
@@ -229,6 +238,19 @@ public class ConversacionActivity extends TopBaseActivity {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
+
+        faceRecognitionControl.startFaceRecognition();
+        faceRecognitionControl.startFaceRecognition();
+
+        // Parar después de 10 segundos (10000 ms)
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                faceRecognitionControl.stopFaceRecognition();
+            }
+        }, 10000);
 
 
     }

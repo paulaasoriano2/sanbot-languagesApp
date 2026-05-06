@@ -124,6 +124,8 @@ public class MainActivity extends TopBaseActivity {
         emociones = findViewById(R.id.emocionesimg);
         sayit = findViewById(R.id.sayit);
 
+        setAllButtonsClickable(true);
+
 
         faceRecognitionControl.stopFaceRecognition();
 
