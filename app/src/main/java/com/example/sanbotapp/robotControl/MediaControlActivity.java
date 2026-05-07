@@ -129,7 +129,6 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
@@ -148,6 +147,8 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
 
         // Añadimos el speechManager
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
+        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
+
         faceRecognitionControl.stopFaceRecognition();
 
         checkPermissions();

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -130,6 +131,20 @@ public class MainActivity extends TopBaseActivity {
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
+
+        //faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
+
+        /*faceRecognitionControl.startFaceRecognition();
+        faceRecognitionControl.startFaceRecognition();
+
+        // Parar después de 10 segundos (10000 ms)
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                faceRecognitionControl.stopFaceRecognition();
+            }
+        }, 10000);*/
+
     }
 
     public void setAllButtonsClickable(boolean clickable) {
@@ -156,7 +171,6 @@ public class MainActivity extends TopBaseActivity {
 
 
         btnAsociacion.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
@@ -296,7 +310,6 @@ public class MainActivity extends TopBaseActivity {
             public void onClick(View v) {
 
                 // Desactivar todos los botones
-                setAllButtonsClickable(false);
 
                 Intent intent = new Intent(MainActivity.this, AgendaActivity.class);
                 startActivity(intent);
@@ -322,7 +335,6 @@ public class MainActivity extends TopBaseActivity {
             public void onClick(View v) {
 
                 // Desactivar todos los botones
-                setAllButtonsClickable(false);
 
                 Intent intent = new Intent(MainActivity.this, ColoresActivity.class);
                 startActivity(intent);

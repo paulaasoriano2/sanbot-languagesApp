@@ -149,11 +149,11 @@ public class ConversacionActivity extends TopBaseActivity {
                 try { Thread.sleep(6000); } catch (InterruptedException e) { e.printStackTrace(); }
 
                 // Invitar al niño a presentarse
-                String invitacion = "Can you please tell me your name?";
+                String invitacion = "How are you today?";
                 //speechManager.startSpeak(invitacion, speakOption);
-                speechControl.hablar(invitacion);
+                //speechControl.hablar(invitacion);
                 chatArrayAdapter.add(new MensajeChat(true, invitacion));
-                try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); } // si se activa el reconocimiento facial
+                try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); } // si se activa el reconocimiento facial
 
 
 
@@ -242,7 +242,6 @@ public class ConversacionActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         faceRecognitionControl.startFaceRecognition();
-        faceRecognitionControl.startFaceRecognition();
 
         // Parar después de 10 segundos (10000 ms)
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -250,7 +249,7 @@ public class ConversacionActivity extends TopBaseActivity {
             public void run() {
                 faceRecognitionControl.stopFaceRecognition();
             }
-        }, 10000);
+        }, 2000);
 
 
     }

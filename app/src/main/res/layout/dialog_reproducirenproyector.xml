@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="1700dp"
+    android:layout_height="700dp"
+    android:gravity="center">
+
+        <TextView
+            android:id="@+id/feedbackTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="Do you want to reproduce it using the proyector?"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="70sp"
+            android:textStyle="bold"/>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btnCancel"
+                android:text="No"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FF0000"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:text="Yes"
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FF00"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+
+</LinearLayout>

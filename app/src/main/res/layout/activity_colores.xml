@@ -27,7 +27,7 @@
                 android:id="@+id/imgred"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/mancha"
                 android:scaleType="centerInside"
                 android:tag="red"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
