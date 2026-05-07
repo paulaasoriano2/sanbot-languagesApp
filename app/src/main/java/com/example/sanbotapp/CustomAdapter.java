@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,14 +20,14 @@ import java.util.Arrays;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    private ArrayList<String> localDataSet;
+    private ArrayList<Pictograma> localDataSet;
 
-    public void addItem(String item) {
+    public void addItem(Pictograma item) {
         localDataSet.add(item);
         notifyItemInserted(localDataSet.size() - 1);
     }
 
-    public void deleteItem(String item) {
+    public void deleteItem(Pictograma item) {
         if (!localDataSet.isEmpty()) {
             int position = localDataSet.size() - 1; // Elimina el último elemento añadido
             localDataSet.remove(position);
@@ -34,7 +35,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
     }
 
-    public ArrayList<String> getDataSet() {
+    public ArrayList<Pictograma> getDataSet() {
         return localDataSet;
     }
 
@@ -44,17 +45,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      * (custom ViewHolder)
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final ImageView imageView;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textView = (TextView) view.findViewById(R.id.textView);
+            imageView = view.findViewById(R.id.imageView);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public ImageView getImageView() {
+            return imageView;
         }
     }
 
@@ -64,7 +65,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      * @param dataSet String[] containing the data to populate views to be used
      * by RecyclerView
      */
-    public CustomAdapter(ArrayList<String> dataSet) {
+    public CustomAdapter(ArrayList<Pictograma> dataSet) {
         localDataSet = dataSet;
     }
 
@@ -84,8 +85,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getTextView().setText(localDataSet.get(position));
+        Pictograma pictograma = localDataSet.get(position);
 
+        int imageResource = viewHolder.itemView.getContext()
+                .getResources()
+                .getIdentifier(
+                        pictograma.getImagen(),
+                        "drawable",
+                        viewHolder.itemView.getContext().getPackageName()
+                );
+
+        viewHolder.getImageView().setImageResource(imageResource);
         viewHolder.itemView.setOnClickListener(v -> {
 
             int pos = viewHolder.getAdapterPosition();

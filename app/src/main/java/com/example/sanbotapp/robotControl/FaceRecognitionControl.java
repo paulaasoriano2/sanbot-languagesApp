@@ -50,11 +50,11 @@ public class FaceRecognitionControl {
                     if(user != ""){
 
                         String[] frases = {
-                                "Hola " + user + ", ¿cómo estás?",
-                                "¡Qué gusto verte " + user + "!",
-                                "Hola " + user + ", espero que estés teniendo un buen día.",
-                                "¡Hola " + user + "! ¿Cómo te va?",
-                                "Hola " + user + ", ¿qué tal todo?"
+                                "Hi " + user + ", how are you today?",
+                                //"¡Qué gusto verte " + user + "!",
+                               // "Hola " + user + ", espero que estés teniendo un buen día.",
+                               // "¡Hola " + user + "! ¿Cómo te va?",
+                                //"Hola " + user + ", ¿qué tal todo?"
                         };
 
                         // Seleccionar una frase aleatoria

@@ -113,6 +113,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
     private String color="";
     private Boolean isFirst = false;
     private long mRowId;
+    private FaceRecognitionControl faceRecognitionControl;
 
 
     /**
@@ -128,6 +129,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
@@ -146,6 +148,7 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
 
         // Añadimos el speechManager
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
+        faceRecognitionControl.stopFaceRecognition();
 
         checkPermissions();
 
@@ -153,6 +156,9 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         // Set TextureView listener
         tvMedia.setSurfaceTextureListener(this);
         initListener();
+
+
+
 
         // Obtener la URI de la imagen desde el intent
         Intent intent = getIntent();
@@ -210,9 +216,9 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                     saveScreenshot(MediaControlActivity.this, screenshot);
 
                     // Mostrar mensaje
-                    Toast.makeText(MediaControlActivity.this, "Captura mostrada y guardada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MediaControlActivity.this, "Coloured captured correctly", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MediaControlActivity.this, "Error al capturar la imagen", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MediaControlActivity.this, "Error capturing the colour", Toast.LENGTH_SHORT).show();
                 }
 
             }
