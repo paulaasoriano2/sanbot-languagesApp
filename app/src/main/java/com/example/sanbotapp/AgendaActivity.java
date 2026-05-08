@@ -1,18 +1,23 @@
 package com.example.sanbotapp;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +36,7 @@ import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
 import com.qihancloud.opensdk.function.unit.HeadMotionManager;
 import com.qihancloud.opensdk.function.unit.MediaManager;
+import com.qihancloud.opensdk.function.unit.ProjectorManager;
 import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 import com.qihancloud.opensdk.function.unit.WheelMotionManager;
@@ -69,6 +75,7 @@ public class AgendaActivity extends TopBaseActivity {
     private HardWareManager hardwareManager;
     List<Pictograma> pictogramas = new ArrayList<>();
     private LinearLayout containerLayout;
+    private ProjectorManager projectorManager;
 
 
     @Override
@@ -84,6 +91,8 @@ public class AgendaActivity extends TopBaseActivity {
         super.onCreate(savedInstanceState);
         onMainServiceConnected();
         setContentView(R.layout.activity_agenda);
+
+        projectorManager = (ProjectorManager) getUnitManager(FuncConstant.PROJECTOR_MANAGER);
 
 
         // Creación de la lista de elementos seleccionados vacía
@@ -149,7 +158,7 @@ public class AgendaActivity extends TopBaseActivity {
 
     private void mostrarPictogramas() {
 
-        LinearLayout pictogramasLayout =
+        GridLayout pictogramasLayout =
                 findViewById(R.id.pictogramasLayout);
 
         SpeakOption speakOption = new SpeakOption();
@@ -266,14 +275,18 @@ public class AgendaActivity extends TopBaseActivity {
 
                         }
                         else{
-                            for (int i = 0; i < localDataSet.size(); i++) {
+                            runOnUiThread(() -> {
+                                mostrarDialogoProyector();
+                            });
+
+                            /*for (int i = 0; i < localDataSet.size(); i++) {
                                 Pictograma elemento = localDataSet.get(i);
                                 System.out.println(elemento.getNombre());
                                 Thread.sleep(100);
                                 speechManager.startSpeak(localDataSet.get(i).getNombre(), speakOption);
                                 Thread.sleep(1000);
 
-                            }
+                            }*/
                         }
 
 
@@ -292,6 +305,61 @@ public class AgendaActivity extends TopBaseActivity {
         });
     }
 
+    void mostrarDialogoProyector(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.dialog_reproducirenproyector, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+
+        dialog.show();
+        Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
+        Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
+
+        btnAcceptar.setOnClickListener(v -> {
+            dialog.dismiss();
+
+            // ENCENDER PROYECTOR
+            projectorManager.switchProjector(true);
+
+            new Handler().postDelayed(() -> {
+
+                projectorManager.setMode(ProjectorManager.MODE_WALL);
+
+                projectorManager.setBright(31);
+
+                projectorManager.setTrapezoidV(30);
+
+                Intent intent = new Intent(
+                        AgendaActivity.this,
+                        ElementosAgendaActivity.class
+                );
+
+                intent.putExtra(
+                        "elements",
+                        adapter.getDataSet()
+                );
+
+                intent.putExtra("proyector", true);
+
+                startActivity(intent);
+
+            }, 4000); // esperar a que encienda
+
+        });
+
+        btnCancelar.setOnClickListener(v -> {
+            dialog.dismiss();
+            Intent intent = new Intent(AgendaActivity.this, ElementosAgendaActivity.class);
+            intent.putExtra("elements", adapter.getDataSet());
+            intent.putExtra("proyector", false);
+            startActivity(intent);
+        });
+
+    }
     public void getPictogramas() throws IOException, JSONException {
         URL url = new URL("https://api.arasaac.org/v1/pictograms/es/search/water");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

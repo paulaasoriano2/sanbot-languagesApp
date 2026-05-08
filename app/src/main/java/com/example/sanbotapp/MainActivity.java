@@ -175,47 +175,6 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
 
-                // Desactivar todos los botones
-
-                /*new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        // Mostrar emoción y encender LEDs
-                        systemManager.showEmotion(EmotionsType.SMILE);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                        // Generar frases aleatorias
-                        /*String[] frases = {
-                                "Hoy estoy muy feliz, ¡Gracias por jugar conmigo!",
-                                "Estoy contenta de que estés aquí",
-                                "Estoy muy feliz de verte, espero que tú también lo estés"
-                        };
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        String frase = "Vamos a jugar al juego asociación imagen palabra." +
-                                "Yo te diré una palabra en inglés y tú tendrás que seleccionar la imagen asociada. ¿Empezamos?";
-                        speechManager.startSpeak(frase, speakOption);
-
-                        // Simula la duración de la frase
-                        Thread.sleep(5000);
-
-                        // Apagar luces
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();*/
-
                 Intent intent = new Intent(MainActivity.this, AsociacionimagenPalabraMainActivity.class);
                 startActivity(intent);
             }
@@ -227,8 +186,6 @@ public class MainActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-
-                // Desactivar todos los botones
 
                 Intent intent = new Intent(MainActivity.this, AsociacionimagenPalabraMainActivity.class);
                 startActivity(intent);
@@ -243,47 +200,6 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
 
-                // Desactivar todos los botones
-
-                /*new Thread(() -> {
-                    try {
-                        // Simula un pequeño retraso inicial
-                        Thread.sleep(100);
-
-                        // Mostrar emoción y encender LEDs
-                        systemManager.showEmotion(EmotionsType.SMILE);
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                        // Generar frases aleatorias
-                        /*String[] frases = {
-                                "Hoy estoy muy feliz, ¡Gracias por jugar conmigo!",
-                                "Estoy contenta de que estés aquí",
-                                "Estoy muy feliz de verte, espero que tú también lo estés"
-                        };
-                        Random rand = new Random();
-                        int randomIndex = rand.nextInt(frases.length);
-                        speechManager.startSpeak(frases[randomIndex], speakOption);
-
-                        String frase = "Vamos a jugar al juego asociación imagen palabra." +
-                                "Yo te diré una palabra en inglés y tú tendrás que seleccionar la imagen asociada. ¿Empezamos?";
-                        speechManager.startSpeak(frase, speakOption);
-
-                        // Simula la duración de la frase
-                        Thread.sleep(5000);
-
-                        // Apagar luces
-                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
-                    }
-                }).start();*/
-
                 Intent intent = new Intent(MainActivity.this, ConversacionActivity.class);
                 startActivity(intent);
             }
@@ -296,8 +212,6 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
 
-                // Desactivar todos los botones
-
                 Intent intent = new Intent(MainActivity.this, ConversacionActivity.class);
                 startActivity(intent);
             }
@@ -308,8 +222,6 @@ public class MainActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-
-                // Desactivar todos los botones
 
                 Intent intent = new Intent(MainActivity.this, AgendaActivity.class);
                 startActivity(intent);
@@ -322,8 +234,6 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
 
-                // Desactivar todos los botones
-
                 Intent intent = new Intent(MainActivity.this, AgendaActivity.class);
                 startActivity(intent);
             }
@@ -334,8 +244,6 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
 
-                // Desactivar todos los botones
-
                 Intent intent = new Intent(MainActivity.this, ColoresActivity.class);
                 startActivity(intent);
             }
@@ -345,9 +253,6 @@ public class MainActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-
-                // Desactivar todos los botones
-
 
                 Intent intent = new Intent(MainActivity.this, ColoresActivity.class);
                 startActivity(intent);

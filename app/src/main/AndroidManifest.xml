@@ -42,6 +42,8 @@
         <activity android:name=".AsociacionimagenPalabraMainActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".robotControl.MediaControlActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ReconocimientoVocesActivity" android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".ElementosAgendaActivity" android:windowSoftInputMode="stateHidden" />
+
 
 
 

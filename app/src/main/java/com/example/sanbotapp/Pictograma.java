@@ -1,6 +1,8 @@
 package com.example.sanbotapp;
 
-public class Pictograma {
+import java.io.Serializable;
+
+public class Pictograma implements Serializable {
 
     private String nombre;
     private String imagen;

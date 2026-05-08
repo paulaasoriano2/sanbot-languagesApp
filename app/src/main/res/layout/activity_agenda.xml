@@ -21,65 +21,81 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <HorizontalScrollView
-        android:id="@+id/pictogramasContainer"
+    <!-- 🔵 LÍNEA AZUL FINA SUPERIOR -->
+    <View
+        android:id="@+id/dividerTop"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/addButton"
+        android:layout_height="2dp"
+        android:background="#2196F3"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp">
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <LinearLayout
-            android:id="@+id/pictogramasLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"/>
-    </HorizontalScrollView>
-    <LinearLayout
-        android:id="@+id/containerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-    </LinearLayout>
-
-
-    <!-- Botón de reproducir agenda -->
+    <!-- Botón reproducir -->
     <Button
         android:id="@+id/reproducir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp"/>
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/dividerTop"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- LISTA -->
+    <!-- Lista seleccionados -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintBottom_toTopOf="@id/pictogramasContainer"
+        android:layout_height="120dp"
+        app:layout_constraintTop_toBottomOf="@id/dividerTop"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/reproducir"
+        app:layout_constraintBottom_toTopOf="@id/dividerBottom"/>
+
+    <!-- 🔵 LÍNEA AZUL GRUESA -->
+    <View
+        android:id="@+id/dividerBottom"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:background="#1565C0"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 🔵 LÍNEA VERTICAL (entre los dos dividers) -->
+    <View
+        android:id="@+id/dividerVertical"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toTopOf="@id/dividerTop"
+        app:layout_constraintBottom_toBottomOf="@id/dividerBottom"
         app:layout_constraintEnd_toStartOf="@id/reproducir"/>
 
-
-    <ImageButton
-        android:id="@+id/addButton"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:contentDescription="Añadir"
-        android:src="@drawable/apple"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="16dp"
-        android:clickable="true"
+    <!-- GRID DE PICTOGRAMAS -->
+    <GridLayout
+        android:id="@+id/pictogramasLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:columnCount="7"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/dividerBottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Contenedor oculto -->
+    <LinearLayout
+        android:id="@+id/containerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
