@@ -1,9 +1,5 @@
 package com.example.sanbotapp;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.DataSetObserver;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,24 +7,13 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sanbotapp.ChatArrayAdapter;
-import com.example.sanbotapp.MensajeChat;
-import com.example.sanbotapp.GestionMediaPlayer;
-import com.example.sanbotapp.R;
-import com.example.sanbotapp.ModuloOpenAIChatCompletions;
-import com.example.sanbotapp.ModuloOpenAIAudioSpeech;
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.example.sanbotapp.robotControl.HandsControl;
 import com.example.sanbotapp.robotControl.HardwareControl;
@@ -39,7 +24,6 @@ import com.qihancloud.opensdk.base.TopBaseActivity;
 import com.qihancloud.opensdk.beans.FuncConstant;
 import com.qihancloud.opensdk.function.beans.EmotionsType;
 import com.qihancloud.opensdk.function.beans.SpeakOption;
-import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
 import com.qihancloud.opensdk.function.unit.HeadMotionManager;
@@ -47,13 +31,26 @@ import com.qihancloud.opensdk.function.unit.MediaManager;
 import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import android.media.MediaRecorder;
 
-public class ConversacionActivity extends TopBaseActivity {
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class ReconocimientoVocesActivity extends TopBaseActivity {
 
     // Componentes módulo conversacional
     private Button botonConfiguracion;
@@ -112,7 +109,11 @@ public class ConversacionActivity extends TopBaseActivity {
 
     private boolean forzarParada = false;
 
+    private MediaRecorder recorder;
+    private String audioPath;
 
+    private static final String SERVER_URL =
+            "https://pyannote-audio.onrender.com/diarize_live";
     private static SpeakOption speakOption = new SpeakOption();
 
     private ChatArrayAdapter chatArrayAdapter;
@@ -217,20 +218,21 @@ public class ConversacionActivity extends TopBaseActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        setAllButtonsClickable(true);
         try {
 
             botonHablar.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    try {
-                        registrarConsulta();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    empezarGrabacion();
+
+                    // grabar 4 segundos
+                    /*new Handler().postDelayed(() -> {
+
+                        pararGrabacion();
+
+                    }, 50000);*/
                 }
             });
 
@@ -240,16 +242,17 @@ public class ConversacionActivity extends TopBaseActivity {
         }
 
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
+        faceRecognitionControl.stopFaceRecognition();
 
-        faceRecognitionControl.startFaceRecognition();
+        //faceRecognitionControl.startFaceRecognition();
 
         // Parar después de 10 segundos (10000 ms)
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        /*new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 faceRecognitionControl.stopFaceRecognition();
             }
-        }, 5000);
+        }, 7000);*/
 
 
     }
@@ -314,6 +317,9 @@ public class ConversacionActivity extends TopBaseActivity {
         }).start();
     }
 
+    public void setAllButtonsClickable(boolean clickable) {
+        botonHablar.setClickable(clickable);
+    }
 
     private String capitalizeCadena(String c){
         Log.d("capitalize", "tratando de capitalizar " + c);
@@ -343,6 +349,124 @@ public class ConversacionActivity extends TopBaseActivity {
 
     }
 
+    private void empezarGrabacion() {
 
+        try {
+
+            audioPath = getExternalCacheDir().getAbsolutePath()
+                    + "/voz_usuario.m4a";
+
+            recorder = new MediaRecorder();
+
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+            recorder.setAudioSamplingRate(16000);
+
+            recorder.setAudioEncodingBitRate(96000);
+
+            recorder.setOutputFile(audioPath);
+
+            recorder.prepare();
+
+            recorder.start();
+
+            Log.d("AUDIO", "Grabando...");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void pararGrabacion() {
+
+        try {
+
+            if (recorder != null) {
+
+                recorder.stop();
+                recorder.release();
+                recorder = null;
+
+                Log.d("AUDIO", "Grabación finalizada");
+
+                enviarAudioServidor();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void enviarAudioServidor() {
+
+        File audioFile = new File(audioPath);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody fileBody =
+                RequestBody.create(
+                        audioFile,
+                        MediaType.parse("audio/mp4")
+                );
+
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(
+                        "audio",
+                        audioFile.getName(),
+                        fileBody
+                )
+                .build();
+
+        Request request = new Request.Builder()
+                .url(SERVER_URL)
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+                Log.e("SERVER", "Error conexión", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response)
+                    throws IOException {
+
+                String responseData = response.body().string();
+
+                Log.d("SERVER_RESPONSE", responseData);
+
+                try {
+
+                    JSONObject json = new JSONObject(responseData);
+
+                    String speaker = json.getString("speaker");
+
+                    runOnUiThread(() -> {
+
+                        String mensaje =
+                                "Hello " + speaker;
+
+                        speechControl.hablar(mensaje);
+
+                        chatArrayAdapter.add(
+                                new MensajeChat(
+                                        true,
+                                        mensaje
+                                )
+                        );
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }
