@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,6 +63,8 @@ public class AgendaActivity extends TopBaseActivity {
     public Boolean reconocimientoFacial = false;
     private ImageButton addButton;
     private Button reproducir;
+    private ImageButton btnBack;
+
 
     private CustomAdapter adapter;
     
@@ -122,6 +125,8 @@ public class AgendaActivity extends TopBaseActivity {
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
         reproducir = findViewById(R.id.reproducir);
+        btnBack = findViewById(R.id.btnBack);
+
         containerLayout = findViewById(R.id.containerLayout);
 
 
@@ -129,8 +134,6 @@ public class AgendaActivity extends TopBaseActivity {
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         PictogramasDbAdapter db = getPictogramasDbAdapter();
@@ -245,6 +248,7 @@ public class AgendaActivity extends TopBaseActivity {
     }
     public void setAllButtonsClickable(boolean clickable) {
         reproducir.setClickable(clickable);
+        btnBack.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -255,15 +259,10 @@ public class AgendaActivity extends TopBaseActivity {
 
 
         reproducir.setOnClickListener(new View.OnClickListener() {
-            private boolean isProcessing = false; // Bandera para evitar múltiples clics
 
             @Override
             public void onClick(View v) {
-                if (isProcessing) return; // Si ya está procesando, ignorar el clic
-                isProcessing = true;
 
-                // Desactivar todos los botones
-                setAllButtonsClickable(false);
 
                 new Thread(() -> {
                     try {
@@ -292,15 +291,17 @@ public class AgendaActivity extends TopBaseActivity {
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    } finally {
-                        // Reactivar todos los botones
-                        runOnUiThread(() -> {
-                            setAllButtonsClickable(true);
-                            isProcessing = false; // Liberar bandera
-                        });
                     }
                 }).start();
 
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

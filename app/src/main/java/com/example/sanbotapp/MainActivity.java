@@ -20,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.example.sanbotapp.robotControl.HardwareControl;
 import com.example.sanbotapp.robotControl.SpeechControl;
@@ -98,6 +101,7 @@ public class MainActivity extends TopBaseActivity {
         super.onCreate(savedInstanceState);
         onMainServiceConnected();
         setContentView(R.layout.activity_main);
+
 
         speechManager = (SpeechManager) getUnitManager(FuncConstant.SPEECH_MANAGER);
         mediaManager = (MediaManager) getUnitManager(FuncConstant.MEDIA_MANAGER);
@@ -365,6 +369,10 @@ public class MainActivity extends TopBaseActivity {
         if (id == R.id.logo) {
             Intent intent = new Intent(MainActivity.this, ReconocimientoVocesActivity.class);
             startActivity(intent);
+            return true;
+        }
+        if (item.getItemId() == android.R.id.home) {
+            finish();
             return true;
         }
 

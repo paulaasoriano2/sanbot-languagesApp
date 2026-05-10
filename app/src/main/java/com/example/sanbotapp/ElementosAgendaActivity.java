@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 
 import com.qihancloud.opensdk.base.TopBaseActivity;
@@ -44,6 +45,12 @@ public class ElementosAgendaActivity extends TopBaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_elementos_agenda);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.arrow_button);
+        }
 
         image1 = findViewById(R.id.image1);
         image2 = findViewById(R.id.image2);

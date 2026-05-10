@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -120,6 +121,7 @@ public class ConversacionActivity extends TopBaseActivity {
     private List<MensajeChat> conversacion;
     private FaceRecognitionControl faceRecognitionControl;
     private MediaManager mediaManager;
+    private ImageButton btnBack;
 
 
     @Override
@@ -179,10 +181,12 @@ public class ConversacionActivity extends TopBaseActivity {
         // Establecer pantalla
         setContentView(R.layout.activity_modulo_conversacional_dos);
 
+
         // Instanciación de componentes
         botonHablar = findViewById(R.id.botonHablar);
         textoConsulta = findViewById(R.id.text_gchat_indicator);
         dialogo = findViewById(R.id.recycler_gchat);
+        btnBack = findViewById(R.id.btnBack);
 
         chatArrayAdapter = new ChatArrayAdapter();
 
@@ -215,8 +219,6 @@ public class ConversacionActivity extends TopBaseActivity {
         moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
         gestionMediaPlayer = new GestionMediaPlayer();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         try {
 
@@ -231,6 +233,14 @@ public class ConversacionActivity extends TopBaseActivity {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                }
+            });
+
+            btnBack.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    finish();
                 }
             });
 

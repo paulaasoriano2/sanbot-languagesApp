@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
@@ -69,6 +70,7 @@ public class DetalleColorActivity extends TopBaseActivity {
     private TextView colorRespuesta;
     private Boolean isFirst;
     private Boolean notFound;
+    private ImageButton btnBack;
 
 
     @Override
@@ -85,6 +87,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         onMainServiceConnected();
 
         setContentView(R.layout.activity_detalle_color);
+
         color = getIntent().getStringExtra("color");
         isFirst = getIntent().getBooleanExtra("isFirst", true);
         imageUriString = getIntent().getStringExtra("screenshot_uri");
@@ -106,13 +109,13 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         btnAbrirCamara = findViewById(R.id.abrirCamara);
         btnComprobarColor = findViewById(R.id.notfound);
+        //btnBack = findViewById(R.id.btnBack);
 
 
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 
@@ -132,6 +135,7 @@ public class DetalleColorActivity extends TopBaseActivity {
     public void setAllButtonsClickable(boolean clickable) {
         btnAbrirCamara.setClickable(clickable);
         btnComprobarColor.setClickable(clickable);
+//        btnBack.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -162,6 +166,14 @@ public class DetalleColorActivity extends TopBaseActivity {
             }
 
         });
+
+        /*btnBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });*/
 
         btnComprobarColor.setOnClickListener(new View.OnClickListener() {
 

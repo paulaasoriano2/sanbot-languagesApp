@@ -68,23 +68,23 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'pear','pear',1)");
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'shoes','shoes',1)");
 
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('deporte','deporte', 'deporte',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('desayunar','desayunar', 'desayunar',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('dormir','dormir', 'dormir',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('duchar','duchar', 'duchar',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('escribir','escribir', 'escribir',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('estudiar','estudiar', 'estudiar',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('iralacompra','ir a la compra', 'iralacompra',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('iralcolegio','ir al colegio', 'iralcolegio',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('jugaralapelota','jugar a ña pelota', 'jugaralapelota',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('leer','leer', 'leer',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('trabajarenelordenador','trabajar en el ordenador', 'trabajarenelordenador',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('vamonosacasa','vamonos a casa', 'vamonosacasa',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('verlatele','ver la tele', 'verlatele',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('vestir','vestir', 'vestir',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cenar','cenar', 'cenar',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cocinar','cocinar', 'cocinar',1)");
-        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comer','comer', 'comer',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('deporte','Sport', 'deporte',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('desayunar','Have breakfast', 'desayunar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('dormir','Sleep', 'dormir',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('duchar','Shower', 'duchar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('escribir','Write', 'escribir',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('estudiar','Study', 'estudiar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('iralacompra','Go shopping', 'iralacompra',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('iralcolegio','Go to school', 'iralcolegio',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('jugaralapelota','Play ball', 'jugaralapelota',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('leer','Read', 'leer',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('trabajarenelordenador','Work on the computer', 'trabajarenelordenador',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('vamonosacasa','Let''s go home', 'vamonosacasa',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('verlatele','Watch TV', 'verlatele',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('vestir','Dress', 'vestir',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cenar','Have dinner', 'cenar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cocinar','Cook', 'cocinar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comer','Eat', 'comer',1)");
 
 
 

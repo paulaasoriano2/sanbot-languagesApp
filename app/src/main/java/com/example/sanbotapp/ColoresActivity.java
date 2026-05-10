@@ -52,6 +52,7 @@ public class ColoresActivity extends TopBaseActivity {
     private HeadMotionManager headMotionManager;
     private HardWareManager hardwareManager;
     private String colour;
+    private ImageButton btnBack;
 
 
     @Override
@@ -84,6 +85,7 @@ public class ColoresActivity extends TopBaseActivity {
         btnWhite = findViewById(R.id.white);
         btnBlack = findViewById(R.id.black);
         btnGreen = findViewById(R.id.green);
+        btnBack = findViewById(R.id.btnBack);
 
         setAllButtonsClickable(true);
 
@@ -92,7 +94,6 @@ public class ColoresActivity extends TopBaseActivity {
 
         setonClicks();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -106,6 +107,7 @@ public class ColoresActivity extends TopBaseActivity {
         btnWhite.setClickable(clickable);
         btnBlack.setClickable(clickable);
         btnGreen.setClickable(clickable);
+        btnBack.setClickable(clickable);
 
 
     }
@@ -133,6 +135,14 @@ public class ColoresActivity extends TopBaseActivity {
         btnGreen.setOnClickListener(listener);
         btnWhite.setOnClickListener(listener);
         btnBlack.setOnClickListener(listener);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

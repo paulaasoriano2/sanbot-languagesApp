@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
@@ -83,6 +84,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     List<ImageButton> imagenes = new ArrayList<>();
     int indiceCorrecto;
     List<String> palabrasAMostrar = new ArrayList<String>();
+    private ImageButton btnBack;
 
     @Override
     protected void onMainServiceConnected() {
@@ -124,6 +126,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         fallo2 = findViewById(R.id.imgcolores);
         fallo3 = findViewById(R.id.imgcolores2);
         titulo = findViewById(R.id.actividad);
+        btnBack = findViewById(R.id.btnBack);
 
         imagenes.add(acierto);
         imagenes.add(fallo1);
@@ -138,8 +141,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         VocabularioDbAdapter db = getVocabularioDbAdapter();
 // Leer
@@ -179,6 +180,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         fallo2.setClickable(clickable);
         fallo3.setClickable(clickable);
         acierto.setClickable(clickable);
+        btnBack.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -198,6 +200,14 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 }
             });
         }
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
@@ -309,60 +319,68 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
         } else {
             speechManager.startSpeak("Try again!", speakOption);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-            systemManager.showEmotion(EmotionsType.QUESTION);
-            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
+            new Handler().postDelayed(() -> {
+                systemManager.showEmotion(EmotionsType.QUESTION);
+                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
 
-            AbsoluteAngleHandMotion absoluteAngleHandMotion =
-                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
-            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+                AbsoluteAngleHandMotion arm =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
+                handMotionManager.doAbsoluteAngleMotion(arm);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                LayoutInflater inflater = getLayoutInflater();
 
-            View dialogView = inflater.inflate(R.layout.dialog_pista, null);
-            builder.setView(dialogView);
+                View dialogView = inflater.inflate(R.layout.dialog_pista, null);
+                builder.setView(dialogView);
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                AlertDialog dialog = builder.create();
+                Objects.requireNonNull(dialog.getWindow())
+                        .setBackgroundDrawableResource(android.R.color.transparent);
+                dialog.show();
 
+                imagenes.get(imagenPulsada).setVisibility(View.GONE);
+                imagenesOcultas.add(imagenPulsada);
 
-            imagenes.get(imagenPulsada).setVisibility(View.GONE);
-            imagenesOcultas.add(imagenPulsada);
+                speechManager.startSpeak("I can repeat the word again.", speakOption);
 
-            String[] frases = {"I can repeat the word again."};
-            Random rand = new Random();
-            int randomIndex = rand.nextInt(frases.length);
-            speechManager.startSpeak(frases[randomIndex], speakOption);
+                new Handler().postDelayed(() -> {
 
-            AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
-                    new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 7);
-            headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                    speechManager.startSpeak("The word is", speakOption);
 
+                    new Handler().postDelayed(() -> {
 
-            speechManager.startSpeak("The word is", speakOption);
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                        speechManager.startSpeak(titulos.get(contador), speakOption);
 
-            speechManager.startSpeak(titulos.get(contador), speakOption);
-            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                        new Handler().postDelayed(() -> {
 
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
 
+                            resetRobotAfterFailure();
+
+                        }, 1000);
+
+                    }, 2500);
+
+                }, 2500);
+                },1000);
         }
 
+    }
+
+    private void resetRobotAfterFailure() {
+
+        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
+        AbsoluteAngleHandMotion armsDown =
+                new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 180);
+        handMotionManager.doAbsoluteAngleMotion(armsDown);
+
+        AbsoluteAngleHeadMotion headUp =
+                new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 30);
+        headMotionManager.doAbsoluteAngleMotion(headUp);
     }
 
     private void finJuego() {

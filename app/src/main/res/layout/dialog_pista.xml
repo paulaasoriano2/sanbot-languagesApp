@@ -1,6 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="1300dp"
+    android:background="@drawable/dialog_rounded"
+    android:padding="20dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -25,7 +27,7 @@
             android:text="HINT!"
             android:textSize="60sp"
             android:layout_margin="20dp"
-            android:textColor="@android:color/black"
+            android:textColor="#3C3200"
             android:textAlignment="center"
             android:gravity="center"
             android:id="@+id/hint"
@@ -39,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="That's not the correct image."
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:layout_margin="20dp"
             android:textColor="@android:color/black"
             android:textAlignment="center"

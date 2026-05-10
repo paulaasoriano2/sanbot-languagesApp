@@ -8,6 +8,12 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".AsociacionimagenPalabraActivity">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Título -->
     <TextView
@@ -20,7 +26,9 @@
         android:textAlignment="center"
         android:gravity="center"
         android:id="@+id/actividad"
-        />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:layout_width="match_parent"
