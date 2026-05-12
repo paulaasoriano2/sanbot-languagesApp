@@ -56,7 +56,7 @@ public class ModuloOpenAIAudioSpeech {
                 .url("https://api.openai.com/v1/audio/speech")
                 .post(peticion)
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer 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")
+                .header("Authorization", "Bearer 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")
                 .build();
 
         Log.d("requestBody", requestOpenAI.toString());
