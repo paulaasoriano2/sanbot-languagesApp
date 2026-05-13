@@ -62,7 +62,7 @@ public class AgendaActivity extends TopBaseActivity {
 
     public Boolean reconocimientoFacial = false;
     private ImageButton addButton;
-    private Button reproducir;
+    private ImageButton reproducir;
     private ImageButton btnBack;
 
 
@@ -230,7 +230,8 @@ public class AgendaActivity extends TopBaseActivity {
 
             // Añadir vistas
             itemLayout.addView(imageView);
-            //itemLayout.addView(textView); POR SI SE QUIERE MOSTRAR EL TEXTO DE LOS PICTOGRAMAS
+            itemLayout.addView(textView); // POR SI SE QUIERE MOSTRAR EL TEXTO DE LOS PICTOGRAMAS
+            itemLayout.setGravity(android.view.Gravity.CENTER);
 
             pictogramasLayout.addView(itemLayout);
         }

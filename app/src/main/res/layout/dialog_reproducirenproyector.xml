@@ -1,49 +1,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="1700dp"
-    android:layout_height="700dp"
-    android:gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="32dp"
+    android:gravity="center"
+    android:background="@drawable/dialog_rounded_bg">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
+        android:id="@+id/feedbackTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="dialog_reproducirenproyector.xml" />
-
-    <TextView
-            android:id="@+id/feedbackTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:gravity="center"
-            android:text="Do you want to reproduce it using the proyector?"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="70sp"
-            android:textStyle="bold"/>
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:text="Do you want to reproduce it using the projector?"
+        android:textAlignment="center"
+        android:textColor="#333333"
+        android:textSize="26sp"
+        android:textStyle="bold"/>
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <Button
-                android:id="@+id/btnCancel"
-                android:text="No"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#FF0000"
-                android:textStyle="bold"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-            <Button
-                android:id="@+id/btnAccept"
-                android:text="Yes"
-                android:layout_marginStart="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00FF00"
-                android:textStyle="bold"/>
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="140dp"
+            android:layout_height="52dp"
+            android:text="No"
+            android:textAllCaps="false"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:background="@drawable/btn_pastel_red"/>
 
+        <Button
+            android:id="@+id/btnAccept"
+            android:layout_width="140dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="16dp"
+            android:text="Yes"
+            android:textAllCaps="false"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:background="@drawable/btn_pastel_green"/>
+    </LinearLayout>
 
 </LinearLayout>

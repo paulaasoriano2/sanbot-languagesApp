@@ -46,12 +46,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
+        private final TextView textView;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
             imageView = view.findViewById(R.id.imageView);
+            textView = view.findViewById(R.id.textView);
         }
 
         public ImageView getImageView() {
@@ -96,6 +98,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 );
 
         viewHolder.getImageView().setImageResource(imageResource);
+        viewHolder.textView.setText(pictograma.getNombre());
+        viewHolder.textView.setPadding(0, 4, 0, 0);
+
         viewHolder.itemView.setOnClickListener(v -> {
 
             int pos = viewHolder.getAdapterPosition();

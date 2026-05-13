@@ -1,5 +1,8 @@
 package com.example.sanbotapp;
 
+import android.Manifest;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +44,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -121,6 +126,11 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
     private List<MensajeChat> conversacion;
     private FaceRecognitionControl faceRecognitionControl;
     private MediaManager mediaManager;
+    private Button botonDetener;
+    private boolean grabando = false;
+    private AudioRecord audioRecord;
+    private boolean isRecording = false;
+    private Thread recordingThread;
 
 
     @Override
@@ -142,19 +152,19 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                 // Saludo inicial
                 String saludo = "Hi there! I have been waiting so long to talk. Let's have a wonderful conversation now!";
                 //speechManager.startSpeak(saludo, speakOption);
-                speechControl.hablar(saludo);
+                //speechControl.hablar(saludo);
                 chatArrayAdapter.add(new MensajeChat(true, saludo));
 
 
                 // Esperar un poco antes de la siguiente frase
-                try { Thread.sleep(6000); } catch (InterruptedException e) { e.printStackTrace(); }
+               // try { Thread.sleep(6000); } catch (InterruptedException e) { e.printStackTrace(); }
 
                 // Invitar al niño a presentarse
                 String invitacion = "How are you today?";
                 //speechManager.startSpeak(invitacion, speakOption);
                 //speechControl.hablar(invitacion);
                 chatArrayAdapter.add(new MensajeChat(true, invitacion));
-                try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); } // si se activa el reconocimiento facial
+                //try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); } // si se activa el reconocimiento facial
 
 
 
@@ -169,6 +179,14 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                1
+        );
 
         // Configuración de la aplicación
         super.onCreate(savedInstanceState);
@@ -178,12 +196,13 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
 
         // Establecer pantalla
-        setContentView(R.layout.activity_modulo_conversacional_dos);
+        setContentView(R.layout.activity_modulo_conversacional);
 
         // Instanciación de componentes
         botonHablar = findViewById(R.id.botonHablar);
         textoConsulta = findViewById(R.id.text_gchat_indicator);
         dialogo = findViewById(R.id.recycler_gchat);
+        botonDetener = findViewById(R.id.botonDetener);
 
         chatArrayAdapter = new ChatArrayAdapter();
 
@@ -216,26 +235,30 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
         moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
         gestionMediaPlayer = new GestionMediaPlayer();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setAllButtonsClickable(true);
         try {
 
-            botonHablar.setOnClickListener(new View.OnClickListener() {
+            botonHablar.setOnClickListener(v -> {
 
-                @Override
-                public void onClick(View v) {
+                if (!grabando) {
+
                     empezarGrabacion();
+                    grabando = true;
 
-                    // grabar 4 segundos
-                    /*new Handler().postDelayed(() -> {
-
-                        pararGrabacion();
-
-                    }, 50000);*/
+                    Log.d("AUDIO", "Grabación iniciada");
                 }
             });
 
+            botonDetener.setOnClickListener(v -> {
+
+                if (grabando) {
+
+                    pararGrabacion();
+                    grabando = false;
+
+                    Log.d("AUDIO", "Grabación detenida");
+                }
+            });
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -349,12 +372,14 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
     }
 
-    private void empezarGrabacion() {
+    /*private void empezarGrabacion() {
 
         try {
 
-            audioPath = getExternalCacheDir().getAbsolutePath()
+            audioPath = Objects.requireNonNull(getExternalCacheDir()).getAbsolutePath()
                     + "/voz_usuario.m4a";
+
+            Log.d("audioPath", audioPath);
 
             recorder = new MediaRecorder();
 
@@ -379,8 +404,118 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }*/
+    /*private void empezarGrabacion() {
+
+        try {
+
+            // DETENER SISTEMA DE VOZ DEL ROBOT
+            speechManager.doSleep();
+
+            // Esperar un poco para liberar el micro
+            Thread.sleep(1000);
+
+            audioPath = getExternalCacheDir().getAbsolutePath()
+                    + "/voz_usuario.3gp";
+
+            Log.d("AUDIO", "Path: " + audioPath);
+
+            if (recorder != null) {
+                recorder.release();
+                recorder = null;
+            }
+
+            recorder = new MediaRecorder();
+
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
+            // FORMATO MUCHO MÁS COMPATIBLE
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+            recorder.setOutputFile(audioPath);
+
+            recorder.prepare();
+
+            recorder.start();
+
+            Log.d("AUDIO", "Grabación iniciada correctamente");
+
+        } catch (Exception e) {
+
+            Log.e("AUDIO", "Error al grabar", e);
+        }
+    }*/
+    private void empezarGrabacion() {
+
+        try {
+
+            int sampleRate = 16000;
+
+            int bufferSize = AudioRecord.getMinBufferSize(
+                    sampleRate,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT
+            );
+
+            audioRecord = new AudioRecord(
+                    MediaRecorder.AudioSource.MIC,
+                    sampleRate,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    bufferSize
+            );
+
+            audioPath = getExternalCacheDir().getAbsolutePath()
+                    + "/voz_usuario.pcm";
+
+            isRecording = true;
+
+            audioRecord.startRecording();
+
+            Log.d("AUDIO", "AudioRecord iniciado");
+
+            recordingThread = new Thread(() -> {
+
+                try {
+
+                    File file = new File(audioPath);
+
+                    java.io.FileOutputStream os =
+                            new java.io.FileOutputStream(file);
+
+                    byte[] buffer = new byte[bufferSize];
+
+                    while (isRecording) {
+
+                        int read = audioRecord.read(
+                                buffer,
+                                0,
+                                buffer.length
+                        );
+
+                        if (read > 0) {
+                            os.write(buffer, 0, read);
+                        }
+                    }
+
+                    os.close();
+
+                } catch (Exception e) {
+
+                    Log.e("AUDIO", "Error escribiendo PCM", e);
+                }
+            });
+
+            recordingThread.start();
+
+        } catch (Exception e) {
+
+            Log.e("AUDIO", "Error AudioRecord", e);
+        }
     }
-    private void pararGrabacion() {
+    /*private void pararGrabacion() {
 
         try {
 
@@ -397,6 +532,28 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }*/
+    private void pararGrabacion() {
+
+        try {
+
+            isRecording = false;
+
+            if (audioRecord != null) {
+
+                audioRecord.stop();
+                audioRecord.release();
+                audioRecord = null;
+            }
+
+            Log.d("AUDIO", "Grabación PCM finalizada");
+
+            enviarAudioServidor();
+
+        } catch (Exception e) {
+
+            Log.e("AUDIO", "Error parando grabación", e);
         }
     }
     private void enviarAudioServidor() {
@@ -440,6 +597,13 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                 String responseData = response.body().string();
 
                 Log.d("SERVER_RESPONSE", responseData);
+                if (!response.isSuccessful()) {
+
+                    Log.e("SERVER", "Código: " + response.code());
+                    Log.e("SERVER", responseData);
+
+                    return;
+                }
 
                 try {
 

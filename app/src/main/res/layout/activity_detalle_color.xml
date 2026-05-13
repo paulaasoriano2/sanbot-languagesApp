@@ -8,6 +8,8 @@
     android:orientation="vertical"
     android:gravity="center_vertical"
     tools:context=".DetalleColorActivity">
+    <include layout="@layout/toolbar"/>
+
 
     <LinearLayout
         android:layout_width="wrap_content"

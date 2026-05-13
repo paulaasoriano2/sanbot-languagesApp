@@ -86,6 +86,7 @@ public class MainActivity extends TopBaseActivity {
     private WheelMotionManager wheelMotionManager;
     private HeadMotionManager headMotionManager;
     private HardWareManager hardwareManager;
+    private ImageButton btnBack;
 
 
     @Override
@@ -114,6 +115,8 @@ public class MainActivity extends TopBaseActivity {
 
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setVisibility(View.GONE);
         btnAsociacion = findViewById(R.id.asociacionimagenpalabra);
         btnAgenda = findViewById(R.id.agenda);
         btnColores = findViewById(R.id.colores);
