@@ -85,6 +85,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     int indiceCorrecto;
     List<String> palabrasAMostrar = new ArrayList<String>();
     private ImageButton btnBack;
+    private int fallosSeguidos;
 
     @Override
     protected void onMainServiceConnected() {
@@ -94,6 +95,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        fallosSeguidos = 0;
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
@@ -217,6 +219,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         speakOption.setIntonation(50);
 
         if(imagenPulsada == indiceCorrecto){
+            fallosSeguidos = 0;
 
                 // Mostrar emoción y encender LEDs
             systemManager.showEmotion(EmotionsType.PRISE);
@@ -289,12 +292,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                     actualizarTitulo();
                 });
                 correcto = false;
-            /*int resId = getResources().getIdentifier(
-                    nombreImagen,
-                    "drawable",
-                    getPackageName()
-            );*/
-
 
 
                 headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
@@ -318,54 +315,132 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
 
         } else {
+            fallosSeguidos++;
             speechManager.startSpeak("Try again!", speakOption);
 
-            new Handler().postDelayed(() -> {
-                systemManager.showEmotion(EmotionsType.QUESTION);
-                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
-
-                AbsoluteAngleHandMotion arm =
-                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
-                handMotionManager.doAbsoluteAngleMotion(arm);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                LayoutInflater inflater = getLayoutInflater();
-
-                View dialogView = inflater.inflate(R.layout.dialog_pista, null);
-                builder.setView(dialogView);
-
-                AlertDialog dialog = builder.create();
-                Objects.requireNonNull(dialog.getWindow())
-                        .setBackgroundDrawableResource(android.R.color.transparent);
-                dialog.show();
-
-                imagenes.get(imagenPulsada).setVisibility(View.GONE);
-                imagenesOcultas.add(imagenPulsada);
-
-                speechManager.startSpeak("I can repeat the word again.", speakOption);
-
+            if(fallosSeguidos == 3){
+                fallosSeguidos = 0;
                 new Handler().postDelayed(() -> {
+                    systemManager.showEmotion(EmotionsType.SWEAT);
+                    hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
 
-                    speechManager.startSpeak("The word is", speakOption);
+                    AbsoluteAngleHandMotion arm =
+                            new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
+                    handMotionManager.doAbsoluteAngleMotion(arm);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    LayoutInflater inflater = getLayoutInflater();
+
+                    View dialogView = inflater.inflate(R.layout.dialog_feedbackasociacionlast, null);
+                    builder.setView(dialogView);
+
+                    AlertDialog dialog = builder.create();
+                    Objects.requireNonNull(dialog.getWindow())
+                            .setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog.show();
+
+                    Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
+                    Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
+
+                    for (int k = 0; k < imagenesOcultas.size(); k++) {
+                        imagenes.get(imagenesOcultas.get(k)).setVisibility(View.VISIBLE);
+                    }
+
+
+                    speechManager.startSpeak("“You almost got it, next time you’ll definitely get it!", speakOption);
+
+                    btnAcceptar.setOnClickListener(v -> {
+                        dialog.dismiss();
+
+
+                        // apagar luces
+                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
+                        // Cambiar imagen
+                        indiceActual++;
+                        contador ++;
+
+                        runOnUiThread(() -> {
+                            actualizarImagen();
+                            actualizarTitulo();
+                        });
+                        correcto = false;
+
+
+                        headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+
+                        if (contador>=4) {
+                            indiceActual = 0;
+                            finJuego();
+                            //Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
+                            //startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                    btnCancelar.setOnClickListener(v -> {
+                        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                        headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+                        dialog.dismiss();
+                        finJuego();
+                        finish();
+                    });
+
+
+
+                },1000);
+
+            }
+            else{
+                new Handler().postDelayed(() -> {
+                    systemManager.showEmotion(EmotionsType.QUESTION);
+                    hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
+
+                    AbsoluteAngleHandMotion arm =
+                            new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
+                    handMotionManager.doAbsoluteAngleMotion(arm);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    LayoutInflater inflater = getLayoutInflater();
+
+                    View dialogView = inflater.inflate(R.layout.dialog_pista, null);
+                    builder.setView(dialogView);
+
+                    AlertDialog dialog = builder.create();
+                    Objects.requireNonNull(dialog.getWindow())
+                            .setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog.show();
+
+                    imagenes.get(imagenPulsada).setVisibility(View.GONE);
+                    imagenesOcultas.add(imagenPulsada);
+
+                    speechManager.startSpeak("I can repeat the word again.", speakOption);
 
                     new Handler().postDelayed(() -> {
 
-                        speechManager.startSpeak(titulos.get(contador), speakOption);
+                        speechManager.startSpeak("The word is", speakOption);
 
                         new Handler().postDelayed(() -> {
 
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
+                            speechManager.startSpeak(titulos.get(contador), speakOption);
 
-                            resetRobotAfterFailure();
+                            new Handler().postDelayed(() -> {
 
-                        }, 1000);
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+
+                                resetRobotAfterFailure();
+
+                            }, 1000);
+
+                        }, 2500);
 
                     }, 2500);
-
-                }, 2500);
                 },1000);
+
+            }
+
         }
 
     }
@@ -389,7 +464,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         speakOption.setSpeed(40);
         speakOption.setIntonation(50);
 
-        speechManager.startSpeak("Amazing! You finished all the words!", speakOption);
+        speechManager.startSpeak("That was amazing! Let's continue playing later!", speakOption);
 
         systemManager.showEmotion(EmotionsType.SMILE);
         hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));

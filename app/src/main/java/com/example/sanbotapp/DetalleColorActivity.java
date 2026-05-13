@@ -109,7 +109,7 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         btnAbrirCamara = findViewById(R.id.abrirCamara);
         btnComprobarColor = findViewById(R.id.notfound);
-        //btnBack = findViewById(R.id.btnBack);
+        btnBack = findViewById(R.id.btnBack);
 
 
         faceRecognitionControl.stopFaceRecognition();
@@ -135,7 +135,7 @@ public class DetalleColorActivity extends TopBaseActivity {
     public void setAllButtonsClickable(boolean clickable) {
         btnAbrirCamara.setClickable(clickable);
         btnComprobarColor.setClickable(clickable);
-//        btnBack.setClickable(clickable);
+        btnBack.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -167,13 +167,13 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         });
 
-        /*btnBack.setOnClickListener(new View.OnClickListener() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });*/
+        });
 
         btnComprobarColor.setOnClickListener(new View.OnClickListener() {
 
@@ -475,7 +475,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         speakOption.setSpeed(40);
         speakOption.setIntonation(50);
 
-        speechManager.startSpeak("Amazing! You finished all the colours!", speakOption);
+        speechManager.startSpeak("That was amazing! Let's continue playing later!", speakOption);
 
         systemManager.showEmotion(EmotionsType.SMILE);
         hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));

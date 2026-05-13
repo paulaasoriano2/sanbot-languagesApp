@@ -42,6 +42,9 @@ public class ColoresActivity extends TopBaseActivity {
     private Button btnWhite;
 
     private Button btnGreen;
+    private Button btnPurple;
+    private Button btnPink;
+    private Button btnGrey;
 
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
@@ -82,10 +85,13 @@ public class ColoresActivity extends TopBaseActivity {
 
         btnRed = findViewById(R.id.red);
         btnBlue = findViewById(R.id.blue);
+        btnPurple = findViewById(R.id.purple);
         btnWhite = findViewById(R.id.white);
         btnBlack = findViewById(R.id.black);
         btnGreen = findViewById(R.id.green);
         btnBack = findViewById(R.id.btnBack);
+        btnPink = findViewById(R.id.pink);
+        btnGrey = findViewById(R.id.grey);
 
         setAllButtonsClickable(true);
 
@@ -108,7 +114,9 @@ public class ColoresActivity extends TopBaseActivity {
         btnBlack.setClickable(clickable);
         btnGreen.setClickable(clickable);
         btnBack.setClickable(clickable);
-
+        btnPurple.setClickable(clickable);
+        btnPink.setClickable(clickable);
+        btnGrey.setClickable(clickable);
 
     }
 
@@ -135,6 +143,10 @@ public class ColoresActivity extends TopBaseActivity {
         btnGreen.setOnClickListener(listener);
         btnWhite.setOnClickListener(listener);
         btnBlack.setOnClickListener(listener);
+        btnPink.setOnClickListener(listener);
+        btnPurple.setOnClickListener(listener);
+        btnGrey.setOnClickListener(listener);
+
 
         btnBack.setOnClickListener(new View.OnClickListener() {
 
