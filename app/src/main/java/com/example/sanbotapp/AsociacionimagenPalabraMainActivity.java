@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -86,6 +87,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     List<String> palabrasAMostrar = new ArrayList<String>();
     private ImageButton btnBack;
     private int fallosSeguidos;
+    private Boolean esFinal;
 
     @Override
     protected void onMainServiceConnected() {
@@ -96,7 +98,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         fallosSeguidos = 0;
-
+        esFinal = false;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         onMainServiceConnected();
@@ -287,22 +289,48 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 indiceActual++;
                 contador ++;
 
+
+                headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+
+                if (contador >= 4) {
+                    indiceActual = 0;
+                    esFinal = true;
+
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                    LayoutInflater inflater2 = getLayoutInflater();
+
+                    View dialogView2 = inflater2.inflate(R.layout.dialog_feedbackasociacionend, null);
+                    builder2.setView(dialogView2);
+
+                    AlertDialog dialog2 = builder2.create();
+
+                    Objects.requireNonNull(dialog2.getWindow())
+                            .setBackgroundDrawableResource(android.R.color.transparent);
+
+                    dialog2.show();
+
+                    // El diálogo desaparece solo después de 2 segundos
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+                        if (dialog2.isShowing()) {
+                            dialog2.dismiss();
+                        }
+
+                        // ejecutar después para que el diálogo sí se vea
+                        new Thread(() -> {
+                            finJuego();
+
+                            runOnUiThread(this::finish);
+                        }).start();
+
+                    }, 2000);
+                }
+
                 runOnUiThread(() -> {
                     actualizarImagen();
                     actualizarTitulo();
                 });
                 correcto = false;
-
-
-                headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
-
-                if (contador>=4) {
-                    indiceActual = 0;
-                    finJuego();
-                    //Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                    //startActivity(intent);
-                    finish();
-                }
             });
 
             btnCancelar.setOnClickListener(v -> {
@@ -321,12 +349,24 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             if(fallosSeguidos == 3){
                 fallosSeguidos = 0;
                 new Handler().postDelayed(() -> {
-                    systemManager.showEmotion(EmotionsType.SWEAT);
+                    systemManager.showEmotion(EmotionsType.SNICKER);
                     hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
 
                     AbsoluteAngleHandMotion arm =
                             new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 20, 0);
                     handMotionManager.doAbsoluteAngleMotion(arm);
+
+                    String nombreImagen = palabrasAMostrar.get(indiceCorrecto);
+
+                    int resId = getResources().getIdentifier(
+                            nombreImagen,
+                            "drawable",
+                            getPackageName()
+                    );
+
+                    imagenes.get(indiceCorrecto).setImageResource(resId);
+                    String palabra = palabrasAMostrar.get(indiceCorrecto);
+
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -335,8 +375,14 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                     builder.setView(dialogView);
 
                     AlertDialog dialog = builder.create();
-                    Objects.requireNonNull(dialog.getWindow())
-                            .setBackgroundDrawableResource(android.R.color.transparent);
+                    dialog.setCancelable(false);
+                    respuestaCorrectaDialog = dialogView.findViewById(R.id.textoRespuesta);
+                    respuestaCorrectaDialog.setText(palabra.toUpperCase());
+
+                    ImageView imgDialog =
+                            dialogView.findViewById(R.id.imgRespuesta);
+
+                    imgDialog.setImageResource(resId);
                     dialog.show();
 
                     Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
@@ -360,22 +406,50 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                         indiceActual++;
                         contador ++;
 
-                        runOnUiThread(() -> {
-                            actualizarImagen();
-                            actualizarTitulo();
-                        });
-                        correcto = false;
+
 
 
                         headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
                         if (contador>=4) {
                             indiceActual = 0;
-                            finJuego();
-                            //Intent intent = new Intent(AsociacionimagenPalabraMainActivity.this, MainActivity.class);
-                            //startActivity(intent);
-                            finish();
+                            esFinal = true;
+
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                            LayoutInflater inflater2 = getLayoutInflater();
+
+                            View dialogView2 = inflater2.inflate(R.layout.dialog_feedbackasociacionend, null);
+                            builder2.setView(dialogView2);
+
+                            AlertDialog dialog2 = builder2.create();
+
+                            Objects.requireNonNull(dialog2.getWindow())
+                                    .setBackgroundDrawableResource(android.R.color.transparent);
+
+                            dialog2.show();
+
+                            // El diálogo desaparece solo después de 2 segundos
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+                                if (dialog2.isShowing()) {
+                                    dialog2.dismiss();
+                                }
+
+                                // ejecutar después para que el diálogo sí se vea
+                                new Thread(() -> {
+                                    finJuego();
+
+                                    runOnUiThread(this::finish);
+                                }).start();
+
+                            }, 2000);
                         }
+
+                        runOnUiThread(() -> {
+                            actualizarImagen();
+                            actualizarTitulo();
+                        });
+                        correcto = false;
                     });
 
                     btnCancelar.setOnClickListener(v -> {
@@ -414,15 +488,13 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                     imagenes.get(imagenPulsada).setVisibility(View.GONE);
                     imagenesOcultas.add(imagenPulsada);
 
-                    speechManager.startSpeak("I can repeat the word again.", speakOption);
+                    speechManager.startSpeak("The word you have chosen is.", speakOption);
 
-                    new Handler().postDelayed(() -> {
-
-                        speechManager.startSpeak("The word is", speakOption);
+                        //speechManager.startSpeak("The word is", speakOption);
 
                         new Handler().postDelayed(() -> {
 
-                            speechManager.startSpeak(titulos.get(contador), speakOption);
+                            speechManager.startSpeak(palabrasAMostrar.get(imagenPulsada), speakOption);
 
                             new Handler().postDelayed(() -> {
 
@@ -436,7 +508,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                         }, 2500);
 
-                    }, 2500);
                 },1000);
 
             }
@@ -464,8 +535,14 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         speakOption.setSpeed(40);
         speakOption.setIntonation(50);
 
-        speechManager.startSpeak("That was amazing! Let's continue playing later!", speakOption);
+        if(esFinal){
+            esFinal = false;
+            speechManager.startSpeak("Incredible! You finished all the words!", speakOption);
+        }
+        else{
+            speechManager.startSpeak("That was amazing! Let's continue playing later!", speakOption);
 
+        }
         systemManager.showEmotion(EmotionsType.SMILE);
         hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
 

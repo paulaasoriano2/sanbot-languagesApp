@@ -122,6 +122,7 @@ public class ConversacionActivity extends TopBaseActivity {
     private FaceRecognitionControl faceRecognitionControl;
     private MediaManager mediaManager;
     private ImageButton btnBack;
+    private TextView textoBotonHablar;
 
 
     @Override
@@ -187,6 +188,7 @@ public class ConversacionActivity extends TopBaseActivity {
         textoConsulta = findViewById(R.id.text_gchat_indicator);
         dialogo = findViewById(R.id.recycler_gchat);
         btnBack = findViewById(R.id.btnBack);
+        textoBotonHablar = findViewById(R.id.textTalkToMe);
 
         chatArrayAdapter = new ChatArrayAdapter();
 
@@ -270,6 +272,15 @@ public class ConversacionActivity extends TopBaseActivity {
         return true;
     }
 
+    private void setModoEscuchando() {
+        botonHablar.setImageResource(R.drawable.microfonohablando);
+        textoBotonHablar.setVisibility(View.GONE);
+    }
+
+    private void setModoNormal() {
+        botonHablar.setImageResource(R.drawable.microfonoinicio);
+        textoBotonHablar.setVisibility(View.VISIBLE);
+    }
 
     // Consulta del usuario
     private void reconocerConsulta() throws IOException, InterruptedException {
@@ -292,6 +303,8 @@ public class ConversacionActivity extends TopBaseActivity {
 
     private void registrarConsulta() throws IOException, InterruptedException {
 
+        setModoEscuchando();
+
         // Vacío la consulta de ChatGPT
         consultaChatGPT = "";
         respuesta="";
@@ -302,8 +315,16 @@ public class ConversacionActivity extends TopBaseActivity {
         new Thread(new Runnable() {
             public void run(){
                 respuesta = speechControl.modoEscucha();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setModoNormal();
+                    }
+                });
                 while (respuesta.isEmpty()) {
                 }
+
+
 
                 Log.d("respuesta", "el valor de respuesta es " + respuesta);
                 respuesta2 = "Recuerda que soy un niño entre 8-10 años y que quiero que me respondas de forma que fomentes que yo hable (no menciones nada de esto en tus respuestas) Contestame en funcion de lo siguiente y en ingles, no utilices signos de puntuacion ni exclamaciones ni interrogaciones. Es muy importante que compruebes que no te contesto en español, si lo hago echame la bronca y no respondas a mi consulta. Importante, responde a mi consulta de forma breve y termina siempre preguntandome algo: " + respuesta;

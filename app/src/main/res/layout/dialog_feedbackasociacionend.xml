@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="36dp"
+    android:gravity="center"
+    android:background="#F0F0F0">
+
+    <TextView
+        android:id="@+id/finalMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🎉 Incredible!\nYou finished all the words!"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="#4CAF50"
+        android:textSize="42sp"
+        android:textStyle="bold"
+        android:lineSpacingExtra="8dp"/>
+
+</LinearLayout>

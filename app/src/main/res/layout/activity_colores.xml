@@ -29,7 +29,7 @@
                 android:id="@+id/imgred"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/mancha"
+                android:src="@drawable/grisuno"
                 android:scaleType="centerInside"
                 android:tag="red"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
@@ -57,7 +57,7 @@
                 android:id="@+id/imgblue"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:scaleType="centerInside"
                 android:tag="blue"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
@@ -85,7 +85,7 @@
                 android:id="@+id/imggreen"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:scaleType="centerInside"
                 android:tag="green"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
@@ -113,7 +113,7 @@
                 android:id="@+id/imgpurple"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:tag="purple"
                 android:scaleType="centerInside"
 
@@ -152,7 +152,7 @@
                 android:id="@+id/imgblack"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:scaleType="centerInside"
                 android:tag="black"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
@@ -179,7 +179,7 @@
                 android:id="@+id/imgpink"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:tag="pink"
                 android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
@@ -206,7 +206,7 @@
                 android:id="@+id/imggrey"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:tag="grey"
                 android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
@@ -233,7 +233,7 @@
                 android:id="@+id/imgwhite"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/colores"
+                android:src="@drawable/grisuno"
                 android:tag="white"
                 android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
