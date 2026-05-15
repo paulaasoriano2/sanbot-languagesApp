@@ -308,6 +308,14 @@ public class DetalleColorActivity extends TopBaseActivity {
                                     "Good job! The color was " + color_dominant,
                                     speakOption
                             );
+
+                            ColoresDbAdapter adapter = new ColoresDbAdapter(this);
+                            adapter.open();
+
+                            adapter.updateAcierto("red", true); // ejemplo
+
+                            adapter.close();
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(this);
                             LayoutInflater inflater = getLayoutInflater();
 

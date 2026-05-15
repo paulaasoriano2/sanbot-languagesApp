@@ -3,6 +3,7 @@ package com.example.sanbotapp;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,16 @@ public class ColoresActivity extends TopBaseActivity {
     private Button btnPurple;
     private Button btnPink;
     private Button btnGrey;
+
+    private ImageButton imgRed;
+    private ImageButton imgBlue;
+    private ImageButton imgBlack;
+    private ImageButton imgWhite;
+    private ImageButton imgGreen;
+    private ImageButton imgPurple;
+    private ImageButton imgPink;
+    private ImageButton imgGrey;
+
 
     private FaceRecognitionControl faceRecognitionControl;
     private SpeechManager speechManager;
@@ -93,13 +104,23 @@ public class ColoresActivity extends TopBaseActivity {
         btnPink = findViewById(R.id.pink);
         btnGrey = findViewById(R.id.grey);
 
+        imgRed = findViewById(R.id.imgred);
+        imgBlue = findViewById(R.id.imgblue);
+        imgPurple = findViewById(R.id.imgpurple);
+        imgWhite = findViewById(R.id.imgwhite);
+        imgBlack = findViewById(R.id.imgblack);
+        imgPink = findViewById(R.id.imgpink);
+        imgGrey = findViewById(R.id.imggrey);
+        imgGreen = findViewById(R.id.imggreen);
+
+
         setAllButtonsClickable(true);
 
 
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
-
+        loadColorsFromDB();
     }
 
     @Override
@@ -117,6 +138,15 @@ public class ColoresActivity extends TopBaseActivity {
         btnPurple.setClickable(clickable);
         btnPink.setClickable(clickable);
         btnGrey.setClickable(clickable);
+
+        imgRed.setClickable(clickable);
+        imgBlue.setClickable(clickable);
+        imgWhite.setClickable(clickable);
+        imgBlack.setClickable(clickable);
+        imgGreen.setClickable(clickable);
+        imgPurple.setClickable(clickable);
+        imgPink.setClickable(clickable);
+        imgGrey.setClickable(clickable);
 
     }
 
@@ -146,6 +176,16 @@ public class ColoresActivity extends TopBaseActivity {
         btnPink.setOnClickListener(listener);
         btnPurple.setOnClickListener(listener);
         btnGrey.setOnClickListener(listener);
+
+        imgRed.setOnClickListener(listener);
+        imgBlue.setOnClickListener(listener);
+        imgGreen.setOnClickListener(listener);
+        imgWhite.setOnClickListener(listener);
+        imgBlack.setOnClickListener(listener);
+        imgPink.setOnClickListener(listener);
+        imgPurple.setOnClickListener(listener);
+        imgGrey.setOnClickListener(listener);
+
 
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +226,72 @@ public class ColoresActivity extends TopBaseActivity {
 
     }
 
+    private void loadColorsFromDB() {
 
+        ColoresDbAdapter adapter = new ColoresDbAdapter(this);
+        adapter.open();
+
+        Cursor cursor = adapter.fetchAllColors();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                int acierto = cursor.getInt(cursor.getColumnIndexOrThrow("acierto"));
+
+                if (acierto == 1) {
+                    setColorImage(nombre);
+                }
+            }
+            cursor.close();
+        }
+
+        adapter.close();
+    }
+
+    private void setColorImage(String color) {
+
+        int resId = getResources().getIdentifier(
+                "img" + color,
+                "drawable",
+                getPackageName()
+        );
+
+        switch (color) {
+
+            case "red":
+                imgRed.setImageResource(resId);
+                break;
+
+            case "blue":
+                imgBlue.setImageResource(resId);
+                break;
+
+            case "green":
+                imgGreen.setImageResource(resId);
+                break;
+
+            case "purple":
+                imgPurple.setImageResource(resId);
+                break;
+
+            case "black":
+                imgBlack.setImageResource(resId);
+                break;
+
+            case "pink":
+                imgPink.setImageResource(resId);
+                break;
+
+            case "grey":
+                imgGrey.setImageResource(resId);
+                break;
+
+            case "white":
+                imgWhite.setImageResource(resId);
+                break;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

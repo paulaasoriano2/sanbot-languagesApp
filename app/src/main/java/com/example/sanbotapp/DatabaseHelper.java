@@ -39,6 +39,15 @@ class DatabaseHelper extends SQLiteOpenHelper {
             + "nivel        integer not null"
             + "); ";
 
+    private static final String COLORES = "create table colores ("
+            + "_id          integer primary key autoincrement,"
+            + "nombre       text    unique,"
+            + "acierto      boolean     not null,"
+            + "imagen       text    not null,"
+            + "nivel        integer not null"
+            + "); ";
+
+
     DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -47,6 +56,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(VOCABULARIO);
         db.execSQL(PICTOGRAMAS);
+        db.execSQL(COLORES);
 
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida', 'frutas', 'apple','apple',1)");
         db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'banana','banana',1)");
@@ -86,8 +96,14 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cocinar','Cook', 'cocinar',1)");
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comer','Eat', 'comer',1)");
 
-
-
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('red',1, 'imgred',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('blue',0, 'imgblue',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('green',0, 'imggreen',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('purple',0, 'imgpurple',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('black',0, 'imgblack',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('pink',0, 'imgpink',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('grey',0, 'imggrey',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('white',0, 'imgwhite',1)");
 
 
     }
@@ -98,6 +114,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS vocabulario");
         db.execSQL("DROP TABLE IF EXISTS pictogramas");
+        db.execSQL("DROP TABLE IF EXISTS colores");
+
 
         onCreate(db);
     }
