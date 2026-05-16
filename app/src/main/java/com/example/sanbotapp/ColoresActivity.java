@@ -280,7 +280,7 @@ public class ColoresActivity extends TopBaseActivity {
             case "blue":
                 imgBlue.setImageResource(resId);
                 drawable = btnBlue.getBackground().mutate();
-                drawable.setTint(Color.parseColor("#E30613"));
+                drawable.setTint(Color.parseColor("#009FE3"));
                 btnBlue.setBackground(drawable);
                 break;
 
@@ -294,7 +294,7 @@ public class ColoresActivity extends TopBaseActivity {
             case "purple":
                 imgPurple.setImageResource(resId);
                 drawable = btnPurple.getBackground().mutate();
-                drawable.setTint(Color.parseColor("#3AAA35"));
+                drawable.setTint(Color.parseColor("#6F2383"));
                 btnPurple.setBackground(drawable);
                 break;
 
@@ -308,14 +308,14 @@ public class ColoresActivity extends TopBaseActivity {
             case "pink":
                 imgPink.setImageResource(resId);
                 drawable = btnPink.getBackground().mutate();
-                drawable.setTint(Color.parseColor("#E30613"));
+                drawable.setTint(Color.parseColor("#E6007E"));
                 btnPink.setBackground(drawable);
                 break;
 
             case "grey":
                 imgGrey.setImageResource(resId);
                 drawable = btnGrey.getBackground().mutate();
-                drawable.setTint(Color.parseColor("#E30613"));
+                drawable.setTint(Color.parseColor("#ADADAD"));
                 btnGrey.setBackground(drawable);
                 break;
 
