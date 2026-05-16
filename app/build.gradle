@@ -10,7 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi"
+            abiFilters "armeabi-v7a"
         }
     }
     buildTypes {
@@ -20,6 +20,7 @@ android {
         }
         sourceSets.main {
             jniLibs.srcDir 'libs'
+            assets.srcDirs = ['src/main/assets']
         }
     }
 }
