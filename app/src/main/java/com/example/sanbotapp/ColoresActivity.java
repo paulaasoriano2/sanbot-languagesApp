@@ -5,6 +5,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -162,6 +165,8 @@ public class ColoresActivity extends TopBaseActivity {
 
                 String color = v.getTag().toString();
 
+                btnWhite.setForeground(null);
+                btnWhite.setAlpha(1f);
                 Intent intent = new Intent(ColoresActivity.this, DetalleColorActivity.class);
                 intent.putExtra("color", color);
                 startActivity(intent);
@@ -208,6 +213,10 @@ public class ColoresActivity extends TopBaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                AbsoluteAngleHandMotion arm =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT, 20, 0);
+                handMotionManager.doAbsoluteAngleMotion(arm);
 
                 String frase = "Let's recognize colors. I will tell you a color and you will have to show me an object of that color.";
                 speechManager.startSpeak(frase, speakOption);
@@ -257,38 +266,74 @@ public class ColoresActivity extends TopBaseActivity {
                 getPackageName()
         );
 
+        Drawable drawable;
+
         switch (color) {
 
             case "red":
                 imgRed.setImageResource(resId);
+                drawable = btnRed.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#E30613"));
+                btnRed.setBackground(drawable);
                 break;
 
             case "blue":
                 imgBlue.setImageResource(resId);
+                drawable = btnBlue.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#E30613"));
+                btnBlue.setBackground(drawable);
                 break;
 
             case "green":
                 imgGreen.setImageResource(resId);
+                drawable = btnGreen.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#3AAA35"));
+                btnGreen.setBackground(drawable);
                 break;
 
             case "purple":
                 imgPurple.setImageResource(resId);
+                drawable = btnPurple.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#3AAA35"));
+                btnPurple.setBackground(drawable);
                 break;
 
             case "black":
                 imgBlack.setImageResource(resId);
+                drawable = btnBlack.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#000000"));
+                btnBlack.setBackground(drawable);
                 break;
 
             case "pink":
                 imgPink.setImageResource(resId);
+                drawable = btnPink.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#E30613"));
+                btnPink.setBackground(drawable);
                 break;
 
             case "grey":
                 imgGrey.setImageResource(resId);
+                drawable = btnGrey.getBackground().mutate();
+                drawable.setTint(Color.parseColor("#E30613"));
+                btnGrey.setBackground(drawable);
                 break;
 
             case "white":
+
                 imgWhite.setImageResource(resId);
+
+                GradientDrawable drawable2 = new GradientDrawable();
+                drawable2.setShape(GradientDrawable.RECTANGLE);
+                drawable2.setCornerRadius(30f);
+                drawable2.setColor(Color.WHITE);
+                drawable2.setStroke(4, Color.BLACK);
+
+                btnWhite.setBackground(drawable2);
+
+
+                btnWhite.setTextColor(Color.BLACK);
+
                 break;
         }
     }

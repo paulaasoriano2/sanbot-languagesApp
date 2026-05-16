@@ -415,20 +415,36 @@ public class AgendaActivity extends TopBaseActivity {
                 int randomIndex = rand.nextInt(frases.length);
                 speechManager.startSpeak(frases[randomIndex], speakOption);
 
-               /* try {
-                    getPictogramas();
-                } catch (IOException | JSONException e) {
-                    throw new RuntimeException(e);
+
+               RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
+                wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);
+
+                systemManager.showEmotion(EmotionsType.SMILE);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-*/
-               /* RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
-                wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);*/
+
+                AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+               /* try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
 
                 AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
                         new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);

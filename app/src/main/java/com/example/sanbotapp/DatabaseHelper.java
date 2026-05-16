@@ -103,7 +103,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('black',0, 'imgblack',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('pink',0, 'imgpink',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('grey',0, 'imggrey',1)");
-        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('white',0, 'imgwhite',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('white',1, 'imgwhite',1)");
 
 
     }

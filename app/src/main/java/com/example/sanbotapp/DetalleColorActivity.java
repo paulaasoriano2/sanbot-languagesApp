@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,6 +72,7 @@ public class DetalleColorActivity extends TopBaseActivity {
     private Boolean isFirst;
     private Boolean notFound;
     private ImageButton btnBack;
+    private Handler handler = new Handler();
 
 
     @Override
@@ -303,16 +305,19 @@ public class DetalleColorActivity extends TopBaseActivity {
                         speakOption.setSpeed(50);
                         speakOption.setIntonation(50);
 
-                        if (esColorCorrecto()) {
+                        if (true) { //esColorCorrecto()
+                            encenderFeedbackCorrecto();
                             speechManager.startSpeak(
-                                    "Good job! The color was " + color_dominant,
+                                    "Good job! The color was " + color,
                                     speakOption
                             );
+
+                            animarBrazos(true);
 
                             ColoresDbAdapter adapter = new ColoresDbAdapter(this);
                             adapter.open();
 
-                            adapter.updateAcierto("red", true); // ejemplo
+                            adapter.updateAcierto(color, true); // ejemplo
 
                             adapter.close();
 
@@ -325,7 +330,49 @@ public class DetalleColorActivity extends TopBaseActivity {
                             AlertDialog dialog = builder.create();
                             dialog.setCancelable(false);
                             colorRespuesta = dialogView.findViewById(R.id.colorRespuesta);
+
+                            // MODIFICAR TEXTO Y COLOR DEPENDIENDO DEL COLOR QUE SEA
                             colorRespuesta.setText(color.toUpperCase());
+
+                            switch (color.toLowerCase()) {
+                                case "red":
+                                    colorRespuesta.setTextColor(Color.RED);
+                                    break;
+
+                                case "green":
+                                    colorRespuesta.setTextColor(Color.GREEN);
+                                    break;
+
+                                case "blue":
+                                    colorRespuesta.setTextColor(Color.BLUE);
+                                    break;
+
+                                case "purple":
+                                    colorRespuesta.setTextColor(Color.MAGENTA);
+                                    break;
+
+                                case "pink":
+                                    colorRespuesta.setTextColor(Color.rgb(255, 105, 180));
+                                    break;
+
+                                case "white":
+                                    colorRespuesta.setTextColor(Color.WHITE);
+                                    colorRespuesta.setShadowLayer(4f, 2f, 2f, Color.BLACK);
+                                    break;
+
+                                case "black":
+                                    colorRespuesta.setTextColor(Color.BLACK);
+                                    break;
+
+                                case "grey":
+                                    colorRespuesta.setTextColor(Color.GRAY);
+                                    break;
+
+                                default:
+                                    colorRespuesta.setTextColor(Color.BLACK);
+                                    break;
+                            }
+
 
                             dialog.show();
                             Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
@@ -333,16 +380,21 @@ public class DetalleColorActivity extends TopBaseActivity {
 
                             btnAcceptar.setOnClickListener(v -> {
                                 dialog.dismiss();
+                                animarBrazos(false);
 
-                                //absoluteAngleHandMotion.set(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 180));
-                                //handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
                                 // apagar luces
+                                apagarFeedback();
                                 hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                                //finish();
+                                Intent intent = new Intent(DetalleColorActivity.this, ColoresActivity.class);
+                                startActivity(intent);
+                                finish();
                             });
 
                             btnCancelar.setOnClickListener(v -> {
+                                animarBrazos(false);
                                 hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
-                                headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+                                //headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
                                 dialog.dismiss();
                                 finJuego();
                                 finish();
@@ -366,6 +418,81 @@ public class DetalleColorActivity extends TopBaseActivity {
 
     public boolean esColorCorrecto(){
         return Objects.equals(color, color_dominant);
+    }
+
+    private void animarBrazos(Boolean subir) {
+
+        if(subir){
+
+            // bajar izquierdo
+            handler.postDelayed(() -> {
+                AbsoluteAngleHandMotion leftDown =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT, 30, 0);
+                handMotionManager.doAbsoluteAngleMotion(leftDown);
+            }, 6600);
+
+            // derecho arriba
+            handler.post(() -> {
+                AbsoluteAngleHandMotion rightUp =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 30, 180);
+                handMotionManager.doAbsoluteAngleMotion(rightUp);
+            });
+
+            // esperar y bajar derecho
+            handler.postDelayed(() -> {
+                AbsoluteAngleHandMotion rightDown =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 30, 0);
+                handMotionManager.doAbsoluteAngleMotion(rightDown);
+            }, 4200);
+
+
+
+        }
+        else{
+            AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
+            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+        }
+
+
+    }
+
+    public void encenderFeedbackCorrecto(){
+        systemManager.showEmotion(EmotionsType.SURPRISE);
+
+
+        if(Objects.equals(color, "red")){
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_RED));
+        }
+        else if(Objects.equals(color, "blue")){
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_BLUE));
+
+        }
+        else if(Objects.equals(color, "green")){
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
+
+        }
+        else if(Objects.equals(color, "purple")){
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_PURPLE));
+
+        }
+        else if(Objects.equals(color, "black")){
+
+        }
+        else if(Objects.equals(color, "pink")){
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_PINK));
+        }
+        else if(Objects.equals(color, "grey")){
+
+        }
+        else if(Objects.equals(color, "white")){
+            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_WHITE));
+
+        }
+    }
+
+    public void apagarFeedback(){
+
     }
 
     @Override
@@ -509,6 +636,9 @@ public class DetalleColorActivity extends TopBaseActivity {
         }
 
         hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
+        Intent intent = new Intent(DetalleColorActivity.this, MainActivity.class);
+        startActivity(intent);
 
 
     }

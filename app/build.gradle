@@ -46,6 +46,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'com.alphacephei:vosk-android:0.3.47@aar'
+    implementation 'net.java.dev.jna:jna:5.13.0@aar'
 
     //implementation(name: 'QihanOpenSdk_1.1.8.0', ext: 'aar')
     //compile(name: 'SanbotOpenSDK_2.0.1.0', ext: 'aar')

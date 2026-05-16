@@ -80,7 +80,7 @@
             android:layout_margin="10dp"
             android:background="@drawable/button_rounded"
             android:textColor="@android:color/white"
-            android:text="Acept" />
+            android:text="Save colour" />
 
     </LinearLayout>
 

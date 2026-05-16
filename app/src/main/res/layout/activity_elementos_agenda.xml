@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="#F2F2F2"
+        android:background="#F0F0F0"
         android:padding="24dp">
 
         <!-- PICTOGRAMA 1 -->

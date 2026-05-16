@@ -45,7 +45,7 @@
         android:text="Reproduce your day"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
-        android:padding="8dp"
+        android:padding="10dp"
         app:layout_constraintTop_toBottomOf="@id/reproducir"
         app:layout_constraintEnd_toEndOf="@id/reproducir"
         app:layout_constraintStart_toStartOf="@id/reproducir"/>

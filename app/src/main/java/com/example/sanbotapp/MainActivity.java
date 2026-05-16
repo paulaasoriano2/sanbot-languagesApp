@@ -333,6 +333,9 @@ public class MainActivity extends TopBaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
+                        new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL, 0);
+                headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
                 systemManager.showEmotion(EmotionsType.SMILE);
                 AbsoluteAngleHandMotion absoluteAngleHandMotion =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);

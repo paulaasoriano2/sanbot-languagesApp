@@ -514,7 +514,7 @@ public class AsociacionimagenPalabraActivity extends TopBaseActivity {
 
         Log.d("prueba", "registrando consulta...");
 
-        speechControl.setIdiomaIngles();
+        //speechControl.setIdiomaIngles();
         final String[] respuesta = {""};
 
         // El robot se pone en modo escucha
