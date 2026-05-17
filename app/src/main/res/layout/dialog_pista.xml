@@ -26,10 +26,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HINT!"
-            android:textSize="48sp"
+            android:text="CLUE!"
+            android:textSize="68sp"
             android:layout_margin="20dp"
-            android:textColor="#3C3200"
+            android:textColor="@color/colorPurple"
             android:textAlignment="center"
             android:gravity="center"
             android:id="@+id/hint"
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="That's not the correct image."
+        android:text="That image is not the correct one."
         android:textSize="34sp"
         android:layout_margin="20dp"
         android:textColor="#555555"

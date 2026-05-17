@@ -26,31 +26,45 @@
         android:textAlignment="center"
         android:gravity="center"
         android:id="@+id/actividad"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose the image that matches with the word"
-        android:textSize="20sp"
-        android:layout_margin="20dp"
-        android:textColor="@android:color/black"
-        android:textAlignment="center"
+    <!-- Recuadro de carga -->
+    <LinearLayout
+        android:id="@+id/loadingBox"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="40dp"
+        android:padding="40dp"
+        android:background="@color/colorPurple"
+        android:orientation="vertical"
         android:gravity="center"
-        android:id="@+id/informacion"
         app:layout_constraintTop_toBottomOf="@id/actividad"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose the image that matches with the word!"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
         tools:ignore="MissingConstraints"
-        app:layout_constraintTop_toBottomOf="@id/informacion"
+        app:layout_constraintTop_toBottomOf="@id/actividad"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
@@ -71,6 +85,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
+                android:visibility="invisible"
             />
 
 
@@ -95,6 +110,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
+                android:visibility="invisible"
                 />
 
 
@@ -119,6 +135,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
+                android:visibility="invisible"
                 />
 
 
@@ -142,6 +159,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
                 android:clickable="true"
+                android:visibility="invisible"
                 />
 
 

@@ -197,6 +197,9 @@ public class ColoresActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(ColoresActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -218,7 +221,7 @@ public class ColoresActivity extends TopBaseActivity {
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT, 20, 0);
                 handMotionManager.doAbsoluteAngleMotion(arm);
 
-                String frase = "Let's recognize colors. I will tell you a color and you will have to show me an object of that color.";
+                String frase = "Let's recognize colors. Choose a color and you will have to show me an object of that color.";
                 speechManager.startSpeak(frase, speakOption);
 
                 try {

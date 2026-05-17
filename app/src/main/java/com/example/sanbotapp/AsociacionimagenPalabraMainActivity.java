@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -88,6 +89,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private ImageButton btnBack;
     private int fallosSeguidos;
     private Boolean esFinal;
+    private LinearLayout loadingBox;
 
     @Override
     protected void onMainServiceConnected() {
@@ -131,6 +133,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         fallo3 = findViewById(R.id.imgcolores2);
         titulo = findViewById(R.id.actividad);
         btnBack = findViewById(R.id.btnBack);
+        loadingBox = findViewById(R.id.loadingBox);
 
         imagenes.add(acierto);
         imagenes.add(fallo1);
@@ -669,6 +672,15 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             imagenes.get(k).setImageResource(resId);
         }
+        // Mostrar imágenes
+        for (ImageButton img : imagenes) {
+            img.setVisibility(View.VISIBLE);
+        }
+
+        // Ocultar loading azul
+        loadingBox.setVisibility(View.GONE);
+        // Mostrar título
+        titulo.setVisibility(View.VISIBLE);
 
 /*
         int resId1 = getResources().getIdentifier(

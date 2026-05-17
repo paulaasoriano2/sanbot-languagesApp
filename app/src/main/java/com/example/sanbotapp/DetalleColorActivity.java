@@ -173,6 +173,8 @@ public class DetalleColorActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(DetalleColorActivity.this, ColoresActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -305,7 +307,7 @@ public class DetalleColorActivity extends TopBaseActivity {
                         speakOption.setSpeed(50);
                         speakOption.setIntonation(50);
 
-                        if (true) { //esColorCorrecto()
+                        if (esColorCorrecto()) { //esColorCorrecto()
                             encenderFeedbackCorrecto();
                             speechManager.startSpeak(
                                     "Good job! The color was " + color,
@@ -336,23 +338,23 @@ public class DetalleColorActivity extends TopBaseActivity {
 
                             switch (color.toLowerCase()) {
                                 case "red":
-                                    colorRespuesta.setTextColor(Color.RED);
+                                    colorRespuesta.setTextColor(Color.parseColor("#E30613"));
                                     break;
 
                                 case "green":
-                                    colorRespuesta.setTextColor(Color.GREEN);
+                                    colorRespuesta.setTextColor(Color.parseColor("#3AAA35"));
                                     break;
 
                                 case "blue":
-                                    colorRespuesta.setTextColor(Color.BLUE);
+                                    colorRespuesta.setTextColor(Color.parseColor("#009FE3"));
                                     break;
 
                                 case "purple":
-                                    colorRespuesta.setTextColor(Color.MAGENTA);
+                                    colorRespuesta.setTextColor(Color.parseColor("#6F2383"));
                                     break;
 
                                 case "pink":
-                                    colorRespuesta.setTextColor(Color.rgb(255, 105, 180));
+                                    colorRespuesta.setTextColor(Color.parseColor("#E6007E"));
                                     break;
 
                                 case "white":
@@ -365,7 +367,7 @@ public class DetalleColorActivity extends TopBaseActivity {
                                     break;
 
                                 case "grey":
-                                    colorRespuesta.setTextColor(Color.GRAY);
+                                    colorRespuesta.setTextColor(Color.parseColor("#ADADAD"));
                                     break;
 
                                 default:
@@ -401,10 +403,45 @@ public class DetalleColorActivity extends TopBaseActivity {
                             });
 
                         } else {
-                            speechManager.startSpeak(
-                                    "Try again, I detected " + color_dominant,
+                            /*speechManager.startSpeak(
+                                    "Try again " + color_dominant,
                                     speakOption
-                            );
+                            );*/
+
+                            systemManager.showEmotion(EmotionsType.QUESTION);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            LayoutInflater inflater = getLayoutInflater();
+
+                            View dialogView = inflater.inflate(R.layout.dialog_feedbackcoloreswrong, null);
+                            builder.setView(dialogView);
+
+                            AlertDialog dialog = builder.create();
+                            dialog.setCancelable(false);
+                            colorRespuesta = dialogView.findViewById(R.id.colorRespuesta);
+
+                            // MODIFICAR TEXTO DEPENDIENDO DEL COLOR QUE SEA
+                            colorRespuesta.setText(color_dominant.toUpperCase());
+                            dialog.show();
+
+                            speechManager.startSpeak("Try again. The colour I detected is.", speakOption);
+
+                            new Handler().postDelayed(() -> {
+
+                                speechManager.startSpeak(color_dominant, speakOption);
+
+                                new Handler().postDelayed(() -> {
+
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
+
+                                    //resetRobotAfterFailure();
+
+                                }, 2000);
+
+                            }, 3000);
+
                         }
                     });
                 }
@@ -425,26 +462,30 @@ public class DetalleColorActivity extends TopBaseActivity {
         if(subir){
 
             // bajar izquierdo
-            handler.postDelayed(() -> {
+           /* handler.post(() -> {
                 AbsoluteAngleHandMotion leftDown =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT, 30, 0);
                 handMotionManager.doAbsoluteAngleMotion(leftDown);
-            }, 6600);
+            });
 
             // derecho arriba
-            handler.post(() -> {
+            handler.postDelayed(() -> {
                 AbsoluteAngleHandMotion rightUp =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 30, 180);
                 handMotionManager.doAbsoluteAngleMotion(rightUp);
-            });
+            }, 3000);*/
 
             // esperar y bajar derecho
-            handler.postDelayed(() -> {
+            /*handler.postDelayed(() -> {
                 AbsoluteAngleHandMotion rightDown =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT, 30, 0);
                 handMotionManager.doAbsoluteAngleMotion(rightDown);
-            }, 4200);
+            }, 4200);*/
 
+
+            AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                    new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,0);
+            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
 
         }
@@ -533,11 +574,11 @@ public class DetalleColorActivity extends TopBaseActivity {
                     headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion2);
 
 
-                    String frase3 = "When you find it, tap";
+                    String frase3 = "When you find it, tap on show me";
                     speechManager.startSpeak(frase3, speakOption);
 
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

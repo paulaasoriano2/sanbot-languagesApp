@@ -52,31 +52,42 @@
                 android:textColor="@color/colorPurple"
                 android:paddingBottom="40dp"/>
 
-            <Button
-                android:id="@+id/abrirCamara"
-                android:layout_width="220dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="SHOW ME"
-                android:background="@drawable/button_rounded"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="12dp"
-                android:padding="12dp"/>
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingTop="16dp">
 
-            <Button
-                android:id="@+id/notfound"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:text="CHECK COLOUR"
-                android:background="@drawable/button_rounded"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:padding="12dp"/>
+                <Button
+                    android:id="@+id/abrirCamara"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="SHOW ME"
+                    android:background="@drawable/button_rounded"
+                    android:textColor="@color/colorWhite"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:padding="12dp"/>
 
+                <Button
+                    android:id="@+id/notfound"
+                    android:layout_width="30dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="CHECK COLOUR"
+                    android:background="@drawable/button_rounded"
+                    android:textColor="@color/colorWhite"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:padding="12dp"/>
+
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
