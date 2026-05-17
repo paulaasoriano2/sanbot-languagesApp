@@ -457,7 +457,7 @@ public class RecognitionControl implements TextureView.SurfaceTextureListener{
     private static HttpURLConnection getHttpURLConnectionLive(byte[] wavData, String nombre) throws IOException {
         Log.d("ServerLive", "GET URL ");
         String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
-        URL url = new URL("http://192.168.50.245:10000/diarize_live"); // NUEVO endpoint
+        URL url = new URL("http://10.1.64.1:10000/diarize_live"); // NUEVO endpoint
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);

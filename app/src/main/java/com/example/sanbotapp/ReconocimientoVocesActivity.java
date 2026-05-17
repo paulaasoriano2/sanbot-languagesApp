@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
+//import io.socket.client.IO;
+
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -30,6 +33,7 @@ import com.example.sanbotapp.GestionMediaPlayer;
 import com.example.sanbotapp.R;
 import com.example.sanbotapp.ModuloOpenAIChatCompletions;
 import com.example.sanbotapp.ModuloOpenAIAudioSpeech;
+import com.example.sanbotapp.moduloReactivo.RecognitionControl;
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.example.sanbotapp.robotControl.HandsControl;
 import com.example.sanbotapp.robotControl.HardwareControl;
@@ -48,9 +52,12 @@ import com.qihancloud.opensdk.function.unit.MediaManager;
 import com.qihancloud.opensdk.function.unit.SpeechManager;
 import com.qihancloud.opensdk.function.unit.SystemManager;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.net.Socket;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,9 +129,28 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
     private FaceRecognitionControl faceRecognitionControl;
     private MediaManager mediaManager;
     private ImageButton btnBack;
+    private Button btnDetener;
+
     private TextView textoBotonHablar;
     private VoskRecognition voskRecognition;
+    private RecognitionControl recognitionControl;
     private boolean escuchando = false;
+    private Socket mSocket;
+    TextureView tvMedia;
+
+
+    /*{
+        try {
+            IO.Options opts = new IO.Options();
+            opts.transports = new String[] {"websocket"}; // Solo WebSocket
+            mSocket = IO.socket("http://robot-server-flask.onrender.com", opts);
+
+        } catch (URISyntaxException e) {
+            System.out.println("Error al crear el socket");
+            e.printStackTrace();
+        }
+    }*/
+
 
 
     @Override
@@ -182,7 +208,7 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
 
         // Establecer pantalla
-        setContentView(R.layout.activity_modulo_conversacional_dos);
+        setContentView(R.layout.activity_modulo_conversacional);
 
 
         // Instanciación de componentes
@@ -217,49 +243,11 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
         handsControl = new HandsControl(handMotionManager);
         systemControl = new SystemControl(systemManager);
         hardwareControl = new HardwareControl(hardWareManager);
-
+        tvMedia = findViewById(R.id.tv_media);
         speechControl.setVelocidadHabla(40);
 
         moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
         gestionMediaPlayer = new GestionMediaPlayer();
-
-
-        try {
-
-            botonHablar.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    //registrarConsulta();
-                    escuchando = true;
-                    speechControl.iniciar(); // opcional feedback robot
-                }
-            });
-
-            btnBack.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
-
-        faceRecognitionControl.startFaceRecognition();
-
-        // Parar después de 10 segundos (10000 ms)
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                faceRecognitionControl.stopFaceRecognition();
-            }
-        }, 5000);
 
 
         voskRecognition = new VoskRecognition();
@@ -293,6 +281,87 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
             }
 
         });
+
+        recognitionControl = new RecognitionControl(speechManager, mediaManager, tvMedia, this, voskRecognition);
+        recognitionControl.startDeteccionIsSpeaking();
+
+
+        try {
+            /*mSocket.on("receive_message", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    JSONObject data = (JSONObject) args[0];
+                    String robotm = data.optString("robot");
+                    String message = data.optString("message");
+
+                    if (robot.equals(robotm)) {// solo mostramos si el mensaje es para A
+                        Log.i("Socket", "Mensaje recibido para" + robotm + ": " + message);
+
+                        speechControl.hablar("He recibido un mensaje de " + robotm + ": " + message);
+                    }
+                }
+            });*/
+
+            botonHablar.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //registrarConsulta();
+                    //escuchando = true;
+                    //speechControl.iniciar(); // opcional feedback robot
+                    Log.d("ServerLive", "PULSA BOTÓN");
+                    //recognitionControl.audiowav();
+                    recognitionControl.activarReconocimiento();
+                }
+            });
+
+            /*btnDetener.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //registrarConsulta();
+                    //escuchando = true;
+                    //speechControl.iniciar(); // opcional feedback robot
+                    JSONObject enviar = new JSONObject();
+                    try {
+                        enviar.put("robot", robot);
+                        enviar.put("message", message);  // o desde B si es ese robot
+                        mSocket.emit("send_message", enviar);
+                        Log.i("Socket", "Mensaje enviado");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });*/
+
+
+            btnBack.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
+
+        faceRecognitionControl.startFaceRecognition();
+
+        // Parar después de 10 segundos (10000 ms)
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                faceRecognitionControl.stopFaceRecognition();
+            }
+        }, 5000);
+
+
+
 
     }
 

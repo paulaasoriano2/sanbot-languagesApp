@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/botonDetener"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Detener"/>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_gchat"
@@ -18,52 +19,52 @@
         android:layout_marginBottom="16dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/text_gchat_indicator"
-        app:layout_constraintTop_toBottomOf="@+id/botonDetener" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
     <TextView
         android:id="@+id/text_gchat_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintBottom_toTopOf="@id/botonHablarContainer"
         app:layout_constraintStart_toStartOf="parent" />
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#e0e0e0"
-        app:layout_constraintBottom_toTopOf="@+id/botonHablarContainer" />
     <LinearLayout
         android:id="@+id/botonHablarContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:orientation="vertical"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center">
+        <TextureView
+            android:id="@+id/tv_media"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:alpha="0"/>
 
 
         <ImageButton
             android:id="@+id/botonHablar"
-            android:layout_width="99dp"
-            android:layout_height="99dp"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
             android:background="@android:color/transparent"
             android:scaleType="centerInside"
-            android:src="@drawable/sayit"
+            android:src="@drawable/microfonoinicio"
             android:contentDescription="Talk to me" />
 
         <TextView
+            android:id="@+id/textTalkToMe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Talk to me"
+            android:text="Tap here to talk"
             android:textColor="#808080"
-            android:textSize="34sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginBottom="10dp"/>
-
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
