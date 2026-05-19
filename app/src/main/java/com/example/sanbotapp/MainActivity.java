@@ -219,7 +219,7 @@ public class MainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, ConversacionActivity.class);
+                Intent intent = new Intent(MainActivity.this, ReconocimientoVocesActivity.class);
                 startActivity(intent);
             }
 

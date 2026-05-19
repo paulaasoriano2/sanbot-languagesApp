@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="Do you want to reproduce it again?"
+        android:text="Do you want to play it again?"
         android:textAlignment="center"
         android:textColor="#333333"
         android:textSize="26sp"

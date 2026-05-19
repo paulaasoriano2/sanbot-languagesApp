@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:text="GOOD JOB!"
+        android:text="VERY GOOD!"
         android:textAlignment="center"
         android:textColor="#4CAF50"
         android:textSize="52sp"
@@ -51,7 +51,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Do you want to play with other colour?"
+        android:text="Do you want to play another round?"
         android:textSize="26sp"
         android:layout_margin="20dp"
         android:textColor="#8A8A8A"
