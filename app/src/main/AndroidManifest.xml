@@ -45,13 +45,8 @@
         <activity android:name=".robotControl.MediaControlActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ReconocimientoVocesActivity" android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ElementosAgendaActivity" android:windowSoftInputMode="stateHidden" />
-
-
-
-
-
-
-
+        <activity android:name=".SplashUnoActivity" android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".SplashDosActivity" android:windowSoftInputMode="stateHidden" />
 
 
 

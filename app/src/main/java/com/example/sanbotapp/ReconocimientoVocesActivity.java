@@ -311,7 +311,16 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                     //speechControl.iniciar(); // opcional feedback robot
                     Log.d("ServerLive", "PULSA BOTÓN");
                     //recognitionControl.audiowav();
+
+                    try {
+                        registrarConsulta();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     recognitionControl.activarReconocimiento();
+
                 }
             });
 
@@ -363,6 +372,11 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
 
 
+    }
+
+    String textoConPrimeraMayus(String texto){
+        String textoModificado = texto.substring(0, 1).toUpperCase() + texto.substring(1);
+        return textoModificado;
     }
 
     @Override
@@ -460,11 +474,24 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
         // Respuesta de Open AI
         String resp = moduloOpenAI.getRespuestaGPT();
         Log.d("resp", resp);
-        speechControl.hablar(resp);
 
-        // Mostrar respuesta de Open AI
-        chatArrayAdapter.add(new MensajeChat(true, resp + "?"));
-        dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1); // Para que la vista se posicione al final
+        if(recognitionControl.isSpeakerRecognized()){
+            String speaker = recognitionControl.getSpeaker();
+
+            speechControl.hablar(resp + " " + speaker);
+
+            // Mostrar respuesta de Open AI
+            chatArrayAdapter.add(new MensajeChat(true, textoConPrimeraMayus(resp) + " " + speaker + "?"));
+            dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1); // Para que la vista se posicione al final
+        }
+        else{
+
+            speechControl.hablar(resp);
+
+            // Mostrar respuesta de Open AI
+            chatArrayAdapter.add(new MensajeChat(true, textoConPrimeraMayus(resp) + "?"));
+            dialogo.scrollToPosition(chatArrayAdapter.getItemCount() - 1); // Para que la vista se posicione al final
+        }
 
     }
 
