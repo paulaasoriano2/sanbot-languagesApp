@@ -50,7 +50,7 @@ public class FaceRecognitionControl {
                     if(user != ""){
 
                         String[] frases = {
-                                "Hi " + user + ", how are you today?",
+                                "Hi " + user ,
                                 //"¡Qué gusto verte " + user + "!",
                                // "Hola " + user + ", espero que estés teniendo un buen día.",
                                // "¡Hola " + user + "! ¿Cómo te va?",

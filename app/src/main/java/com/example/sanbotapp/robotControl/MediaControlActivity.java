@@ -368,8 +368,9 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
                     // Hacer algo con el valor de "user"
                     //System.out.println("Usuario reconocido: " + user);
 
+                    //TODO: QUITAR ESTO? :))))))))
                     if(user != ""){
-                        speechManager.startSpeak("hola " + user + " ¿cómo estás?");
+                        //speechManager.startSpeak("hola " + user + " ¿cómo estás?");
                     }
 
                 }

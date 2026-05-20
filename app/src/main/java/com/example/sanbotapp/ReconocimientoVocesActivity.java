@@ -19,6 +19,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -137,6 +138,12 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
     private boolean escuchando = false;
     private Socket mSocket;
     TextureView tvMedia;
+    private Button sayitagain, skip;
+    private ImageButton btnHelp;
+    private TextView textoDialogo;
+    private LinearLayout loadingBox;
+    private TextView helpText;
+
 
 
     /*{
@@ -170,10 +177,10 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
             public void run() {
                 systemManager.showEmotion(EmotionsType.PRISE);
                 // Saludo inicial
-                String saludo = "Hi there! I have been waiting so long to talk. Let's have a wonderful conversation now!";
+                String saludo = "Hi there! I have been waiting so long to talk. Let's have a conversation with me!";
                 //speechManager.startSpeak(saludo, speakOption);
                 speechControl.hablar(saludo);
-                chatArrayAdapter.add(new MensajeChat(true, saludo));
+                chatArrayAdapter.add(new MensajeChat(true, "Hi!"));
 
 
                 // Esperar un poco antes de la siguiente frase
@@ -183,7 +190,7 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                 String invitacion = "How are you today?";
                 //speechManager.startSpeak(invitacion, speakOption);
                 //speechControl.hablar(invitacion);
-                chatArrayAdapter.add(new MensajeChat(true, invitacion));
+                //chatArrayAdapter.add(new MensajeChat(true, invitacion));
                 try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); } // si se activa el reconocimiento facial
 
 
@@ -249,7 +256,12 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
         moduloOpenAISpeechVoice = new ModuloOpenAIAudioSpeech();
         gestionMediaPlayer = new GestionMediaPlayer();
 
-
+        sayitagain = findViewById(R.id.sayitagain);
+        btnHelp = findViewById(R.id.btnHelp);
+        skip = findViewById(R.id.skip);
+        textoDialogo = findViewById(R.id.instruction);
+        loadingBox = findViewById(R.id.loadingBox);
+        helpText = findViewById(R.id.helpText);
         voskRecognition = new VoskRecognition();
 
         voskRecognition.startRecognition(this, new VoskRecognition.VoskListener() {
@@ -324,6 +336,104 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                 }
             });
 
+            btnHelp.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    textoDialogo.setText("¡Manten una conversación conmigo!");
+                    sayitagain.setVisibility(View.GONE);
+                    btnHelp.setVisibility(View.GONE);
+                    helpText.setVisibility(View.GONE);
+
+                }
+            });
+
+            skip.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    SpeakOption speakOption = new SpeakOption();
+                    speakOption.setSpeed(50);
+                    speakOption.setIntonation(50);
+
+                /*// Ocultar diálogo azul
+                loadingBox.setVisibility(View.GONE);
+
+                // Mostrar imágenes
+                for (ImageButton img : imagenes) {
+                    img.setVisibility(View.VISIBLE);
+                }
+
+                // Mostrar título
+                titulo.setVisibility(View.VISIBLE);
+
+                // Iniciar juego
+                actualizarImagen();
+                actualizarTitulo();
+
+                // Desactivar botón skip después
+                skip.setClickable(false);*/
+                    btnHelp.setVisibility(View.GONE);
+                    helpText.setVisibility(View.GONE);
+                    sayitagain.setVisibility(View.GONE);
+                    skip.setVisibility(View.GONE);
+                    loadingBox.setVisibility(View.GONE);
+                    ImageButton botonHablar = findViewById(R.id.botonHablar);
+                    TextView textTalkToMe = findViewById(R.id.textTalkToMe);
+
+                    // RecyclerView del chat
+                    RecyclerView recyclerChat = findViewById(R.id.recycler_gchat);
+
+                    // Texto indicador (está en GONE en tu XML)
+                    TextView indicator = findViewById(R.id.text_gchat_indicator);
+
+                    // Cambiar visibilidad a VISIBLE
+                    if (botonHablar != null) {
+                        botonHablar.setVisibility(View.VISIBLE);
+                    }
+
+                    if (textTalkToMe != null) {
+                        textTalkToMe.setVisibility(View.VISIBLE);
+                    }
+
+                    if (recyclerChat != null) {
+                        recyclerChat.setVisibility(View.VISIBLE);
+                    }
+
+                    if (indicator != null) {
+                        indicator.setVisibility(View.VISIBLE);
+                    }
+
+                    faceRecognitionControl.startFaceRecognition();
+                    // Parar después de 10 segundos (10000 ms)
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            faceRecognitionControl.stopFaceRecognition();
+                            String invitacion = "How are you today?";
+                            speechControl.hablar(invitacion);
+                            chatArrayAdapter.add(new MensajeChat(true, invitacion));
+                        }
+                    }, 5000);
+
+
+                }
+            });
+
+            sayitagain.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    SpeakOption speakOption = new SpeakOption();
+                    speakOption.setSpeed(50);
+                    speakOption.setIntonation(50);
+
+                    speechManager.startSpeak("Have a conversation with me!", speakOption);
+
+
+                }
+            });
             /*btnDetener.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -359,15 +469,9 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
         faceRecognitionControl = new FaceRecognitionControl(speechManager, mediaManager);
 
-        faceRecognitionControl.startFaceRecognition();
+        faceRecognitionControl.stopFaceRecognition();
 
-        // Parar después de 10 segundos (10000 ms)
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                faceRecognitionControl.stopFaceRecognition();
-            }
-        }, 5000);
+
 
 
 

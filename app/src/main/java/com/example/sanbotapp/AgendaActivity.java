@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
@@ -79,8 +81,17 @@ public class AgendaActivity extends TopBaseActivity {
     List<Pictograma> pictogramas = new ArrayList<>();
     private LinearLayout containerLayout;
     private ProjectorManager projectorManager;
+    private Button sayitagain, skip;
+    private ImageButton btnHelp;
+    private TextView textoDialogo;
+    private LinearLayout loadingBox;
+    TextView titleText, instruction, reproducirTexto;
+    LinearLayout helpContainer;
+    RecyclerView recyclerView;
+    View dividerBottom, dividerVertical;
+    GridLayout pictogramasLayout;
 
-
+    private TextView helpText;
     @Override
     protected void onMainServiceConnected() {
 
@@ -99,7 +110,7 @@ public class AgendaActivity extends TopBaseActivity {
 
 
         // Creación de la lista de elementos seleccionados vacía
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
 
         ArrayList<Pictograma> datos = new ArrayList<>();
 
@@ -126,10 +137,23 @@ public class AgendaActivity extends TopBaseActivity {
 
         reproducir = findViewById(R.id.reproducir);
         btnBack = findViewById(R.id.btnBack);
-
+        sayitagain = findViewById(R.id.sayitagain);
+        btnHelp = findViewById(R.id.btnHelp);
+        skip = findViewById(R.id.skip);
+        textoDialogo = findViewById(R.id.instruction);
         containerLayout = findViewById(R.id.containerLayout);
+        loadingBox = findViewById(R.id.loadingBox);
+        helpText = findViewById(R.id.helpText);
 
-
+        titleText = findViewById(R.id.titleText);
+        instruction = findViewById(R.id.instruction);
+        reproducir = findViewById(R.id.reproducir);
+        reproducirTexto = findViewById(R.id.reproducirTexto);
+        helpContainer = findViewById(R.id.helpContainer);
+       // recyclerView = findViewById(R.id.recyclerView);
+        dividerBottom = findViewById(R.id.dividerBottom);
+        dividerVertical = findViewById(R.id.dividerVertical);
+        pictogramasLayout = findViewById(R.id.pictogramasLayout);
 
         faceRecognitionControl.stopFaceRecognition();
 
@@ -305,6 +329,55 @@ public class AgendaActivity extends TopBaseActivity {
                 finish();
             }
         });
+
+        btnHelp.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                textoDialogo.setText("¡Completa la secuencia de acciones!");
+                sayitagain.setVisibility(View.GONE);
+                btnHelp.setVisibility(View.GONE);
+                helpText.setVisibility(View.GONE);
+            }
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+
+                btnHelp.setVisibility(View.GONE);
+                helpText.setVisibility(View.GONE);
+                loadingBox.setVisibility(View.GONE);
+                skip.setVisibility(View.GONE);
+
+                titleText.setVisibility(View.VISIBLE);
+                reproducir.setVisibility(View.VISIBLE);
+                reproducirTexto.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                dividerBottom.setVisibility(View.VISIBLE);
+                dividerVertical.setVisibility(View.VISIBLE);
+                pictogramasLayout.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        sayitagain.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+
+                speechManager.startSpeak("Complete the sequence of actions.", speakOption);
+
+
+            }
+        });
     }
 
     void mostrarDialogoProyector(){
@@ -409,7 +482,7 @@ public class AgendaActivity extends TopBaseActivity {
 
 
                 String[] frases = {
-                        "What if we remember what you did yesterday? I'm very curious. Click on the actions you did"
+                        "What if we remember what you did yesterday? I'm very curious. Complete the sequence of actions."
                 };
                 Random rand = new Random();
                 int randomIndex = rand.nextInt(frases.length);

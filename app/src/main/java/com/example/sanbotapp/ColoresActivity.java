@@ -10,12 +10,15 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.sanbotapp.robotControl.FaceRecognitionControl;
 import com.qihancloud.opensdk.base.TopBaseActivity;
@@ -70,8 +73,11 @@ public class ColoresActivity extends TopBaseActivity {
     private HardWareManager hardwareManager;
     private String colour;
     private ImageButton btnBack;
-
-
+    private LinearLayout loadingBox;
+    private Button sayitagain, skip;
+    private ImageButton btnHelp;
+    private TextView textoDialogo;
+    private TextView helpText;
     @Override
     protected void onMainServiceConnected() {
 
@@ -115,7 +121,12 @@ public class ColoresActivity extends TopBaseActivity {
         imgPink = findViewById(R.id.imgpink);
         imgGrey = findViewById(R.id.imggrey);
         imgGreen = findViewById(R.id.imggreen);
-
+        loadingBox = findViewById(R.id.loadingBox);
+        sayitagain = findViewById(R.id.sayitagain);
+        btnHelp = findViewById(R.id.btnHelp);
+        skip = findViewById(R.id.skip);
+        textoDialogo = findViewById(R.id.instruction);
+        helpText = findViewById(R.id.helpText);
 
         setAllButtonsClickable(true);
 
@@ -150,6 +161,10 @@ public class ColoresActivity extends TopBaseActivity {
         imgPurple.setClickable(clickable);
         imgPink.setClickable(clickable);
         imgGrey.setClickable(clickable);
+
+        sayitagain.setClickable(clickable);
+        skip.setClickable(clickable);
+        btnHelp.setClickable(clickable);
 
     }
 
@@ -204,6 +219,57 @@ public class ColoresActivity extends TopBaseActivity {
             }
         });
 
+        btnHelp.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                textoDialogo.setText("¡Busca un objeto del color que selecciones y enséñamelo!");
+                sayitagain.setVisibility(View.GONE);
+                btnHelp.setVisibility(View.GONE);
+                helpText.setVisibility(View.GONE);
+
+
+            }
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+
+                btnHelp.setVisibility(View.GONE);
+                helpText.setVisibility(View.GONE);
+                sayitagain.setVisibility(View.GONE);
+                skip.setVisibility(View.GONE);
+                loadingBox.setVisibility(View.GONE);
+                LinearLayout fila1 = findViewById(R.id.fila1);
+                fila1.setVisibility(View.VISIBLE);
+                LinearLayout fila2 = findViewById(R.id.fila2);
+                fila2.setVisibility(View.VISIBLE);
+
+
+
+            }
+        });
+
+        sayitagain.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+
+                speechManager.startSpeak("Pick a colour, find an object that matches it, and show it to me!", speakOption);
+
+
+            }
+        });
+
+
     }
 
     @Override
@@ -221,7 +287,7 @@ public class ColoresActivity extends TopBaseActivity {
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT, 20, 0);
                 handMotionManager.doAbsoluteAngleMotion(arm);
 
-                String frase = "Let's recognize colors. Choose a color and you will have to show me an object of that color.";
+                String frase = "Let's recognize colors. Pick a colour, find an object that matches it, and show it to me!";
                 speechManager.startSpeak(frase, speakOption);
 
                 try {

@@ -90,6 +90,11 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private int fallosSeguidos;
     private Boolean esFinal;
     private LinearLayout loadingBox;
+    private Button sayitagain, skip;
+    private ImageButton btnHelp;
+    private TextView textoDialogo;
+    private String textoActualDialogo = "Choose the image that matches with the word!";
+    private TextView helpText, info;
 
     @Override
     protected void onMainServiceConnected() {
@@ -134,6 +139,13 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         titulo = findViewById(R.id.actividad);
         btnBack = findViewById(R.id.btnBack);
         loadingBox = findViewById(R.id.loadingBox);
+        sayitagain = findViewById(R.id.sayitagain);
+        btnHelp = findViewById(R.id.btnHelp);
+        skip = findViewById(R.id.skip);
+        textoDialogo = findViewById(R.id.instruction);
+        helpText = findViewById(R.id.helpText);
+        info = findViewById(R.id.info);
+
 
         imagenes.add(acierto);
         imagenes.add(fallo1);
@@ -188,6 +200,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         fallo3.setClickable(clickable);
         acierto.setClickable(clickable);
         btnBack.setClickable(clickable);
+        btnHelp.setClickable(clickable);
+        sayitagain.setClickable(clickable);
+        skip.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -213,6 +228,92 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        btnHelp.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                textoDialogo.setText("¡Elige la imagen que coincida con la palabra!");
+                sayitagain.setVisibility(View.GONE);
+                btnHelp.setVisibility(View.GONE);
+                helpText.setVisibility(View.GONE);
+
+
+            }
+        });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+
+                /*// Ocultar diálogo azul
+                loadingBox.setVisibility(View.GONE);
+
+                // Mostrar imágenes
+                for (ImageButton img : imagenes) {
+                    img.setVisibility(View.VISIBLE);
+                }
+
+                // Mostrar título
+                titulo.setVisibility(View.VISIBLE);
+
+                // Iniciar juego
+                actualizarImagen();
+                actualizarTitulo();
+
+                // Desactivar botón skip después
+                skip.setClickable(false);*/
+                btnHelp.setVisibility(View.GONE);
+                helpText.setVisibility(View.GONE);
+                sayitagain.setVisibility(View.GONE);
+                skip.setVisibility(View.GONE);
+                speechManager.startSpeak(
+                        "Get ready because the words are coming.",
+                        speakOption
+                );
+
+                // 🔥 2. Pequeño delay para que el robot empiece a hablar antes del cambio visual
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+                    // Ocultar diálogo
+                    loadingBox.setVisibility(View.GONE);
+
+                    // Mostrar imágenes
+                    for (ImageButton img : imagenes) {
+                        img.setVisibility(View.VISIBLE);
+                    }
+
+                    // Mostrar título
+                    titulo.setVisibility(View.VISIBLE);
+                    info.setVisibility(View.VISIBLE);
+
+                    // Iniciar juego
+                    actualizarImagen();
+                    actualizarTitulo();
+
+                    skip.setClickable(false);
+
+                }, 600);
+            }
+        });
+
+        sayitagain.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+
+                speechManager.startSpeak("Choose the image that matches with the word", speakOption);
+
+
             }
         });
 
@@ -678,9 +779,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         }
 
         // Ocultar loading azul
-        loadingBox.setVisibility(View.GONE);
+       // loadingBox.setVisibility(View.GONE);
         // Mostrar título
-        titulo.setVisibility(View.VISIBLE);
+        //titulo.setVisibility(View.VISIBLE);
 
 /*
         int resId1 = getResources().getIdentifier(
@@ -796,7 +897,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             @Override
             public void run() {
 
-                String frase = "Let's play the image-word association game. I will say a word in English and you will have to select the corresponding image. Shall we start?";
+                String frase = "Let's play the image-word association game. I will say a word in English and you will have to choose the image that matches with the word.";
                 speechManager.startSpeak(frase, speakOption);
 
                /* try {
@@ -823,8 +924,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                /* for (ImageButton img : imagenes) {
                     img.setImageDrawable(null);
                 }*/
-                actualizarImagen();
-                actualizarTitulo();
+//actualizarImagen();
+               // actualizarTitulo();
                 //titulo.setText(titulos.get(contador));
 
 
