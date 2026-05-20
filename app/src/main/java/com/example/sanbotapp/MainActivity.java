@@ -299,7 +299,7 @@ public class MainActivity extends TopBaseActivity {
 
                 faceRecognitionControl.stopFaceRecognition();
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.imagennombre", "com.example.sanbotapp.MainActivity"));
+                intent.setComponent(new ComponentName("com.example.imagennombree", "com.example.sanbotapp.MainActivity"));
                 startActivity(intent);
             }
 
