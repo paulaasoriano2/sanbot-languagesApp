@@ -58,25 +58,30 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(PICTOGRAMAS);
         db.execSQL(COLORES);
 
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida', 'frutas', 'apple','apple',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'banana','banana',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'watermelon','watermelon',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'strawberry','strawberry',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida', 'frutas', 'apple','manzana',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'orange','naranja',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'pear','pera',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'watermelon','sandia',1)");
 
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','carbohidratos','bread','bread',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','carbohidratos','hamburger','hamburger',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','carbohidratos','rice','rice',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','carbohidratos','pizza','pizza',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'banana','platano',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'strawberry','fresa',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'pineapple','pinia',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'grapes','uvas',1)");
 
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'dog','dog',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'rabbit','rabbit',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'horse','horse',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales', '', 'cat','cat',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'dog','perro',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'lion','leon',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'cow','vaca',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales', '', 'snake','serpiente',1)");
 
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'orange','orange',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'cherries','cherries',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'pear','pear',1)");
-        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('comida','frutas', 'shoes','shoes',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'horse','caballo',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'pig','cerdo',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales','', 'rabbit','conejo',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('animales', '', 'bird','pajaro',1)");
+
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('ropa','', 'cap','gorra',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('ropa','', 'pants','pantalones',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('ropa','', 'sneakers','zapatillas',1)");
+        db.execSQL("INSERT INTO vocabulario (categoria,subCategoria,nombre,imagen,nivel) VALUES ('ropa', '', 'tshirt','camiseta',1)");
 
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('deporte','Sport', 'deporte',1)");
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('desayunar','Have breakfast', 'desayunar',1)");
@@ -95,15 +100,27 @@ class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cenar','Have dinner', 'cenar',1)");
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cocinar','Cook', 'cocinar',1)");
         db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('comer','Eat', 'comer',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cantar','Sing', 'cantar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('cepillardientes','Brush your teeth', 'cepillardientes',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('despertarse','Wake up', 'despertarse',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('jugaralavideoconsola','Play video games', 'jugaralavideoconsola',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('nadar','Swim', 'nadar',1)");
+        db.execSQL("INSERT INTO pictogramas (categoria,nombre,imagen,nivel) VALUES ('pintar','Paint', 'pintar',1)");
 
-        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('red',1, 'imgred',1)");
+
+
+
+
+
+
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('red',0, 'imgred',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('blue',0, 'imgblue',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('green',0, 'imggreen',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('purple',0, 'imgpurple',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('black',0, 'imgblack',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('pink',0, 'imgpink',1)");
         db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('grey',0, 'imggrey',1)");
-        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('white',1, 'imgwhite',1)");
+        db.execSQL("INSERT INTO colores (nombre,acierto,imagen,nivel) VALUES ('white',0, 'imgwhite',1)");
 
 
     }

@@ -396,7 +396,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                 headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                if (contador >= 4) {
+                if (contador >= 5) {
                     indiceActual = 0;
                     esFinal = true;
 
@@ -515,7 +515,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                         headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
 
-                        if (contador>=4) {
+                        if (contador>=5) {
                             indiceActual = 0;
                             esFinal = true;
 
@@ -833,6 +833,10 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
         String palabra = titulos.get(contador);
+
+        if(Objects.equals(palabra, "tshirt") || Objects.equals(palabra, "TSHIRT")){
+            palabra = "T-SHIRT  ";
+        }
 
         if(isFirstScreen){
             //speechManager.startSpeak("Get ready because the words are coming!", speakOption);
