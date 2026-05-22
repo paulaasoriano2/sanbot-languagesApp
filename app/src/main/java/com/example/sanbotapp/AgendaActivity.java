@@ -361,6 +361,7 @@ public class AgendaActivity extends TopBaseActivity {
                 dividerBottom.setVisibility(View.VISIBLE);
                 dividerVertical.setVisibility(View.VISIBLE);
                 pictogramasLayout.setVisibility(View.VISIBLE);
+                findViewById(R.id.scrollPictogramas).setVisibility(View.VISIBLE);
 
             }
         });

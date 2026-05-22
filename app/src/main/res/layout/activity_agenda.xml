@@ -214,21 +214,28 @@
 
 
     <!-- GRID DE PICTOGRAMAS -->
-    <GridLayout
-        android:id="@+id/pictogramasLayout"
+    <ScrollView
+        android:id="@+id/scrollPictogramas"
         android:layout_width="match_parent"
-        android:visibility="invisible"
         android:layout_height="0dp"
-        android:columnCount="9"
-        android:alignmentMode="alignBounds"
-        android:gravity="center"
-        android:useDefaultMargins="true"
-        android:padding="20dp"
+        android:fillViewport="true"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/dividerBottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-    <!-- Contenedor oculto -->
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <GridLayout
+            android:id="@+id/pictogramasLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="9"
+            android:alignmentMode="alignBounds"
+            android:gravity="center"
+            android:useDefaultMargins="true"
+            android:padding="20dp"/>
+
+    </ScrollView>    <!-- Contenedor oculto -->
     <LinearLayout
         android:id="@+id/containerLayout"
         android:layout_width="match_parent"

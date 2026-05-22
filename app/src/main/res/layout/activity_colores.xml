@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".ColoresActivity">
-    <include layout="@layout/toolbar"/>
-
+    android:layout_height="match_parent">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <LinearLayout
         android:id="@+id/helpContainer"
         android:layout_width="wrap_content"
@@ -17,6 +16,8 @@
         android:layout_margin="16dp"
         android:layout_gravity="end"
         android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_horizontal">
 
         <ImageButton
@@ -113,6 +114,9 @@
         android:orientation="horizontal"
         android:id="@+id/fila1"
         android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center">
 
         <!-- RED -->
@@ -238,6 +242,9 @@
         android:id="@+id/fila2"
         android:visibility="invisible"
         android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/fila1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp">
 
         <!-- ORANGE -->
@@ -352,4 +359,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

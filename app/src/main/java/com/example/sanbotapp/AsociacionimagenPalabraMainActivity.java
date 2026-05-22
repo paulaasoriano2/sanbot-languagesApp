@@ -269,6 +269,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                 // Desactivar botón skip después
                 skip.setClickable(false);*/
+                textoDialogo.setText("Get ready because the words are coming!");
                 btnHelp.setVisibility(View.GONE);
                 helpText.setVisibility(View.GONE);
                 sayitagain.setVisibility(View.GONE);
