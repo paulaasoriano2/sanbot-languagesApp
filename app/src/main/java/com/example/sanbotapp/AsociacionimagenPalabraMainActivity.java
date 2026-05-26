@@ -30,6 +30,7 @@ import com.qihancloud.opensdk.function.beans.LED;
 import com.qihancloud.opensdk.function.beans.SpeakOption;
 import com.qihancloud.opensdk.function.beans.handmotion.AbsoluteAngleHandMotion;
 import com.qihancloud.opensdk.function.beans.headmotion.AbsoluteAngleHeadMotion;
+import com.qihancloud.opensdk.function.beans.wheelmotion.RelativeAngleWheelMotion;
 import com.qihancloud.opensdk.function.unit.HandMotionManager;
 import com.qihancloud.opensdk.function.unit.HardWareManager;
 import com.qihancloud.opensdk.function.unit.HeadMotionManager;
@@ -95,6 +96,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
     private TextView textoDialogo;
     private String textoActualDialogo = "Choose the image that matches with the word!";
     private TextView helpText, info;
+    private int aciertosSeguidos;
+    private Boolean haHabidoFallo;
 
     @Override
     protected void onMainServiceConnected() {
@@ -112,6 +115,8 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         contador = 0;
         correcto = false;
         isFirstScreen = true;
+        aciertosSeguidos = 0;
+        haHabidoFallo = false;
         //titulos.add("APPLE");
       //  imageDialog = dialogView.findViewById(R.id.dialogImage);
 
@@ -326,25 +331,111 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
         speakOption.setIntonation(50);
 
         if(imagenPulsada == indiceCorrecto){
+            if(!haHabidoFallo){
+                aciertosSeguidos++;
+            }
             fallosSeguidos = 0;
 
+
+            if(aciertosSeguidos == 2 && haHabidoFallo == false){
+                aciertosSeguidos = 0;
+
+                systemManager.showEmotion(EmotionsType.PRISE);
+                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_FLICKER_RANDOM));
+
+                String[] frases = {
+                        "WOW! You are super intelligent",
+                        "Well done! You are the best!",
+                };
+                Random rand = new Random();
+                int randomIndex = rand.nextInt(frases.length);
+                speechManager.startSpeak(frases[randomIndex], speakOption);
+
+                // mover brazos, izquierdo para arriba derecho para abajo
+                AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT,20,180);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+                absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT,20,20);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                RelativeAngleWheelMotion movimientoRuedas = new RelativeAngleWheelMotion(RelativeAngleWheelMotion.TURN_LEFT, 5, 360);
+                wheelMotionManager.doRelativeAngleMotion(movimientoRuedas);
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // mover brazos, izquierdo para abajo derecho para arriba
+                absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT,20,20);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+                absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT,20,180);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT,20,180);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+                absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT,20,20);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+
+               /* try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+
+                // resetear
+                //absoluteAngleHandMotion =
+               //         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
+                //handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+
+                // apagar luces
+                //hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+
+            }
+            else{
+                systemManager.showEmotion(EmotionsType.PRISE);
+                hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
+
+                AtomicReference<AbsoluteAngleHandMotion> absoluteAngleHandMotion =
+                        new AtomicReference<>(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 0));
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
+
+                // Generar frases aleatorias
+                String[] frases = {
+                        "Ta-da! Your intelligence shines like an LED.",
+                        "Well done! Your brain is in linguist mode.",
+                        "Amazing! Your effort is paying off."
+                };
+                Random rand = new Random();
+                int randomIndex = rand.nextInt(frases.length);
+                speechManager.startSpeak(frases[randomIndex], speakOption);
+            }
+
                 // Mostrar emoción y encender LEDs
-            systemManager.showEmotion(EmotionsType.PRISE);
-            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_GREEN));
 
-            AtomicReference<AbsoluteAngleHandMotion> absoluteAngleHandMotion =
-                    new AtomicReference<>(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 0));
-            handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
-
-            // Generar frases aleatorias
-            String[] frases = {
-                    "Ta-da! Your intelligence shines like an LED.",
-                    "Well done! Your brain is in linguist mode.",
-                    "Amazing! Your effort is paying off."
-            };
-            Random rand = new Random();
-            int randomIndex = rand.nextInt(frases.length);
-            speechManager.startSpeak(frases[randomIndex], speakOption);
 
             String nombreImagen = palabrasAMostrar.get(imagenPulsada);
 
@@ -384,9 +475,12 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             btnAcceptar.setOnClickListener(v -> {
                 dialog.dismiss();
 
+                AbsoluteAngleHandMotion absoluteAngleHandMotion =
+                        new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH,20,180);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
 
-                absoluteAngleHandMotion.set(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 180));
-                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
+               // absoluteAngleHandMotion.set(new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_BOTH, 20, 180));
+               // handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion.get());
                 // apagar luces
                 hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
 
@@ -448,7 +542,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
 
         } else {
+            haHabidoFallo = true;
             fallosSeguidos++;
+            aciertosSeguidos = 0;
             speechManager.startSpeak("Try again!", speakOption);
 
             if(fallosSeguidos == 3){
@@ -571,6 +667,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             }
             else{
+                haHabidoFallo = true;
                 new Handler().postDelayed(() -> {
                     systemManager.showEmotion(EmotionsType.QUESTION);
                     hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_YELLOW));
@@ -766,6 +863,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             String nombreImagen = palabrasAMostrar.get(k);
 
+            if(Objects.equals(nombreImagen, "t-shirt")){
+                nombreImagen = "tshirt";
+            }
             int resId = getResources().getIdentifier(
                     nombreImagen,
                     "drawable",
@@ -829,6 +929,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
     }
     private void actualizarTitulo() {
+        haHabidoFallo = false;
 
         SpeakOption speakOption = new SpeakOption();
         speakOption.setSpeed(50);
