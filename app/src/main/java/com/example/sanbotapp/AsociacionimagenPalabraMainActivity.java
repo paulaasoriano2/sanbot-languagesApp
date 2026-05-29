@@ -383,7 +383,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 absoluteAngleHandMotion =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT,20,180);
                 handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
-
+/*
 
                 try {
                     Thread.sleep(2000);
@@ -397,7 +397,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                 absoluteAngleHandMotion =
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_RIGHT,20,20);
-                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);
+                handMotionManager.doAbsoluteAngleMotion(absoluteAngleHandMotion);*/
 
 
                /* try {
@@ -438,6 +438,9 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
 
             String nombreImagen = palabrasAMostrar.get(imagenPulsada);
+            if(Objects.equals(nombreImagen, "t-shirt") || Objects.equals(nombreImagen, "T-SHIRT")){
+                nombreImagen = "tshirt";
+            }
 
             int resId = getResources().getIdentifier(
                     nombreImagen,
@@ -495,7 +498,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                     indiceActual = 0;
                     esFinal = true;
 
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                    /*AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
                     LayoutInflater inflater2 = getLayoutInflater();
 
                     View dialogView2 = inflater2.inflate(R.layout.dialog_feedbackasociacionend, null);
@@ -522,14 +525,22 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             runOnUiThread(this::finish);
                         }).start();
 
-                    }, 2000);
+                    }, 2000);*/
+                    hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                    headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+                    dialog.dismiss();
+                    finJuego();
+                    finish();
                 }
 
-                runOnUiThread(() -> {
-                    actualizarImagen();
-                    actualizarTitulo();
-                });
-                correcto = false;
+                else{
+                    runOnUiThread(() -> {
+                        actualizarImagen();
+                        actualizarTitulo();
+                    });
+                    correcto = false;
+                }
+
             });
 
             btnCancelar.setOnClickListener(v -> {
@@ -545,7 +556,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             haHabidoFallo = true;
             fallosSeguidos++;
             aciertosSeguidos = 0;
-            speechManager.startSpeak("Try again!", speakOption);
+            //speechManager.startSpeak("Try again!", speakOption);
 
             if(fallosSeguidos == 3){
                 fallosSeguidos = 0;
@@ -559,6 +570,10 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                     String nombreImagen = palabrasAMostrar.get(indiceCorrecto);
 
+                    if(Objects.equals(nombreImagen, "t-shirt") || Objects.equals(nombreImagen, "T-SHIRT")){
+                        nombreImagen = "tshirt";
+                    }
+
                     int resId = getResources().getIdentifier(
                             nombreImagen,
                             "drawable",
@@ -567,7 +582,6 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
                     imagenes.get(indiceCorrecto).setImageResource(resId);
                     String palabra = palabrasAMostrar.get(indiceCorrecto);
-
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     LayoutInflater inflater = getLayoutInflater();
@@ -616,7 +630,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                             indiceActual = 0;
                             esFinal = true;
 
-                            AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+                            /*AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
                             LayoutInflater inflater2 = getLayoutInflater();
 
                             View dialogView2 = inflater2.inflate(R.layout.dialog_feedbackasociacionend, null);
@@ -643,14 +657,22 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                                     runOnUiThread(this::finish);
                                 }).start();
 
-                            }, 2000);
+                            }, 2000);*/
+                            hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+                            headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+                            dialog.dismiss();
+                            finJuego();
+                            finish();
                         }
 
-                        runOnUiThread(() -> {
-                            actualizarImagen();
-                            actualizarTitulo();
-                        });
-                        correcto = false;
+                        else{
+                            runOnUiThread(() -> {
+                                actualizarImagen();
+                                actualizarTitulo();
+                            });
+                            correcto = false;
+                        }
+
                     });
 
                     btnCancelar.setOnClickListener(v -> {
@@ -667,6 +689,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             }
             else{
+                speechManager.startSpeak("Try again!", speakOption);
                 haHabidoFallo = true;
                 new Handler().postDelayed(() -> {
                     systemManager.showEmotion(EmotionsType.QUESTION);

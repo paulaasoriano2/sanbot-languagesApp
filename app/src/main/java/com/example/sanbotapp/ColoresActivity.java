@@ -78,6 +78,7 @@ public class ColoresActivity extends TopBaseActivity {
     private ImageButton btnHelp;
     private TextView textoDialogo;
     private TextView helpText;
+    private boolean notFoundMode = false;
     @Override
     protected void onMainServiceConnected() {
 
@@ -129,8 +130,10 @@ public class ColoresActivity extends TopBaseActivity {
         helpText = findViewById(R.id.helpText);
 
         setAllButtonsClickable(true);
-
-
+        notFoundMode = getIntent().getBooleanExtra("notFound", false);
+        if (notFoundMode) {
+            applySkipState();
+        }
         faceRecognitionControl.stopFaceRecognition();
 
         setonClicks();
@@ -166,6 +169,20 @@ public class ColoresActivity extends TopBaseActivity {
         skip.setClickable(clickable);
         btnHelp.setClickable(clickable);
 
+    }
+    private void applySkipState() {
+
+        btnHelp.setVisibility(View.GONE);
+        helpText.setVisibility(View.GONE);
+        sayitagain.setVisibility(View.GONE);
+        skip.setVisibility(View.GONE);
+        loadingBox.setVisibility(View.GONE);
+
+        LinearLayout fila1 = findViewById(R.id.fila1);
+        fila1.setVisibility(View.VISIBLE);
+
+        LinearLayout fila2 = findViewById(R.id.fila2);
+        fila2.setVisibility(View.VISIBLE);
     }
 
     public void setonClicks() {
@@ -278,6 +295,9 @@ public class ColoresActivity extends TopBaseActivity {
         speakOption.setSpeed(50);
         speakOption.setIntonation(50);
         super.onResume();
+        if (notFoundMode) {
+            return;
+        }
         // Inicializamos el sistema
         new Handler().postDelayed(new Runnable() {
             @Override

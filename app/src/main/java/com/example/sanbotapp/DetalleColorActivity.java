@@ -174,6 +174,7 @@ public class DetalleColorActivity extends TopBaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetalleColorActivity.this, ColoresActivity.class);
+                intent.putExtra("notFound", true);
                 startActivity(intent);
                 finish();
             }
@@ -215,7 +216,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         if (requestCode == 100 && resultCode == RESULT_OK) {
 
             String imageUriString = data.getStringExtra("screenshot_uri");
-            Log.d("imageUriString", imageUriString);
+            //Log.d("imageUriString", imageUriString);
 
 
             if (imageUriString != null) {

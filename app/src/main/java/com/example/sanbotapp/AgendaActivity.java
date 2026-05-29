@@ -85,6 +85,7 @@ public class AgendaActivity extends TopBaseActivity {
     private ImageButton btnHelp;
     private TextView textoDialogo;
     private LinearLayout loadingBox;
+    private Boolean isFirst = true;
     TextView titleText, instruction, reproducirTexto;
     LinearLayout helpContainer;
     RecyclerView recyclerView;
@@ -326,6 +327,9 @@ public class AgendaActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(AgendaActivity.this, MainActivity.class);
+                //intent.putExtra("notFound", true);
+                startActivity(intent);
                 finish();
             }
         });
@@ -482,6 +486,9 @@ public class AgendaActivity extends TopBaseActivity {
             public void run() {
 
 
+                if(!isFirst){
+                    return;
+                }
                 String[] frases = {
                         "What if we remember what you did yesterday? I'm very curious. Complete the sequence of actions."
                 };
@@ -523,6 +530,7 @@ public class AgendaActivity extends TopBaseActivity {
                 AbsoluteAngleHeadMotion absoluteAngleHeadMotion =
                         new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,7);
                 headMotionManager.doAbsoluteAngleMotion(absoluteAngleHeadMotion);
+                isFirst = false;
             }
         }, 200);
 

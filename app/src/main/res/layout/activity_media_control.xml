@@ -58,28 +58,33 @@
         android:id="@+id/ll_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"
+        android:paddingHorizontal="16dp"
         android:orientation="horizontal"
         android:layout_gravity="bottom"
         android:visibility="gone">
 
         <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
             android:background="@drawable/btn_rounded_t"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
+            android:minWidth="170dp"
             android:text="Cancel" />
 
         <Button
             android:id="@+id/btn_aceptar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
-            android:background="@drawable/button_rounded"
-            android:textColor="@android:color/white"
+            android:minWidth="170dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/btn_rounded_t"
+            android:textColor="@android:color/black"
             android:text="Save colour" />
 
     </LinearLayout>

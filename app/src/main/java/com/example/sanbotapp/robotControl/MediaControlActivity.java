@@ -1,5 +1,6 @@
 package com.example.sanbotapp.robotControl;
 
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -41,6 +42,7 @@ import com.google.gson.Gson;
 import com.qihancloud.opensdk.base.TopBaseActivity;
 import com.qihancloud.opensdk.beans.FuncConstant;
 import com.qihancloud.opensdk.function.beans.FaceRecognizeBean;
+import com.qihancloud.opensdk.function.beans.SpeakOption;
 import com.qihancloud.opensdk.function.beans.StreamOption;
 import com.qihancloud.opensdk.function.unit.MediaManager;
 import com.qihancloud.opensdk.function.unit.SpeechManager;
@@ -226,11 +228,18 @@ public class MediaControlActivity extends TopBaseActivity implements TextureView
         });
 
         btn_notfound.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.setClassName("com.example.languages", "com.example.sanbotapp.DetalleColorActivity");
+                intent.setClassName("com.example.languages", "com.example.sanbotapp.ColoresActivity");
+                String frase = "Don't worry we can try with other colour";
+                SpeakOption speakOption = new SpeakOption();
+                speakOption.setSpeed(50);
+                speakOption.setIntonation(50);
+                speakOption.setLanguageType(SpeakOption.LAG_ENGLISH_US);
+                speechManager.startSpeak(frase, speakOption);
                 intent.putExtra("notFound", true);
                 intent.putExtra("color", color);
                 intent.putExtra("isFirst", isFirst);
