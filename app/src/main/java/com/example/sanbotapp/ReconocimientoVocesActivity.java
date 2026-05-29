@@ -405,6 +405,9 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                     }
 
                     faceRecognitionControl.startFaceRecognition();
+                    String saludo = "Hi";
+                    speechControl.hablar(saludo);
+
                     // Parar después de 10 segundos (10000 ms)
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
