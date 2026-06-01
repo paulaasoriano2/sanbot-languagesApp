@@ -73,7 +73,9 @@ public class DetalleColorActivity extends TopBaseActivity {
     private Boolean notFound;
     private ImageButton btnBack;
     private Handler handler = new Handler();
+    private Button btnForceCorrect;
 
+    private Boolean forzar;
 
     @Override
     protected void onMainServiceConnected() {
@@ -90,6 +92,7 @@ public class DetalleColorActivity extends TopBaseActivity {
 
         setContentView(R.layout.activity_detalle_color);
 
+        forzar = false;
         color = getIntent().getStringExtra("color");
         isFirst = getIntent().getBooleanExtra("isFirst", true);
         imageUriString = getIntent().getStringExtra("screenshot_uri");
@@ -112,7 +115,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         btnAbrirCamara = findViewById(R.id.abrirCamara);
         btnComprobarColor = findViewById(R.id.notfound);
         btnBack = findViewById(R.id.btnBack);
-
+        btnForceCorrect = findViewById(R.id.btnForceCorrect);
 
         faceRecognitionControl.stopFaceRecognition();
 
@@ -138,6 +141,7 @@ public class DetalleColorActivity extends TopBaseActivity {
         btnAbrirCamara.setClickable(clickable);
         btnComprobarColor.setClickable(clickable);
         btnBack.setClickable(clickable);
+        btnForceCorrect.setClickable(clickable);
     }
 
     public void setonClicks() {
@@ -180,35 +184,151 @@ public class DetalleColorActivity extends TopBaseActivity {
             }
         });
 
+        btnForceCorrect.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                forzar = true;
+            }
+        });
+
+
         btnComprobarColor.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
 
-
-                if (imageUriString != null) {
-                    Uri imageUri = Uri.parse(imageUriString);
-                    Log.d("Captura recibida", imageUriString);
-
-
-                    File file = uriToFile(imageUri);
-                    sendImageToServer(file);
+                if(forzar){
+                    forzar();
                 }
                 else{
-                    Log.d("Captura recibida", "Captura recibida pero es nula");
-                    String frase = "I can't see the image. Please capture it again!";
-                    speechManager.startSpeak(frase, speakOption);
+                    if (imageUriString != null) {
+                        Uri imageUri = Uri.parse(imageUriString);
+                        Log.d("Captura recibida", imageUriString);
 
 
+                        File file = uriToFile(imageUri);
+                        sendImageToServer(file);
+                    }
+                    else{
+                        Log.d("Captura recibida", "Captura recibida pero es nula");
+                        String frase = "I can't see the image. Please capture it again!";
+                        speechManager.startSpeak(frase, speakOption);
+
+
+                    }
                 }
+
             }
 
         });
 
     }
 
+public void forzar(){ //esColorCorrecto()
 
+    SpeakOption speakOption = new SpeakOption();
+    speakOption.setSpeed(50);
+    speakOption.setIntonation(50);
+
+
+    encenderFeedbackCorrecto();
+    speechManager.startSpeak(
+            "Good job! The color was " + color,
+            speakOption
+    );
+
+    animarBrazos(true);
+
+    ColoresDbAdapter adapter = new ColoresDbAdapter(this);
+    adapter.open();
+
+    adapter.updateAcierto(color, true); // ejemplo
+
+    adapter.close();
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    LayoutInflater inflater = getLayoutInflater();
+
+    View dialogView = inflater.inflate(R.layout.dialog_feedbackcolores, null);
+    builder.setView(dialogView);
+
+    AlertDialog dialog = builder.create();
+    dialog.setCancelable(false);
+    colorRespuesta = dialogView.findViewById(R.id.colorRespuesta);
+
+    // MODIFICAR TEXTO Y COLOR DEPENDIENDO DEL COLOR QUE SEA
+    colorRespuesta.setText(color.toUpperCase());
+
+    switch (color.toLowerCase()) {
+        case "red":
+            colorRespuesta.setTextColor(Color.parseColor("#E30613"));
+            break;
+
+        case "green":
+            colorRespuesta.setTextColor(Color.parseColor("#3AAA35"));
+            break;
+
+        case "blue":
+            colorRespuesta.setTextColor(Color.parseColor("#009FE3"));
+            break;
+
+        case "purple":
+            colorRespuesta.setTextColor(Color.parseColor("#6F2383"));
+            break;
+
+        case "pink":
+            colorRespuesta.setTextColor(Color.parseColor("#E6007E"));
+            break;
+
+        case "white":
+            colorRespuesta.setTextColor(Color.WHITE);
+            colorRespuesta.setShadowLayer(4f, 2f, 2f, Color.BLACK);
+            break;
+
+        case "black":
+            colorRespuesta.setTextColor(Color.BLACK);
+            break;
+
+        case "grey":
+            colorRespuesta.setTextColor(Color.parseColor("#ADADAD"));
+            break;
+
+        default:
+            colorRespuesta.setTextColor(Color.BLACK);
+            break;
+    }
+
+
+    dialog.show();
+    Button btnAcceptar = dialogView.findViewById(R.id.btnAccept);
+    Button btnCancelar = dialogView.findViewById(R.id.btnCancel);
+
+    btnAcceptar.setOnClickListener(vi -> {
+        dialog.dismiss();
+        animarBrazos(false);
+
+        // apagar luces
+        apagarFeedback();
+        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+        //finish();
+        Intent intent = new Intent(DetalleColorActivity.this, ColoresActivity.class);
+        intent.putExtra("notFound", true);
+        startActivity(intent);
+        finish();
+    });
+
+    btnCancelar.setOnClickListener(vi -> {
+        animarBrazos(false);
+        hardwareManager.setLED(new LED(LED.PART_ALL, LED.MODE_CLOSE));
+        //headMotionManager.doAbsoluteAngleMotion(new AbsoluteAngleHeadMotion(AbsoluteAngleHeadMotion.ACTION_VERTICAL,30));
+        dialog.dismiss();
+        finJuego();
+        finish();
+    });
+
+}
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
