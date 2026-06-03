@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- TÍTULO -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:text="WHAT'S THIS?"
+            android:textColor="@color/colorPurple"
+            android:textSize="42sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <!-- HELP -->
+        <LinearLayout
+            android:id="@+id/helpContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnHelp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@null"
+                android:contentDescription="Help"
+                android:scaleType="fitXY"
+                android:src="@drawable/help" />
+
+            <TextView
+                android:id="@+id/helpText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HELP"
+                android:textColor="@color/colorPurple"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- CONTENIDO CENTRAL -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageButton
+                    android:id="@+id/imagen"
+                    android:layout_width="400dp"
+                    android:layout_height="400dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="16dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/banana"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/btnImagen"
+                    android:layout_width="500dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded"
+                    android:text="Tap to tell me what it is"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="30sp"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/btnSkip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/button_rounded"
+                    android:text="skip ⏭"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- CUADRO DE INSTRUCCIONES -->
+        <LinearLayout
+            android:id="@+id/loadingBox"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/bg_dialog_rounded"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="40dp">
+
+            <TextView
+                android:id="@+id/instruction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Say what you see in the image!"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="16dp">
+
+                <Button
+                    android:id="@+id/sayitagain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_rounded_t"
+                    android:padding="12dp"
+                    android:text="SAY IT AGAIN"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/skip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/btn_rounded_t"
+                    android:padding="12dp"
+                    android:text="SKIP"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

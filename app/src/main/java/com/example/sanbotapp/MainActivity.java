@@ -298,8 +298,7 @@ public class MainActivity extends TopBaseActivity {
             public void onClick(View v) {
 
                 faceRecognitionControl.stopFaceRecognition();
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.imagennombree", "com.example.sanbotapp.MainActivity"));
+                Intent intent = new Intent(MainActivity.this, ImagenNombreActivity.class);
                 startActivity(intent);
             }
 
@@ -311,8 +310,7 @@ public class MainActivity extends TopBaseActivity {
             public void onClick(View v) {
 
                 faceRecognitionControl.stopFaceRecognition();
-                Intent intent = new Intent();
-                intent.setComponent(new ComponentName("com.example.imagennombree", "com.example.sanbotapp.MainActivity"));
+                Intent intent = new Intent(MainActivity.this, ImagenNombreActivity.class);
                 startActivity(intent);
             }
 
