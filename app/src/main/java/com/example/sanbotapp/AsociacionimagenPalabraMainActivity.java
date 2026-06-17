@@ -240,7 +240,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                textoDialogo.setText("¡Elige la imagen que coincida con la palabra!");
+                textoDialogo.setText("Elige la imagen que se corresponde con la palabra.");
                 sayitagain.setVisibility(View.GONE);
                 btnHelp.setVisibility(View.GONE);
                 helpText.setVisibility(View.GONE);
@@ -317,7 +317,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
                 speakOption.setSpeed(50);
                 speakOption.setIntonation(50);
 
-                speechManager.startSpeak("Choose the image that matches with the word", speakOption);
+                speechManager.startSpeak("Choose the image which corresponds to the word. Tap the button HELP if you don't understand it.", speakOption);
 
 
             }
@@ -1026,7 +1026,7 @@ public class AsociacionimagenPalabraMainActivity extends TopBaseActivity {
             @Override
             public void run() {
 
-                String frase = "Let's play the image-word association game. I will say a word in English and you will have to choose the image that matches with the word.";
+                String frase = "Let's play the image-word association game. I will say a word in English and you will have to choose the image which corresponds to the word. Tap the button HELP if you don't understand it.";
                 speechManager.startSpeak(frase, speakOption);
 
                /* try {

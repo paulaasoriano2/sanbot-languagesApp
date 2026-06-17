@@ -240,7 +240,7 @@ public class ColoresActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                textoDialogo.setText("¡Busca un objeto del color que selecciones y enséñamelo!");
+                textoDialogo.setText("Selecciona un color, busca un objeto de ese color que selecciones y enséñamelo.");
                 sayitagain.setVisibility(View.GONE);
                 btnHelp.setVisibility(View.GONE);
                 helpText.setVisibility(View.GONE);
@@ -280,7 +280,7 @@ public class ColoresActivity extends TopBaseActivity {
                 speakOption.setSpeed(50);
                 speakOption.setIntonation(50);
 
-                speechManager.startSpeak("Pick a colour, find an object that matches it, and show it to me!", speakOption);
+                speechManager.startSpeak("Pick a colour, find an object of that colour, and show it to me. Tap the button HELP if you don't understand it.", speakOption);
 
 
             }
@@ -307,7 +307,7 @@ public class ColoresActivity extends TopBaseActivity {
                         new AbsoluteAngleHandMotion(AbsoluteAngleHandMotion.PART_LEFT, 20, 0);
                 handMotionManager.doAbsoluteAngleMotion(arm);
 
-                String frase = "Let's recognize colors. Pick a colour, find an object that matches it, and show it to me!";
+                String frase = "Let's recognize colors. Pick a colour, find an object of that colour, and show it to me. Tap the button HELP if you don't understand it.";
                 speechManager.startSpeak(frase, speakOption);
 
                 try {

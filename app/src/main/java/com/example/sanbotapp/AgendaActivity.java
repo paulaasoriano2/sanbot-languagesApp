@@ -338,7 +338,7 @@ public class AgendaActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                textoDialogo.setText("¡Completa la secuencia de acciones!");
+                textoDialogo.setText("Completa la secuencia de acciones usando las imágenes de abajo.");
                 sayitagain.setVisibility(View.GONE);
                 btnHelp.setVisibility(View.GONE);
                 helpText.setVisibility(View.GONE);
@@ -378,7 +378,7 @@ public class AgendaActivity extends TopBaseActivity {
                 speakOption.setSpeed(50);
                 speakOption.setIntonation(50);
 
-                speechManager.startSpeak("Complete the sequence of actions.", speakOption);
+                speechManager.startSpeak("Complete the sequence of actions using the images below. Tap the button HELP if you don't understand it.", speakOption);
 
 
             }
@@ -490,7 +490,7 @@ public class AgendaActivity extends TopBaseActivity {
                     return;
                 }
                 String[] frases = {
-                        "What if we remember what you did yesterday? I'm very curious. Complete the sequence of actions."
+                        "What if we remember what you did yesterday? I'm very curious. Complete the sequence of actions using the images below. Tap the button HELP if you don't understand it."
                 };
                 Random rand = new Random();
                 int randomIndex = rand.nextInt(frases.length);

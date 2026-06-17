@@ -177,7 +177,7 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
             public void run() {
                 systemManager.showEmotion(EmotionsType.PRISE);
                 // Saludo inicial
-                String saludo = "Hi there! I have been waiting so long to talk. Let's have a conversation with me!";
+                String saludo = "Hi there! I have been waiting so long to talk. Let's have a conversation with me! Remember that I'm listening to you when my ears are green. Tap the button HELP if you don't understand it.";
                 //speechManager.startSpeak(saludo, speakOption);
                 speechControl.hablar(saludo);
                 chatArrayAdapter.add(new MensajeChat(true, "Hi!"));
@@ -340,7 +340,7 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
 
                 @Override
                 public void onClick(View v) {
-                    textoDialogo.setText("¡Manten una conversación conmigo!");
+                    textoDialogo.setText("Manten una conversación conmigo. Recuerda que solo te estoy escuchando cuando mis orejas están de color verde.");
                     sayitagain.setVisibility(View.GONE);
                     btnHelp.setVisibility(View.GONE);
                     helpText.setVisibility(View.GONE);
@@ -432,7 +432,7 @@ public class ReconocimientoVocesActivity extends TopBaseActivity {
                     speakOption.setSpeed(50);
                     speakOption.setIntonation(50);
 
-                    speechManager.startSpeak("Have a conversation with me!", speakOption);
+                    speechManager.startSpeak("Have a conversation with me. Remember that I'm listening to you when my ears are green. Tap the button HELP if you don't understand it.", speakOption);
 
 
                 }

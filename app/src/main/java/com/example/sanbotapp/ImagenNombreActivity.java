@@ -539,7 +539,7 @@ public class ImagenNombreActivity extends TopBaseActivity {
 
             @Override
             public void onClick(View v) {
-                textoDialogo.setText("¡Di lo que ves en la imagen!");
+                textoDialogo.setText("Di la palabra que se corresponde con la imagen que ves.");
                 sayitagain.setVisibility(View.GONE);
                 btnHelp.setVisibility(View.GONE);
                 helpText.setVisibility(View.GONE);
@@ -601,7 +601,7 @@ public class ImagenNombreActivity extends TopBaseActivity {
                 speakOption.setSpeed(50);
                 speakOption.setIntonation(50);
 
-                speechManager.startSpeak("Say what you see in the image!", speakOption);
+                speechManager.startSpeak("Say the word which corresponds to the image you see. Tap the button HELP if you don't understand it.", speakOption);
 
 
             }
@@ -691,7 +691,7 @@ public class ImagenNombreActivity extends TopBaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                speechManager.startSpeak("Tap the button and say what you see in the image!!", speakOption );
+                speechManager.startSpeak("Say the word which corresponds to the image you see. Tap the button HELP if you don't understand it.", speakOption );
 
                 try {
                     Thread.sleep(3000);
